@@ -62,6 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     # choise_user = (('doctor', 'doctor'), ('patient', 'patient'))
     # doctor_or_patient = models.CharField(
         # choices=choise_user, max_length=10, null=True, blank=True)
+
+        
     # profile_image = models.ImageField(null=True, blank=True)
     username = models.CharField(('username'), max_length=32, unique=True, null=True, blank=True,
                                 help_text=(
