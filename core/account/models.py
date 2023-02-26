@@ -77,8 +77,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     }
     )
     full_name = models.CharField(('full name'), max_length=80)
+    # national_code = models.CharField(max_length=10,
+                                    #  null=True, validators=[national_code_validator])
     national_code = models.CharField(max_length=10,
-                                     null=True, validators=[national_code_validator])
+                                     null=True, )
     gender_choice = (
         ('male', 'male'),
         ('female', 'female'),
