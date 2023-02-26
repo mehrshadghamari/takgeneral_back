@@ -5,7 +5,7 @@ from django.core import validators
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, send_mail
-from account.validators import national_code_validator
+# from account.validators import national_code_validator
 
 
 
