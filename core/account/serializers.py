@@ -1,6 +1,16 @@
+from django.core import validators
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, TokenError
 
+from account.models import MyUser
+
+
+class UserRegisterOrLoginSendOTpSerializr(serializers.Serializer):
+    phone_number=serializers.CharField(validators=[
+                                              validators.RegexValidator(r'^989[0-3,9]\d{8}$',
+                                                                        ('Enter a valid mobile number.'), 'invalid')])
+        
+        
 
 class LogOutSerializer(serializers.Serializer):
     refresh = serializers.CharField()

@@ -21,7 +21,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from account.serializers import LogOutSerializer
+from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSerializr
 
 from account.models import MyUser
 
@@ -65,7 +65,6 @@ class GetUserInfoAndId(APIView):
         user_id = access_token_obj['user_id']
         user_full_name = access_token_obj['full_name']
         user_phone_number = access_token_obj['phone_number']
-        # who = access_token_obj['who']
         return Response({'user_id': user_id, 'user_full_name': user_full_name,'user_phone_number': user_phone_number})
 
 
@@ -89,31 +88,28 @@ class UserRegisterOrLoginSendOTp (APIView):
 
     def post(self, request):
         register=False
-        phone_number = self.request.data['phone_number']
-        if not phone_number:
-            return Response({"msg": "phone number is requierd'"}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            
-            MyUser.objects.get(phone_number=phone_number)
+        serializer=UserRegisterOrLoginSendOTpSerializr(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            phone_number=serializer.data['phone_number']
+        
+            if not phone_number:
+                return Response({"msg": "phone number is requierd'"}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                
+                MyUser.objects.get(phone_number=phone_number)
 
-        except MyUser.DoesNotExist:
-            register=True
-            MyUser.objects.create(
-                phone_number=phone_number, is_active=False,)
-            
-        print('**************************************')
-        print(type(phone_number))
-        code = random.randint(10000, 99999)
-        # code = r.setex(str(phone_number), timedelta(minutes=2), value=code)
-        code=cache.set(str(phone_number), code,2*60)
-        # register=cache.set(str(phone_number), register,)
-        # code = r.setex(str(phone_number)+'0', timedelta(minutes=2), value=register)
-        print('*****************************')
-        # code=r.get(str(phone_number)).decode()
-        code=cache.get(str(phone_number))
-        print(code)
+            except MyUser.DoesNotExist:
+                register=True
+                MyUser.objects.create(
+                    phone_number=phone_number, is_active=False,)
 
-        return Response({"msg": "code sent successfully","code":code,}, status=status.HTTP_200_OK)
+            code = random.randint(10000, 99999)
+            code=cache.set(str(phone_number), code,2*60)
+            code=cache.get(str(phone_number))
+
+            return Response({"msg": "code sent successfully","code":code,}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserVerifyOTP(APIView):
@@ -123,13 +119,16 @@ class UserVerifyOTP(APIView):
 
     def post(self, request):
         phone_number = self.request.data['phone_number']
-        patient = MyUser.objects.get(phone_number=phone_number)
         code = self.request.data['code']
-        # cached_code = r.get(str(phone_number)).decode()
+        try:
+            user = MyUser.objects.get(phone_number=phone_number)
+        except MyUser.DoesNotExist:
+            return Response({'msg':'user with this phone number does not exist'})
+
         cached_code=cache.get(str(phone_number))
-        # register = cache.get(str(phone_number))
-        if str(code) != str(cached_code):
+        
+        if int(code) != int(cached_code):
             return Response({"msg": "code not matched"}, status=status.HTTP_403_FORBIDDEN)
-        token = get_tokens_for_user(patient)
+        token = get_tokens_for_user(user)
         return Response({"token":token,}, status=status.HTTP_201_CREATED)
 
