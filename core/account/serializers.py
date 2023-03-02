@@ -2,7 +2,7 @@ from django.core import validators
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, TokenError
 
-from account.models import MyUser
+from account.models import MyUser,Address
 
 
 class UserRegisterOrLoginSendOTpSerializr(serializers.Serializer):
@@ -28,3 +28,18 @@ class LogOutSerializer(serializers.Serializer):
             RefreshToken(self.token).blacklist()
         except TokenError:
             self.fail('bad_token')
+
+
+
+
+class UserInfoSerialozer(serializers.ModelSerializer):
+    class Meta:
+        model=MyUser
+        fields=('first_name','last_name','email','national_code','addresses')
+
+
+
+class UserAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Address
+        fields='__all__'

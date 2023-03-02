@@ -5,7 +5,7 @@ from django.core import validators
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, send_mail
-# from account.validators import national_code_validator
+from account.validators import national_code_validator
 
 
 
@@ -78,11 +78,13 @@ class User(AbstractBaseUser, PermissionsMixin):
                                     'unique': ("A user with that username already exists."),
     }
     )
-    full_name = models.CharField(('full name'), max_length=80)
-    # national_code = models.CharField(max_length=10,
-                                    #  null=True, validators=[national_code_validator])
+    # full_name = models.CharField(('full name'), max_length=80)
+    first_name= models.CharField(max_length=80)
+    last_name= models.CharField(max_length=80)
     national_code = models.CharField(max_length=10,
-                                     null=True, )
+                                     null=True, validators=[national_code_validator])
+    # national_code = models.CharField(max_length=10,
+                                    #  null=True, )
     gender_choice = (
         ('male', 'male'),
         ('female', 'female'),
@@ -150,3 +152,30 @@ class User(AbstractBaseUser, PermissionsMixin):
 class MyUser(User):
     registeration_date = jmodels.jDateTimeField(
         auto_now_add=True, null=True, blank=True)
+    
+    @property
+    def addresses(self):
+        self.address_set.all()
+
+
+
+
+
+
+
+class Address (models.Model):
+    user=models.ForeignKey('account.address',on_delete=models.CASCADE)
+    address_name=models.CharField(max_length=80)
+    post_code=models.CharField(max_length=10)
+    full_address=models.TextField()
+    pelak=models.IntegerField()
+    vahed=models.IntegerField()
+    lt=models.FloatField()
+    lng=models.FloatField()
+
+
+
+
+
+
+# email !  fname  lname  code meli phone_meli  addrese (onvane neshani - code posti  -neshani kamel pelak vahed lt lng)

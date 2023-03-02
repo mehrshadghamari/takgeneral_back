@@ -20,12 +20,24 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.backends import TokenBackend
 
-from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSerializr
+from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSerializr,UserInfoSerialozer
 
 from account.models import MyUser
 
 r = redis.Redis(host='localhost', port=6379, db=0)
+
+
+# def get_id(token):
+#     token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
+#     data = {'token': token}
+#     try:
+#       valid_data = TokenBackend(algorithm='HS256').decode(token,verify=True)
+#       user = valid_data['user']
+#     except :
+#         pass
+#     return
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -35,7 +47,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         token['phone_number'] = user.phone_number
-        token['full_name'] = user.full_name
+        # token['full_name'] = user.full_name
         # token['who'] = user.doctor_or_patient
 
         return token
@@ -87,7 +99,7 @@ class UserRegisterOrLoginSendOTp (APIView):
     """
 
     def post(self, request):
-        register=False
+        registered=True
         serializer=UserRegisterOrLoginSendOTpSerializr(data=request.data)
         if serializer.is_valid(raise_exception=True):
             phone_number=serializer.data['phone_number']
@@ -99,7 +111,7 @@ class UserRegisterOrLoginSendOTp (APIView):
                 MyUser.objects.get(phone_number=phone_number)
 
             except MyUser.DoesNotExist:
-                register=True
+                registered=False
                 MyUser.objects.create(
                     phone_number=phone_number, is_active=False,)
 
@@ -107,7 +119,7 @@ class UserRegisterOrLoginSendOTp (APIView):
             code=cache.set(str(phone_number), code,2*60)
             code=cache.get(str(phone_number))
 
-            return Response({"msg": "code sent successfully","code":code,}, status=status.HTTP_200_OK)
+            return Response({"msg": "code sent successfully","code":code,"registered":registered}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -132,3 +144,24 @@ class UserVerifyOTP(APIView):
         token = get_tokens_for_user(user)
         return Response({"token":token,}, status=status.HTTP_201_CREATED)
 
+
+
+
+class UserAddInfo(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        id=1
+        user = MyUser.objects.get(id=id)
+        serializer = UserInfoSerialozer(user)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def put(self,request):
+        pass
+
+
+
+class UserAddAdress(APIView):
+
+    def post(self,request):
+        pass
