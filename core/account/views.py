@@ -152,13 +152,17 @@ class UserAddInfo(APIView):
 
     def get(self,request):
         print(request.user.id,request.user.username)
-        # id=1
         user = MyUser.objects.get(id=request.user.id)
         serializer = UserInfoSerialozer(user)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def put(self,request):
-        pass
+        user= MyUser.objects.get(id=request.user.id)
+        serializer=UserInfoSerialozer(instance=user,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

@@ -93,8 +93,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                               max_length=10, null=True, blank=True)
 
     email = models.EmailField(
-        ('email address'), unique=True, null=True, blank=True)
-    phone_number = models.BigIntegerField(('mobile number'), unique=True, null=True, blank=True,
+        ('email address'), unique=True, null=True, )
+    phone_number = models.BigIntegerField(('mobile number'), unique=True, null=True,
                                           validators=[
                                               validators.RegexValidator(r'^989[0-3,9]\d{8}$',
                                                                         ('Enter a valid mobile number.'), 'invalid'),

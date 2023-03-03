@@ -35,7 +35,8 @@ class LogOutSerializer(serializers.Serializer):
 class UserInfoSerialozer(serializers.ModelSerializer):
     class Meta:
         model=MyUser
-        fields=('first_name','last_name','phone_number','email','national_code','addresses')
+        fields=('first_name','last_name','phone_number','email','national_code',)
+        read_only_fields =('phone_number',)
 
 
 
