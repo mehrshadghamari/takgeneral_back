@@ -131,6 +131,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return str(self.phone_number)
 
     @property
+    def full_name(self):
+        return self.first_name + '' +self.last_name
+    
+    @property
     def is_loggedin_user(self):
         """
         Returns True if user has actually logged in with valid credentials.
@@ -164,7 +168,7 @@ class MyUser(User):
 
 
 class Address (models.Model):
-    user=models.ForeignKey('account.address',on_delete=models.CASCADE)
+    user=models.ForeignKey('account.MyUser',on_delete=models.CASCADE)
     address_name=models.CharField(max_length=80)
     post_code=models.CharField(max_length=10)
     full_address=models.TextField()

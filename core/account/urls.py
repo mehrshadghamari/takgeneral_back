@@ -7,7 +7,7 @@ from account import views
 urlpatterns = [
     path('user-register-or-login-send-otp/',views.UserRegisterOrLoginSendOTp.as_view()),
     path('user-verify-otp/',views.UserVerifyOTP.as_view()),
-    path('Logout/',views.LogoutView.as_view()),
-    path('id/',views.UserAddInfo.as_view())
+    path('logout/',views.LogoutView.as_view()),
+    path('user-info/',views.UserAddInfo.as_view()),
 
 ]

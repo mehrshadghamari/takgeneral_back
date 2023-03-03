@@ -113,7 +113,7 @@ class UserRegisterOrLoginSendOTp (APIView):
             except MyUser.DoesNotExist:
                 registered=False
                 MyUser.objects.create(
-                    phone_number=phone_number, is_active=False,)
+                    phone_number=phone_number,)
 
             code = random.randint(10000, 99999)
             code=cache.set(str(phone_number), code,2*60)
@@ -151,8 +151,9 @@ class UserAddInfo(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        id=1
-        user = MyUser.objects.get(id=id)
+        print(request.user.id,request.user.username)
+        # id=1
+        user = MyUser.objects.get(id=request.user.id)
         serializer = UserInfoSerialozer(user)
         return Response(serializer.data,status=status.HTTP_200_OK)
 

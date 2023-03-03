@@ -8,9 +8,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 # from doctors.forms import UserAdminCreationForm, UserAdminChangeForm
-
+from .models import Address
 
 
 User = get_user_model()
 
 admin.site.register(User)
+admin.site.register(Address)
