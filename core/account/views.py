@@ -24,9 +24,9 @@ from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework.throttling import ScopedRateThrottle
 
 
-from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSerializr,UserInfoSerialozer
+from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSerializr,UserInfoSerialozer,UserAddressSerializer
 
-from account.models import MyUser
+from account.models import MyUser,Address
 
 r = redis.Redis(host='localhost', port=6379, db=0)
 
@@ -131,6 +131,7 @@ class UserVerifyOTP(APIView):
     """
     api for check OTp code for login patient
     """
+    throttle_scope = 'verfiy_code'
 
     def post(self, request):
         phone_number = self.request.data['phone_number']
@@ -154,7 +155,6 @@ class UserAddInfo(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        print(request.user.id,request.user.username)
         user = MyUser.objects.get(id=request.user.id)
         serializer = UserInfoSerialozer(user)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -173,8 +173,9 @@ class UserAddAdress(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        pass
-
+        user_address=Address.objects.filter(user__id=request.user.id)        
+        serializer=UserAddressSerializer(user_address)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request):
         pass

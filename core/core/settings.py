@@ -102,6 +102,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'otp': '2/min',
+        'verfiy_code': '3/min',
     }
 
 }
