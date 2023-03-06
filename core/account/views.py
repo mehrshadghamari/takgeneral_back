@@ -21,6 +21,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.backends import TokenBackend
+from rest_framework.throttling import ScopedRateThrottle
+
 
 from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSerializr,UserInfoSerialozer
 
@@ -97,6 +99,7 @@ class UserRegisterOrLoginSendOTp (APIView):
     """
     api for patient register
     """
+    throttle_scope = 'otp'
 
     def post(self, request):
         registered=True
