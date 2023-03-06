@@ -167,6 +167,11 @@ class UserAddInfo(APIView):
 
 
 class UserAddAdress(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        pass
+
 
     def post(self,request):
         pass
