@@ -173,9 +173,15 @@ class UserAddAdress(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        user_address=Address.objects.filter(user__id=request.user.id)        
-        serializer=UserAddressSerializer(user_address)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        user_address = Address.objects.filter(user__id = request.user.id)        
+        serializer = UserAddressSerializer(user_address)
+        return Response(serializer.data,status = status.HTTP_200_OK)
 
     def post(self,request):
-        pass
+        # user_instance = 
+        serializer = UserAddressSerializer(data=request.data)
+        user_instance=MyUser.objects.get(id=request.user.id)
+        if serializer.is_valid():
+            serializer.save(user = user_instance)
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

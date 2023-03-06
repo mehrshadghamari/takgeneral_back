@@ -9,5 +9,6 @@ urlpatterns = [
     path('user-verify-otp/',views.UserVerifyOTP.as_view()),
     path('logout/',views.LogoutView.as_view()),
     path('user-info/',views.UserAddInfo.as_view()),
+    path('user-add-address/',views.UserAddAdress.as_view()),
 
 ]
