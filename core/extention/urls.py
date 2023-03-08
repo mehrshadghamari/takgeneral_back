@@ -3,6 +3,6 @@ from extention import views
 
 
 urlpatterns = [
-    path('slider/',views.SliderApi.as_view()),
+    path('home/',views.HomeApi.as_view()),
 
 ]

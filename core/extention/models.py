@@ -1,13 +1,26 @@
 from django.db import models
 
-# Create your models here.
+
 
 class Slider(models.Model):
-    # type_choise=(
-        # ('mobile','mobile'),
-        # ('pc','pc'),
-    # )
-    name=models.CharField(max_length=40)
+    name=models.CharField(max_length=64)
     mobile_image=models.ImageField()
     pc_image=models.ImageField()
-    # type=models.CharField(choices=type_choise,max_length=10) 
+    url = models.URLField(null=True)
+    
+
+
+
+class Products(models.Model):
+    name=models.CharField(max_length=64)
+    description = models.TextField()
+    product_image=models.ImageField()
+    url = models.URLField(null=True)
+
+
+
+class Advertisement(models.Model):
+    name = models.CharField(max_length=64)
+    mobile_image=models.ImageField()
+    pc_image=models.ImageField()
+    url = models.URLField(null=True)

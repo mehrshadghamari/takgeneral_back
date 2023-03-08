@@ -81,16 +81,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     # full_name = models.CharField(('full name'), max_length=80)
     first_name= models.CharField(max_length=80)
     last_name= models.CharField(max_length=80)
-    national_code = models.CharField(max_length=10,
+    national_code = models.CharField(max_length=10,unique=True,
                                      null=True, validators=[national_code_validator])
     # national_code = models.CharField(max_length=10,
                                     #  null=True, )
-    gender_choice = (
-        ('male', 'male'),
-        ('female', 'female'),
-    )
-    gender = models.CharField(choices=gender_choice,
-                              max_length=10, null=True, blank=True)
+    # gender_choice = (
+        # ('male', 'male'),
+        # ('female', 'female'),
+    # )
+    # gender = models.CharField(choices=gender_choice,
+                            #   max_length=10, null=True, blank=True)
 
     email = models.EmailField(
         ('email address'), unique=True, null=True, blank=True)
