@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from extention.models import Slider,Products,Advertisement
+from extention.models import Slider,Product,Advertisement
 
 
 class SliderSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
     product_image = serializers.SerializerMethodField('get_product_image_url')
 
     class Meta:
-        model=Products
+        model=Product
         fields='__all__'
 
     def get_mobile_image_url(self, obj):

@@ -11,7 +11,7 @@ class Slider(models.Model):
 
 
 
-class Products(models.Model):
+class Product(models.Model):
     name=models.CharField(max_length=64)
     description = models.TextField()
     product_image=models.ImageField()

@@ -22,6 +22,14 @@ class HomeApi(APIView):
         slider_serializer = SliderSerializer(slider,many=True,context={"request": request})
         products = Products.objects.all()
         products_serializer = ProductSerializer(products,many=True,context={"request": request})
+        # advertisement = Advertisement.objects.all()
+        # advertisement_serializer = AdvertisementSerilizer(advertisement,many=True,context={"request": request})
+        return Response({'sliders':slider_serializer.data,'products':products_serializer.data,},status=status.HTTP_200_OK)
+    
+
+
+class advertisementAPi(APIView):
+    def get(self,request):
         advertisement = Advertisement.objects.all()
         advertisement_serializer = AdvertisementSerilizer(advertisement,many=True,context={"request": request})
-        return Response({'sliders':slider_serializer.data,'products':products_serializer.data,'advertisements':advertisement_serializer.data},status=status.HTTP_200_OK)
+        return Response(advertisement_serializer.data,status=status.HTTP_200_OK)
