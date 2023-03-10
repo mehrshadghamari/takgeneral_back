@@ -185,3 +185,14 @@ class UserAddAdress(APIView):
             serializer.save(user = user_instance)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+
+class UserStatus(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        print('***************************')
+        print(type(request.user.phone_number))
+        p=str(request.user.phone_number)
+        print(p[2:])
+        phone_number='0'+p[2:]
+        return Response({'phone_numer':phone_number,'full_name':request.user.full_name})

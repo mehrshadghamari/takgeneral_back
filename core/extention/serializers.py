@@ -8,7 +8,7 @@ class SliderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Slider
-        fields = ('id','name','mobile_image','pc_image')
+        fields = '__all__'
 
     
     def get_mobile_image_url(self, obj):
