@@ -29,7 +29,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model=Product
         fields='__all__'
 
-    def get_mobile_image_url(self, obj):
+    def get_product_image_url(self, obj):
         request = self.context.get('request')
         product_image_url = obj.product_image.url
         return request.build_absolute_uri(product_image_url)
