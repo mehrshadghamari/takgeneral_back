@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-!p(8*17r_8xhi*zg6+r3^u(1ym!7*pvt5g2zmqdesob0b7y@*h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://takback.soroushes.tk", "https://www.takback.soroushes.tk"]
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ["https://takback.soroushes.tk", "https://www.takback.soroushes.tk"]
 # Application definition
