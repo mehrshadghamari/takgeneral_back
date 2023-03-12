@@ -101,7 +101,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'otp': '1/min',
+        'otp': '10/hour',
         'verfiy_code': '3/min',
     }
 
