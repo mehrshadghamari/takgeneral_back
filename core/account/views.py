@@ -146,7 +146,7 @@ class UserVerifyOTP(APIView):
 
         # cached_code=cache.get(str(phone_number))
         cached_code = r.get(str(phone_number)).decode()
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         if code != cached_code:
             return Response({"msg": "code not matched"}, status=status.HTTP_403_FORBIDDEN)
         token = get_tokens_for_user(user)
@@ -199,4 +199,4 @@ class UserStatus(APIView):
         p=str(request.user.phone_number)
         print(p[2:])
         phone_number='0'+p[2:]
-        return Response({'phone_numer':phone_number,'full_name':request.user.full_name})
+        return Response({'phone_number':phone_number,'full_name':request.user.full_name})
