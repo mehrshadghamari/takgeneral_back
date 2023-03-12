@@ -173,7 +173,7 @@ class UserAddInfo(APIView):
 
 
 
-class UserAddAdress(APIView):
+class UserAdress(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
