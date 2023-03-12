@@ -169,7 +169,7 @@ class MyUser(User):
 
 class Address (models.Model):
     user=models.ForeignKey('account.MyUser',on_delete=models.CASCADE)
-    address_name=models.CharField(max_length=80)
+    title=models.CharField(max_length=80)
     post_code=models.CharField(max_length=10)
     full_address=models.TextField()
     pelak=models.IntegerField()

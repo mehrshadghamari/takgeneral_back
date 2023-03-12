@@ -28,6 +28,7 @@ from account.serializers import LogOutSerializer,UserRegisterOrLoginSendOTpSeria
 
 from account.models import MyUser,Address
 
+# r = redis.Redis(host='localhost', port=6379, db=0)
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 
@@ -119,8 +120,10 @@ class UserRegisterOrLoginSendOTp (APIView):
                     phone_number=phone_number,)
 
             code = random.randint(10000, 99999)
-            code=cache.set(str(phone_number), code,2*60)
-            code=cache.get(str(phone_number))
+            r.setex(str(phone_number), timedelta(minutes=2), value=code)
+            code=r.get(str(phone_number)).decode()
+            # code=cache.set(str(phone_number), code,2*60)
+            # code=cache.get(str(phone_number))
 
             return Response({"msg": "code sent successfully","code":code,"registered":registered}, status=status.HTTP_200_OK)
         
@@ -141,9 +144,10 @@ class UserVerifyOTP(APIView):
         except MyUser.DoesNotExist:
             return Response({'msg':'user with this phone number does not exist'})
 
-        cached_code=cache.get(str(phone_number))
-        
-        if int(code) != cached_code:
+        # cached_code=cache.get(str(phone_number))
+        cached_code = r.get(str(phone_number)).decode()
+        import pdb; pdb.set_trace()
+        if code != cached_code:
             return Response({"msg": "code not matched"}, status=status.HTTP_403_FORBIDDEN)
         token = get_tokens_for_user(user)
         return Response({"token":token,}, status=status.HTTP_201_CREATED)
