@@ -14,7 +14,7 @@ class Slider(models.Model):
 class Product(models.Model):
     title=models.CharField(max_length=64)
     description = models.TextField()
-    image=models.ImageField()
+    product_image=models.ImageField()
     url = models.CharField(max_length=64,null=True)
 
 

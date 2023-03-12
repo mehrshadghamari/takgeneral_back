@@ -23,15 +23,15 @@ class SliderSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image_url')
+    product_image = serializers.SerializerMethodField('get_product_image_url')
 
     class Meta:
         model=Product
         fields='__all__'
 
-    def get_image_url(self, obj):
+    def get_product_image_url(self, obj):
         request = self.context.get('request')
-        product_image_url = obj.image.url
+        product_image_url = obj.product_image.url
         return request.build_absolute_uri(product_image_url)
     
 
