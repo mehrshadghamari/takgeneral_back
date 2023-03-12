@@ -143,7 +143,7 @@ class UserVerifyOTP(APIView):
 
         cached_code=cache.get(str(phone_number))
         
-        if str(code) != str(cached_code):
+        if int(code) != cached_code:
             return Response({"msg": "code not matched"}, status=status.HTTP_403_FORBIDDEN)
         token = get_tokens_for_user(user)
         return Response({"token":token,}, status=status.HTTP_201_CREATED)
