@@ -17,7 +17,7 @@ class ProductCategory(models.Model):
     name=models.CharField(max_length=255)
 
     def __str__(self):
-        return self.neme
+        return self.name
     
 
 
