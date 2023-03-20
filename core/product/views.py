@@ -15,6 +15,6 @@ class HomePompDetail(APIView):
 
 class ProductID(APIView):
     def get(self,request):
-        ids=Product.objects.all().values_list('id')[:30]
+        ids=Product.objects.all().values('id')('id')[:30]
         srz=ProductIDSerializer(ids)
         return Response(srz.data,status=status.HTTP_200_OK)
