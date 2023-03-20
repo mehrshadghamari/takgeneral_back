@@ -70,16 +70,16 @@ class Product(models.Model):
     @property
     def warranty(self):
         if self.waranty_tamir==False and self.waranty_taviz==False:
-            return f'گارانتی تعویض و تعمیر ندارد'
+            return ''
 
         elif self.waranty_taviz==False:
-            return f'{self.month_of_waranty} ماه گارانتی تعمیر دارد'
+            return f'{self.month_of_waranty} ماه گارانتی تعمیر '
 
         elif self.waranty_tamir==False:
-            return f'{self.month_of_waranty} ماه گارانتی تعویض دارد'
+            return f'{self.month_of_waranty} ماه گارانتی تعویض '
 
         elif self.waranty_taviz==True and self.waranty_tamir==True:
-            return f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر دارد'
+            return f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
 
 
 
