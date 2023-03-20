@@ -178,7 +178,7 @@ class UserAdress(APIView):
 
     def get(self,request):
         user_address = Address.objects.filter(user__id = request.user.id)        
-        serializer = UserAddressSerializer(user_address)
+        serializer = UserAddressSerializer(user_address,many=True)
         return Response(serializer.data,status = status.HTTP_200_OK)
 
     def post(self,request):
