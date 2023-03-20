@@ -200,7 +200,7 @@ class UserStatus(APIView):
         print(p[2:])
         phone_number='0'+p[2:]
         if not request.user.full_name:
-            full_name=''
+            full_name=0
         else:
             full_name=request.user.full_name
         return Response({'phone_number':phone_number,'full_name':full_name})
