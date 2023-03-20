@@ -62,7 +62,7 @@ class Product(models.Model):
 
 
     @property
-    def pomp_available(self):
+    def product_available(self):
         if self.count_of_product==0:
             return False
         return True
