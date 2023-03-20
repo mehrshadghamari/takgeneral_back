@@ -3,6 +3,6 @@ from product import views
 
 
 urlpatterns = [
-    path('HomePompDetail/<int:id>/',views.HomePompDetail.as_view()),
+    path('product-detail/<int:id>/',views.HomePompDetail.as_view()),
     
 ]
