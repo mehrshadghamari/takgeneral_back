@@ -39,7 +39,7 @@ class AttributeSerilizer(serializers.ModelSerializer):
     title=serializers.SerializerMethodField('get_title')
     class Meta:
         model=Attribute
-        fields=('title','value',)
+        fields=('id','title','value',)
 
     def get_title(self,obj):
         return obj.title.name
