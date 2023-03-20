@@ -68,7 +68,7 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Product
-        fields='__all__'
+        # fields='__all__'
         exclude = ('count_of_product','waranty_tamir','waranty_taviz','month_of_waranty',)
 
 
