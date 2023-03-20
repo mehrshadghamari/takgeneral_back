@@ -199,4 +199,8 @@ class UserStatus(APIView):
         p=str(request.user.phone_number)
         print(p[2:])
         phone_number='0'+p[2:]
-        return Response({'phone_number':phone_number,'full_name':request.user.full_name})
+        if not request.user.full_name:
+            full_name=None
+        else:
+            full_name=request.user.full_name
+        return Response({'phone_number':phone_number,'full_name':full_name})

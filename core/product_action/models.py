@@ -9,6 +9,15 @@ class favorites(models.Model):
 
 
 class comments (models.Model):
-    pass
+    comment_status=(
+            ('initial','initial'),
+            ('active','active')
+            )
+    status = models.CharField(choices=comment_status,max_length=10)
+    description=models.TextField()
+
+    reply=models.ForeignKey('self')
+    
+
 
 

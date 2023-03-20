@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from extention.models import Slider,Product,Advertisement
+from extention.models import Slider,ProductClassification,Advertisement
 
 
 class SliderSerializer(serializers.ModelSerializer):
@@ -22,11 +22,11 @@ class SliderSerializer(serializers.ModelSerializer):
         return request.build_absolute_uri(pc_image_url)
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductClassificationSerializer(serializers.ModelSerializer):
     product_image = serializers.SerializerMethodField('get_product_image_url')
 
     class Meta:
-        model=Product
+        model=ProductClassification
         fields='__all__'
 
     def get_product_image_url(self, obj):

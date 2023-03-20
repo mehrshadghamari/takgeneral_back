@@ -11,7 +11,7 @@ class Slider(models.Model):
 
 
 
-class Product(models.Model):
+class ProductClassification(models.Model):
     name=models.CharField(max_length=64)
     description = models.TextField()
     product_image=models.ImageField()
@@ -26,23 +26,23 @@ class Advertisement(models.Model):
     url = models.CharField(max_length=64,null=True)
 
 
-class PompMain(models.Model):
-    name=models.CharField(max_length=64)
-    image=models.ImageField()
-    url = models.CharField(max_length=64,null=True)
+# class PompMain(models.Model):
+    # name=models.CharField(max_length=64)
+    # image=models.ImageField()
+    # url = models.CharField(max_length=64,null=True)
 
 
 
-class PompType(models.Model):
-    name=models.CharField(max_length=64)
-    image=models.ImageField()
-    url = models.CharField(max_length=64,null=True)
+# class PompType(models.Model):
+    # name=models.CharField(max_length=64)
+    # image=models.ImageField()
+    # url = models.CharField(max_length=64,null=True)
 
 
-class PompBrand(models.Model):
-    name=models.CharField(max_length=64)
-    image=models.CharField(max_length=64)
-    url =models.CharField(max_length=64,null=True)
+# class PompBrand(models.Model):
+    # name=models.CharField(max_length=64)
+    # image=models.ImageField()
+    # url =models.CharField(max_length=64,null=True)
 
 
 
