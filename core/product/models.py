@@ -23,7 +23,7 @@ class ProductCategory(models.Model):
 
 class ProductBrand(models.Model):
     name=models.CharField(max_length=64)
-    image=models.ImageField()
+    image=models.ImageField(null=True)
 
     def __str__(self) :
         return self.name
@@ -33,7 +33,7 @@ class ProductBrand(models.Model):
 
 class Product(models.Model):
     name=models.CharField(max_length=64)
-    country=models.CharField(max_length=64,choices=keshvar_sazande_choice)
+    # country=models.CharField(max_length=64,choices=keshvar_sazande_choice)
     category=models.ManyToManyField('product.ProductCategory')
     brand=models.ForeignKey('product.ProductBrand',on_delete=models.CASCADE)
     model_brand=models.CharField(max_length=64)
@@ -92,13 +92,14 @@ class TitleAttribute(models.Model):
         return self .name
 
 
+
 class Attribute(models.Model):
     title=models.ForeignKey('product.TitleAttribute',on_delete=models.CASCADE)
     value=models.CharField(max_length=127)
     product=models.ForeignKey('product.Product',on_delete=models.CASCADE,related_name='attributes')
 
     def __str__(self):
-        return f'{self.title}  {self.value}'
+        return f'{self.title}  {self.value}  '
 
     # power=models.FloatField(verbose_name='tavane')
     # min_head=models.FloatField(verbose_name='hadeaghal ertefae popmaj')
@@ -183,7 +184,6 @@ class Attribute(models.Model):
     # @property
     # def similar_pomp(self):
         # return HomePomp.objects.filter(voltage__gte=self.voltage-.5,voltage__lte=self.voltage+.5)
-
 
 
 
