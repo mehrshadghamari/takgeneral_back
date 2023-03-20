@@ -59,7 +59,6 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
     attributes=AttributeSerilizer(many=True)
     other_images=productImaagesSerilizer(many=True)
 
-
     brand=serializers.SerializerMethodField('get_brand')
     final_price=serializers.FloatField()
     pomp_available=serializers.BooleanField()
@@ -76,3 +75,9 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
 
     def get_brand(self,obj):
         return obj.brand.name
+    
+
+class ProductIDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Product
+        fields=('id',)
