@@ -62,7 +62,7 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
     brand=serializers.SerializerMethodField('get_brand')
     final_price=serializers.FloatField()
     product_available=serializers.BooleanField()
-    waranty=serializers.CharField()
+    warranty=serializers.CharField()
 
 
     class Meta:

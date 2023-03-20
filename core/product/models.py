@@ -68,7 +68,7 @@ class Product(models.Model):
         return True
 
     @property
-    def waranty(self):
+    def warranty(self):
         if self.waranty_tamir==False and self.waranty_taviz==False:
             return f'گارانتی تعویض و تعمیر ندارد'
 
