@@ -78,7 +78,7 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
     
 
 
-class Product(serializers.ModelSerializer):
+class AllProductSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product
         fields=('id','name','main_image','price','final_price','discount',)

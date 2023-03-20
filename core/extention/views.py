@@ -3,8 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from extention.models import Slider,ProductClassification,Advertisement
+from product.models import Product
 from extention.serializers import SliderSerializer,ProductClassificationSerializer,AdvertisementSerilizer
-
+from product.serializers import AllProductSerializer
 
 
 
@@ -22,7 +23,9 @@ class HomeApi(APIView):
         slider_serializer = SliderSerializer(slider,many=True,context={"request": request})
         products = ProductClassification.objects.all()
         products_serializer = ProductClassificationSerializer(products,many=True,context={"request": request})
-        return Response({'sliders':slider_serializer.data,'products':products_serializer.data,},status=status.HTTP_200_OK)
+        special_offer_products=Product.objects.filter(special_offer=True)
+        special_offer_serializer=AllProductSerializer(special_offer_products,many=True,context={"request": request})
+        return Response({'sliders':slider_serializer.data,'products':products_serializer.data,'special_offer_products':special_offer_serializer.data},status=status.HTTP_200_OK)
     
 
 

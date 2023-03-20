@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from .models import Product
 from .serializers import HomePompDetailSerializer,ProductIDSerializer
 
-class HomePompDetail(APIView):
+class ProductDetail(APIView):
     def get(self,request,id):
         # pomp_instance=Product.objects.filter(id=id).first()
         pomp_instance=get_object_or_404(Product,id=id)
