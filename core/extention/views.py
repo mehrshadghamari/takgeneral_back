@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import F,Q
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -25,7 +26,10 @@ class HomeApi(APIView):
         products_serializer = ProductClassificationSerializer(products,many=True,context={"request": request})
         special_offer_products=Product.objects.filter(special_offer=True)
         special_offer_serializer=AllProductSerializer(special_offer_products,many=True,context={"request": request})
-        return Response({'sliders':slider_serializer.data,'products':products_serializer.data,'special_offer_products':special_offer_serializer.data},status=status.HTTP_200_OK)
+        # Product.objects.filter(discount__gte=20).union()
+        amazing_offer_product=Product.objects.annotate(ekhtelaf=F('price') - F('final_price')).filter(ekhtelaf__gte=1000000)
+        amazing_offer_serializer=AllProductSerializer(amazing_offer_product,many=True,context={"request": request})
+        return Response({'sliders':slider_serializer.data,'products':products_serializer.data,'special_offer_products':special_offer_serializer.data,'amazing_offer_product':amazing_offer_serializer.data},status=status.HTTP_200_OK)
     
 
 
