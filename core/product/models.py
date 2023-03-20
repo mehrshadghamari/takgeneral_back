@@ -83,6 +83,8 @@ class Product(models.Model):
 
 
 
+    def __str__(self):
+        return  f'id {self.id}  name {self.name} ' 
 
 
 class TitleAttribute(models.Model):
@@ -99,7 +101,7 @@ class Attribute(models.Model):
     product=models.ForeignKey('product.Product',on_delete=models.CASCADE,related_name='attributes')
 
     def __str__(self):
-        return f'{self.title}  {self.value}  '
+        return f'{self.title}  {self.value}  for {self.product.name}'
 
     # power=models.FloatField(verbose_name='tavane')
     # min_head=models.FloatField(verbose_name='hadeaghal ertefae popmaj')
