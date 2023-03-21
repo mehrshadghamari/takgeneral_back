@@ -1,4 +1,5 @@
-from django.db import models,F
+from django.db import models
+from django.db.models import F,Q
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .choices import keshvar_sazande_choice,kase_seyl_choice,khazen_choice,faz_choice,volt_choice,jense_ababand_choice,jense_badane_choice,jense_parvane_choice,jense_shaft_choice,jense_simpich_choice,jense_vaset_choice,jese_poste_va_paye_choice,daraje_hefazati_motor_choice,yataghan_choice
 
