@@ -26,6 +26,10 @@ class Advertisement(models.Model):
     url = models.CharField(max_length=64,null=True)
 
 
+
+
+
+
 # class PompMain(models.Model):
     # name=models.CharField(max_length=64)
     # image=models.ImageField()
