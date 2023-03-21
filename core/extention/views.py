@@ -27,7 +27,7 @@ class HomeApi(APIView):
         special_offer_products=Product.objects.filter(special_offer=True)
         special_offer_serializer=AllProductSerializer(special_offer_products,many=True,context={"request": request})
         # amazing_offer_product=Product.objects.filter(discount__gte=20)
-        amazing_offer_product=Product.objects.with_final_price().annotate(ekhtelaf=F('price') - F('final_price_Manager')).filter(Q(ekhtelaf__gte=1000000) | Q(discount__gte=10))
+        amazing_offer_product=Product.objects.with_final_price().annotate(ekhtelaf=F('price') - F('final_price_Manager')).filter(Q(ekhtelaf__gte=1000000) | Q(discount__gte=20))
         # amazing_offer_product=Product.objects.annotate(final_price=F('price')-(F('price')*F('discount')/100)).annotate(ekhtelaf=F('price') - F('final_price')).filter(ekhtelaf__gte=1000000)
         # amazing_offer_product=Product.objects.annotate(ekhtelaf=F('price') - F('final_price')).filter(ekhtelaf__gte=1000000)
         amazing_offer_serializer=AllProductSerializer(amazing_offer_product,many=True,context={"request": request})
