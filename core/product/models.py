@@ -30,7 +30,7 @@ class ProductBrand(models.Model):
         return self.name
 
 
-class ProductManager(models.manager):
+class ProductManager(models.Manager):
     def with_final_price(self):
         return self.annotate(final_price=F('price')-(F('price')*F('discount')/100))
 
