@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'django_filters',
     'account',
     'extention',
     'product',
@@ -104,7 +105,12 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'otp': '10/hour',
         'verfiy_code': '3/min',
-    }
+    },
+    'DEFAULT_FILTER_BACKENDS': [
+    'django_filters.rest_framework.DjangoFilterBackend',
+    'rest_framework.filters.SearchFilter',
+    'rest_framework.filters.OrderingFilter',
+    ]
 
 }
 
