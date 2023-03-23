@@ -24,7 +24,7 @@ class ProductID(APIView):
 
 
 
-class AllProductsView(generics.ListAPIVie):
+class AllProductsView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = AllProductSerializer
     filterset_fields = ['brand__name']
