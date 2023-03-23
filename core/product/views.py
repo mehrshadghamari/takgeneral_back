@@ -62,14 +62,14 @@ class AllProducts(APIView):
         category = self.request.query_params.get('category', None)
         if category is not None:
             product_query = product_query.filter(category__name=category)
-            # brand_query = brand_query.filter(product__category__name=category)
-            brand_query = brand_query.filter(product__in=product_query)
+            brand_query = brand_query.filter(product__category__name=category)
+            # brand_query = brand_query.filter(product__in=product_query)
 
         brand = self.request.query_params.get('brand', None) 
         if brand is not None:
             product_query=product_query.filter(brand__name=brand)
-            # brand_query = brand_query.filter(product__brand__name=brand)
-            brand_query = brand_query.filter(product__in=product_query)
+            brand_query = brand_query.filter(product__brand__name=brand)
+            # brand_query = brand_query.filter(product__in=product_query)
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
