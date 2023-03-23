@@ -26,14 +26,14 @@ class ProductID(APIView):
 class AllProducts(APIView):
     filterset_fields = ['brand__name']
     # ordering_fields = []
-    search_fileds = [
-        'name',      
-        'category',        
-        'brand',
-    ]
+    # search_fileds = [
+        # 'name',      
+        # 'category',        
+        # 'brand',
+    # ]
     def get(self,request):
         all_products = Product.objects.all()
-        serializer = AllProducts(all_products,many=True)
+        serializer = AllProducts(all_products,many=True,context={"request": request})
         # Product.objects.aggregate(count_of_brands=Count('brand'))
         return Response(serializer.data,status=status.HTTP_200_OK)
 
