@@ -56,34 +56,33 @@ class AllPomps(generics.ListAPIView):
 
 class AllProducts(APIView):
     def get(self,request):
-        query=Product.objects.with_final_price()
-
+        product_query=Product.objects.with_final_price()
+        brand_query = ProductBrand.objects.annotate(product_count=Count('product'))
 
         category = self.request.query_params.get('category', None)
         if category is not None:
-            query=query.filter(category__name=category)
-            count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
-        else:
-            count_of_product_brand = ProductBrand.objects.annotate(product_count=Count('product'))
-
+            product_query = product_query.filter(category__name=category)
+            # brand_query = brand_query.filter(product__category__name=category)
+            brand_query = brand_query.filter(product__in=product_query)
 
         brand = self.request.query_params.get('brand', None) 
         if brand is not None:
-            query=query.filter(brand__name=brand)
-
+            product_query=product_query.filter(brand__name=brand)
+            # brand_query = brand_query.filter(product__brand__name=brand)
+            brand_query = brand_query.filter(product__in=product_query)
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
-            query=query.filter(price__gte=int(min_price),price__lte=int(max_price)) 
-
+            product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            brand_query = brand_query.filter(product__in=product_query)
 
         # if category is not None:
             # count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
         # else:    
             # count_of_product_brand = ProductBrand.objects.annotate(product_count=Count('product'))
-        product_serializer= AllProductSerializer(query,many=True)    
-        count_of_product_brand_serilizer = productCountFromSpecificBrand(count_of_product_brand,many=True)
+        product_serializer= AllProductSerializer(product_query,many=True)    
+        count_of_product_brand_serilizer = productCountFromSpecificBrand(brand_query,many=True)
         return Response({'product':product_serializer.data,'The number of assignments of a brand':count_of_product_brand_serilizer.data},status=status.HTTP_200_OK)
 # class AllPomps(APIView):
 #     filterset_fields = ['brand__name']
