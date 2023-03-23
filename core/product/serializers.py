@@ -79,10 +79,14 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
 
 
 class AllProductSerializer(serializers.ModelSerializer):
+    brand=serializers.SerializerMethodField('get_brand')
+
     class Meta:
         model=Product
-        fields=('id','name','main_image','price','final_price','discount','brand__name')
+        fields=('id','name','main_image','price','final_price','discount','brand')
 
+    def get_brand(self,obj):
+        return obj.brand.name
 
 
 class ProductIDSerializer(serializers.ModelSerializer):
