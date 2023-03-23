@@ -53,18 +53,38 @@ class AllPomps(generics.ListAPIView):
         return Product.objects.filter(category__name='پمپ')        
 
 
+
 class AllProducts(APIView):
     def get(self,request):
-        category = self.request.query_params.get('category') 
-        brand = self.request.query_params.get('brand') 
-        min_price = self.request.query_params.get('min_price') 
-        max_price = self.request.query_params.get('max_price') 
+        query=Product.objects.with_final_price()
+
+
+        category = self.request.query_params.get('category', None)
         if category is not None:
+            query=query.filter(category__name=category)
             count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
-        else:    
+        else:
             count_of_product_brand = ProductBrand.objects.annotate(product_count=Count('product'))
+
+
+        brand = self.request.query_params.get('brand', None) 
+        if brand is not None:
+            query=query.filter(brand__name=brand)
+
+
+        min_price = self.request.query_params.get('min_price', None) 
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price and max_price is not None:
+            query=query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+
+
+        # if category is not None:
+            # count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
+        # else:    
+            # count_of_product_brand = ProductBrand.objects.annotate(product_count=Count('product'))
+        product_serializer= AllProductSerializer(query,many=True)    
         count_of_product_brand_serilizer = productCountFromSpecificBrand(count_of_product_brand,many=True)
-        return Response(count_of_product_brand_serilizer.data,status=status.HTTP_200_OK)
+        return Response({'product':product_serializer.data,'The number of assignments of a brand':count_of_product_brand_serilizer.data},status=status.HTTP_200_OK)
 # class AllPomps(APIView):
 #     filterset_fields = ['brand__name']
 #     # ordering_fields = []
