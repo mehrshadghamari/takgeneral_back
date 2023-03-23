@@ -24,7 +24,8 @@ class ProductID(APIView):
 
 
 
-class AllProductsView(generics.ListAPIView):
+
+class AllProducts(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = AllProductSerializer
     filterset_fields = ['brand__name']
@@ -32,22 +33,23 @@ class AllProductsView(generics.ListAPIView):
     'name',      
     'category__name',        
     'brand__name',
-]
+    ]
+    
 
-class AllProducts(APIView):
-    # filterset_fields = ['brand__name']
-    # ordering_fields = []
-    # search_fileds = [
-        # 'name',      
-        # 'category',        
-        # 'brand',
-    # ]
-    def get(self,request):
-        all_products = Product.objects.all()
-        serializer = AllProductSerializer(all_products,many=True,context={"request": request})
-        # Product.objects.aggregate(count_of_brands=Count('brand'))
-        return Response(serializer.data,status=status.HTTP_200_OK)
 
+
+
+class AllPomps(generics.ListAPIView):
+    serializer_class = AllProductSerializer
+    filterset_fields = ['brand__name']
+    search_fields = [
+    'name',      
+    'category__name',        
+    'brand__name',
+    ]
+
+    def get_queryset(self):
+        return Product.objects.filter(category__name='پمپ')        
 
 
 # class AllPomps(APIView):
