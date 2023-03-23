@@ -24,13 +24,13 @@ class ProductID(APIView):
 
 
 class AllProducts(APIView):
-    filterset_fields = ['brand__name']
+    # filterset_fields = ['brand__name']
     # ordering_fields = []
-    search_fileds = [
-        'name',      
-        'category',        
-        'brand',
-    ]
+    # search_fileds = [
+        # 'name',      
+        # 'category',        
+        # 'brand',
+    # ]
     def get(self,request):
         all_products = Product.objects.all()
         serializer = AllProductSerializer(all_products,many=True,context={"request": request})
