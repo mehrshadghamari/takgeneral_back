@@ -31,7 +31,7 @@ class AllProductsView(generics.ListAPIView):
     search_fields = [
     'name',      
     'category',        
-    'brand',
+    'brand__name',
 ]
 
 class AllProducts(APIView):
