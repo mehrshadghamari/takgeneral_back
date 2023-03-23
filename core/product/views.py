@@ -28,7 +28,7 @@ class AllProductsView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = AllProductSerializer
     filterset_fields = ['brand__name']
-    search_fileds = [
+    search_fields = [
     'name',      
     'category',        
     'brand',
