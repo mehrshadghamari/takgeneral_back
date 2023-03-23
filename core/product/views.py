@@ -28,7 +28,7 @@ class ProductID(APIView):
 class AllProducts(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = AllProductSerializer
-    filterset_fields = ['brand__name','price__gte','price__lte']
+    filterset_fields = ['brand__name']
     search_fields = [
     'name',      
     'category__name',        
@@ -41,7 +41,7 @@ class AllProducts(generics.ListAPIView):
 
 class AllPomps(generics.ListAPIView):
     serializer_class = AllProductSerializer
-    filterset_fields = ['brand__name','price__gte','price__lte']
+    filterset_fields = ['brand__name']
     search_fields = [
     'name',      
     'category__name',        
