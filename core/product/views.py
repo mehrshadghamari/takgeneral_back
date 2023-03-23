@@ -75,7 +75,7 @@ class AllProducts(APIView):
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
-            query=query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            query=query.filter(price__gte=int(min_price),price__lte=int(max_price)) 
 
 
         # if category is not None:
