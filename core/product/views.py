@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import Product
-from .serializers import HomePompDetailSerializer,ProductIDSerializer
+from .serializers import HomePompDetailSerializer,ProductIDSerializer,AllProductSerializer
 
 class ProductDetail(APIView):
     def get(self,request,id):
@@ -26,14 +26,14 @@ class ProductID(APIView):
 class AllProducts(APIView):
     filterset_fields = ['brand__name']
     # ordering_fields = []
-    # search_fileds = [
-        # 'name',      
-        # 'category',        
-        # 'brand',
-    # ]
+    search_fileds = [
+        'name',      
+        'category',        
+        'brand',
+    ]
     def get(self,request):
         all_products = Product.objects.all()
-        serializer = AllProducts(all_products,many=True,context={"request": request})
+        serializer = AllProductSerializer(all_products,many=True,context={"request": request})
         # Product.objects.aggregate(count_of_brands=Count('brand'))
         return Response(serializer.data,status=status.HTTP_200_OK)
 
