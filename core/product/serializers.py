@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product,ProductCategory,Attribute,ProductImage
+from .models import Product,ProductCategory,Attribute,ProductImage,ProductBrand
 
 
 
@@ -93,3 +93,10 @@ class ProductIDSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product
         fields=('id',)
+
+
+class productCountFromSpecificBrand(serializers.ModelSerializer):
+    product_count=serializers.IntegerField()
+    class Meta:
+        model=ProductBrand
+        fields=('id','name','product_count',)

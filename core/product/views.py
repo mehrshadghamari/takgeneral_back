@@ -3,9 +3,10 @@ from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+# from rest_framework.filters import 
 from rest_framework import generics
-from .models import Product
-from .serializers import HomePompDetailSerializer,ProductIDSerializer,AllProductSerializer
+from .models import Product,ProductBrand
+from .serializers import HomePompDetailSerializer,ProductIDSerializer,AllProductSerializer,productCountFromSpecificBrand
 
 class ProductDetail(APIView):
     def get(self,request,id):
@@ -25,15 +26,15 @@ class ProductID(APIView):
 
 
 
-class AllProducts(generics.ListAPIView):
-    queryset = Product.objects.all()
-    serializer_class = AllProductSerializer
-    filterset_fields = ['brand__name']
-    search_fields = [
-    'name',      
-    'category__name',        
-    'brand__name',
-    ]
+# class AllProducts(generics.ListAPIView):
+    # queryset = Product.objects.all()
+    # serializer_class = AllProductSerializer
+    # filterset_fields = ['brand__name']
+    # search_fields = [
+    # 'name',      
+    # 'category__name',        
+    # 'brand__name',
+    # ]
     
 
 
@@ -52,6 +53,16 @@ class AllPomps(generics.ListAPIView):
         return Product.objects.filter(category__name='پمپ')        
 
 
+class AllProducts(APIView):
+    def get(self,request):
+        category = self.request.query_params.get('category') 
+        brand = self.request.query_params.get('brand') 
+        min_price = self.request.query_params.get('min_price') 
+        max_price = self.request.query_params.get('max_price') 
+
+        count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
+        count_of_product_brand_serilizer = productCountFromSpecificBrand(count_of_product_brand,many=True)
+        return Response(count_of_product_brand_serilizer.data,status=status.HTTP_200_OK)
 # class AllPomps(APIView):
 #     filterset_fields = ['brand__name']
 #     # ordering_fields = []
