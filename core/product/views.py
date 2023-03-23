@@ -3,6 +3,7 @@ from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework import generics
 from .models import Product
 from .serializers import HomePompDetailSerializer,ProductIDSerializer,AllProductSerializer
 
@@ -20,8 +21,18 @@ class ProductID(APIView):
         ids=Product.objects.all()[:30]
         srz=ProductIDSerializer(ids,many=True)
         return Response(srz.data,status=status.HTTP_200_OK)
-    
 
+
+
+class AllProductsView(generics.ListAPIVie):
+    queryset = Product.objects.all()
+    serializer_class = AllProductSerializer
+    filterset_fields = ['brand__name']
+    search_fileds = [
+    'name',      
+    'category',        
+    'brand',
+]
 
 class AllProducts(APIView):
     # filterset_fields = ['brand__name']
