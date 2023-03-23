@@ -60,7 +60,8 @@ class AllProducts(APIView):
         min_price = self.request.query_params.get('min_price') 
         max_price = self.request.query_params.get('max_price') 
 
-        count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
+        # count_of_product_brand = ProductBrand.objects.filter(product__category__name=category).annotate(product_count=Count('product'))
+        count_of_product_brand = ProductBrand.objects.annotate(product_count=Count('product'))
         count_of_product_brand_serilizer = productCountFromSpecificBrand(count_of_product_brand,many=True)
         return Response(count_of_product_brand_serilizer.data,status=status.HTTP_200_OK)
 # class AllPomps(APIView):
