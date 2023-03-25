@@ -26,34 +26,235 @@ class ProductID(APIView):
 
 
 
-class AllProducts(APIView):
-    def get(self,request):
-        product_query=Product.objects.with_final_price()
-        brand_query = ProductBrand.objects.annotate(product_count=Count('product'))
+# class AllProducts(APIView):
+#     def get(self,request):
+#         product_query=Product.objects.with_final_price()
 
-        category = self.request.query_params.get('category', None)
-        if category is not None:
-            product_query = product_query.filter(category__name=category)
-            brand_query = brand_query.filter(product__category__name=category)
-            # brand_query = brand_query.filter(product__in=product_query)
+
+#         category = self.request.query_params.get('category', None)
+#         if category is not None:
+#             product_query = product_query.filter(category__name=category)
+#             brand_query = brand_query.filter(product__category__name=category)
+#             # brand_query = brand_query.filter(product__in=product_query)
+
+
+        # brand = self.request.query_params.getlist('brand[]')
+        # if brand:
+        #     product_query=product_query.filter(brand__name__in=brand)
+
+
+        # min_price = self.request.query_params.get('min_price', None) 
+        # max_price = self.request.query_params.get('max_price', None)
+        # if min_price and max_price:
+        #     product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            
+
+        # ordering = self.request.query_params.get('ordering', None)
+        # if ordering is not None:
+        #     if ordering=='asc':
+        #         product_query = product_query.order_by('final_price_Manager')
+        #     elif ordering=='des':
+        #         product_query = product_query.order_by('-final_price_Manager')
+
+
+        # product_serializer= AllProductSerializer(product_query,many=True) 
+        # brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        # return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+
+
+
+
+class Pomps(APIView):
+    def get(self,request):
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ')
+
 
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
             product_query=product_query.filter(brand__name__in=brand)
-            brand_query = brand_query.filter(product__brand__name__in=brand)
-            # brand_query = brand_query.filter(product__in=product_query)
+
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            brand_query = brand_query.filter(product__in=product_query)
+            
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering=='asc':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering=='des':
+                product_query = product_query.order_by('-final_price_Manager')
 
 
-        product_serializer= AllProductSerializer(product_query,many=True)    
-        count_of_product_brand_serilizer = productCountFromSpecificBrand(brand_query,many=True)
-        return Response({'product':product_serializer.data,'The number of assignments of a brand':count_of_product_brand_serilizer.data},status=status.HTTP_200_OK)
+        product_serializer= AllProductSerializer(product_query,many=True) 
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
 
 
 
+
+class HomePomps(APIView):
+    def get(self,request):
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی')
+
+
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__name__in=brand)
+
+
+        min_price = self.request.query_params.get('min_price', None) 
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price and max_price:
+            product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering=='asc':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering=='des':
+                product_query = product_query.order_by('-final_price_Manager')
+
+
+        product_serializer= AllProductSerializer(product_query,many=True) 
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+
+
+
+
+
+
+class MohitiHomePomps(APIView):
+    def get(self,request):
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی محیطی')
+
+
+
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__name__in=brand)
+
+
+        min_price = self.request.query_params.get('min_price', None) 
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price and max_price:
+            product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering=='asc':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering=='des':
+                product_query = product_query.order_by('-final_price_Manager')
+
+
+        product_serializer= AllProductSerializer(product_query,many=True) 
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+
+    
+
+
+
+
+class BoshghabiHomePomps(APIView):
+    def get(self,request):
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی بشقابی')
+
+
+
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__name__in=brand)
+
+
+        min_price = self.request.query_params.get('min_price', None) 
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price and max_price:
+            product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering=='asc':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering=='des':
+                product_query = product_query.order_by('-final_price_Manager')
+
+
+        product_serializer= AllProductSerializer(product_query,many=True) 
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+    
+
+
+
+
+
+class JetiHomePomps(APIView):
+    def get(self,request):
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی جتی')
+
+
+
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__name__in=brand)
+
+
+        min_price = self.request.query_params.get('min_price', None) 
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price and max_price:
+            product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering=='asc':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering=='des':
+                product_query = product_query.order_by('-final_price_Manager')
+
+
+        product_serializer= AllProductSerializer(product_query,many=True) 
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+    
+
+
+
+
+class DoParvaneHomePomps(APIView):
+    def get(self,request):
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی دو پروانه')
+
+
+
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__name__in=brand)
+
+
+        min_price = self.request.query_params.get('min_price', None) 
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price and max_price:
+            product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
+            
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering=='asc':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering=='des':
+                product_query = product_query.order_by('-final_price_Manager')
+
+
+        product_serializer= AllProductSerializer(product_query,many=True) 
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
+        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
