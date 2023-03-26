@@ -8,6 +8,11 @@ from rest_framework import generics
 from .models import Product,ProductBrand
 from .serializers import HomePompDetailSerializer,ProductIDSerializer,AllProductSerializer,productCountFromSpecificBrand
 
+from rest_framework.pagination import LimitOffsetPagination
+from django.core.paginator import Paginator
+import math
+
+
 class ProductDetail(APIView):
     def get(self,request,id):
         # pomp_instance=Product.objects.filter(id=id).first()
@@ -65,6 +70,7 @@ class ProductID(APIView):
 
 
 class Pomps(APIView):
+    
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ')
 
@@ -88,10 +94,17 @@ class Pomps(APIView):
             elif ordering=='des':
                 product_query = product_query.order_by('-final_price_Manager')
 
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = 2
+        # page_size = self.request.query_params.get('page_size', 2)
+        
+        paginator = Paginator(product_query , page_size)
 
-        product_serializer= AllProductSerializer(product_query,many=True) 
+        product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
         brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        page_count = math.ceil(product_query.count()/page_size)
+
+        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
 
 
 
@@ -120,9 +133,17 @@ class HomePomps(APIView):
                 product_query = product_query.order_by('-final_price_Manager')
 
 
-        product_serializer= AllProductSerializer(product_query,many=True) 
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = 2
+        # page_size = self.request.query_params.get('page_size', 2)
+        
+        paginator = Paginator(product_query , page_size)
+
+        product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
         brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        page_count = math.ceil(product_query.count()/page_size)
+
+        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
 
 
 
@@ -154,9 +175,18 @@ class MohitiHomePomps(APIView):
                 product_query = product_query.order_by('-final_price_Manager')
 
 
-        product_serializer= AllProductSerializer(product_query,many=True) 
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = 2
+        # page_size = self.request.query_params.get('page_size', 2)
+        
+        paginator = Paginator(product_query , page_size)
+
+        product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
         brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        page_count = math.ceil(product_query.count()/page_size)
+
+        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+
 
     
 
@@ -188,9 +218,18 @@ class BoshghabiHomePomps(APIView):
                 product_query = product_query.order_by('-final_price_Manager')
 
 
-        product_serializer= AllProductSerializer(product_query,many=True) 
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = 2
+        # page_size = self.request.query_params.get('page_size', 2)
+        
+        paginator = Paginator(product_query , page_size)
+
+        product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
         brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        page_count = math.ceil(product_query.count()/page_size)
+
+        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+
     
 
 
@@ -222,9 +261,18 @@ class JetiHomePomps(APIView):
                 product_query = product_query.order_by('-final_price_Manager')
 
 
-        product_serializer= AllProductSerializer(product_query,many=True) 
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = 2
+        # page_size = self.request.query_params.get('page_size', 2)
+        
+        paginator = Paginator(product_query , page_size)
+
+        product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
         brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        page_count = math.ceil(product_query.count()/page_size)
+
+        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+
     
 
 
@@ -255,6 +303,14 @@ class DoParvaneHomePomps(APIView):
                 product_query = product_query.order_by('-final_price_Manager')
 
 
-        product_serializer= AllProductSerializer(product_query,many=True) 
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = 2
+        # page_size = self.request.query_params.get('page_size', 2)
+        
+        paginator = Paginator(product_query , page_size)
+
+        product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
         brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        return Response({'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        page_count = math.ceil(product_query.count()/page_size)
+
+        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
