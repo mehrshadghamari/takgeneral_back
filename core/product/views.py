@@ -78,7 +78,7 @@ class Pomps(APIView):
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
-            product_query=product_query.filter(brand__name__in=brand)
+            product_query=product_query.filter(brand__id__in=brand)
 
 
         min_price = self.request.query_params.get('min_price', None) 
@@ -89,22 +89,22 @@ class Pomps(APIView):
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
-            if ordering=='asc':
+            if ordering=='price':
                 product_query = product_query.order_by('final_price_Manager')
-            elif ordering=='des':
+            elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
-        page_number = self.request.query_params.get('page_number', 1)
-        page_size = 2
-        # page_size = self.request.query_params.get('page_size', 2)
+        page_number = self.request.query_params.get('page', 1)
+        # page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
         
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        page_count = math.ceil(product_query.count()/page_size)
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        page_count = math.ceil(product_query.count()/int(page_size))
 
-        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
 
 
 
@@ -116,7 +116,7 @@ class HomePomps(APIView):
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
-            product_query=product_query.filter(brand__name__in=brand)
+            product_query=product_query.filter(brand__id__in=brand)
 
 
         min_price = self.request.query_params.get('min_price', None) 
@@ -127,23 +127,22 @@ class HomePomps(APIView):
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
-            if ordering=='asc':
+            if ordering=='price':
                 product_query = product_query.order_by('final_price_Manager')
-            elif ordering=='des':
+            elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
-
-        page_number = self.request.query_params.get('page_number', 1)
-        page_size = 2
-        # page_size = self.request.query_params.get('page_size', 2)
+        page_number = self.request.query_params.get('page', 1)
+        # page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
         
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        page_count = math.ceil(product_query.count()/page_size)
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        page_count = math.ceil(product_query.count()/int(page_size))
 
-        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
 
 
 
@@ -158,7 +157,7 @@ class MohitiHomePomps(APIView):
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
-            product_query=product_query.filter(brand__name__in=brand)
+            product_query=product_query.filter(brand__id__in=brand)
 
 
         min_price = self.request.query_params.get('min_price', None) 
@@ -169,23 +168,22 @@ class MohitiHomePomps(APIView):
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
-            if ordering=='asc':
+            if ordering=='price':
                 product_query = product_query.order_by('final_price_Manager')
-            elif ordering=='des':
+            elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
-
-        page_number = self.request.query_params.get('page_number', 1)
-        page_size = 2
-        # page_size = self.request.query_params.get('page_size', 2)
+        page_number = self.request.query_params.get('page', 1)
+        # page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
         
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        page_count = math.ceil(product_query.count()/page_size)
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        page_count = math.ceil(product_query.count()/int(page_size))
 
-        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
 
 
     
@@ -201,7 +199,7 @@ class BoshghabiHomePomps(APIView):
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
-            product_query=product_query.filter(brand__name__in=brand)
+            product_query=product_query.filter(brand__id__in=brand)
 
 
         min_price = self.request.query_params.get('min_price', None) 
@@ -212,23 +210,22 @@ class BoshghabiHomePomps(APIView):
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
-            if ordering=='asc':
+            if ordering=='price':
                 product_query = product_query.order_by('final_price_Manager')
-            elif ordering=='des':
+            elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
-
-        page_number = self.request.query_params.get('page_number', 1)
-        page_size = 2
-        # page_size = self.request.query_params.get('page_size', 2)
+        page_number = self.request.query_params.get('page', 1)
+        # page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
         
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        page_count = math.ceil(product_query.count()/page_size)
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        page_count = math.ceil(product_query.count()/int(page_size))
 
-        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
 
     
 
@@ -244,7 +241,7 @@ class JetiHomePomps(APIView):
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
-            product_query=product_query.filter(brand__name__in=brand)
+            product_query=product_query.filter(brand__id__in=brand)
 
 
         min_price = self.request.query_params.get('min_price', None) 
@@ -255,23 +252,22 @@ class JetiHomePomps(APIView):
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
-            if ordering=='asc':
+            if ordering=='price':
                 product_query = product_query.order_by('final_price_Manager')
-            elif ordering=='des':
+            elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
-
-        page_number = self.request.query_params.get('page_number', 1)
-        page_size = 2
-        # page_size = self.request.query_params.get('page_size', 2)
+        page_number = self.request.query_params.get('page', 1)
+        # page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
         
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        page_count = math.ceil(product_query.count()/page_size)
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        page_count = math.ceil(product_query.count()/int(page_size))
 
-        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
 
     
 
@@ -286,7 +282,7 @@ class DoParvaneHomePomps(APIView):
 
         brand = self.request.query_params.getlist('brand[]')
         if brand:
-            product_query=product_query.filter(brand__name__in=brand)
+            product_query=product_query.filter(brand__id__in=brand)
 
 
         min_price = self.request.query_params.get('min_price', None) 
@@ -297,20 +293,20 @@ class DoParvaneHomePomps(APIView):
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
-            if ordering=='asc':
+            if ordering=='price':
                 product_query = product_query.order_by('final_price_Manager')
-            elif ordering=='des':
+            elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
-
-        page_number = self.request.query_params.get('page_number', 1)
-        page_size = 2
-        # page_size = self.request.query_params.get('page_size', 2)
+        page_number = self.request.query_params.get('page', 1)
+        # page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
         
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand'))
-        page_count = math.ceil(product_query.count()/page_size)
+        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        page_count = math.ceil(product_query.count()/int(page_size))
 
-        return Response({'real_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brand_count':brand_query},status=status.HTTP_200_OK)
+        return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
+
