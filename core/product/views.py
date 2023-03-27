@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404
-from django.db.models import Count
+from django.db.models import Count,Q
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -74,18 +74,24 @@ class Pomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ')
 
-
-
-        brand = self.request.query_params.getlist('brand[]')
-        if brand:
-            product_query=product_query.filter(brand__id__in=brand)
+        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            
+            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+        brand_query = brand_query_before
+
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__id__in=brand)
+        else:
+            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
@@ -101,7 +107,9 @@ class Pomps(APIView):
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+
         page_count = math.ceil(product_query.count()/int(page_size))
 
         return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
@@ -112,18 +120,24 @@ class Pomps(APIView):
 class HomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی')
-
-
-        brand = self.request.query_params.getlist('brand[]')
-        if brand:
-            product_query=product_query.filter(brand__id__in=brand)
+        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            
+            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+        brand_query = brand_query_before
+        
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__id__in=brand)
+        else:
+            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
@@ -139,7 +153,9 @@ class HomePomps(APIView):
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+
         page_count = math.ceil(product_query.count()/int(page_size))
 
         return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
@@ -153,18 +169,24 @@ class MohitiHomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی محیطی')
 
-
-
-        brand = self.request.query_params.getlist('brand[]')
-        if brand:
-            product_query=product_query.filter(brand__id__in=brand)
+        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            
+            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+        brand_query = brand_query_before
+        
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__id__in=brand)
+        else:
+            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
@@ -180,11 +202,12 @@ class MohitiHomePomps(APIView):
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+
         page_count = math.ceil(product_query.count()/int(page_size))
 
         return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
-
 
     
 
@@ -195,18 +218,24 @@ class BoshghabiHomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی بشقابی')
 
-
-
-        brand = self.request.query_params.getlist('brand[]')
-        if brand:
-            product_query=product_query.filter(brand__id__in=brand)
+        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            
+            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+        brand_query = brand_query_before
+        
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__id__in=brand)
+        else:
+            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
@@ -222,7 +251,9 @@ class BoshghabiHomePomps(APIView):
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+
         page_count = math.ceil(product_query.count()/int(page_size))
 
         return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
@@ -237,18 +268,24 @@ class JetiHomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی جتی')
 
-
-
-        brand = self.request.query_params.getlist('brand[]')
-        if brand:
-            product_query=product_query.filter(brand__id__in=brand)
+        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            
+            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+        brand_query = brand_query_before
+        
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__id__in=brand)
+        else:
+            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
@@ -264,7 +301,9 @@ class JetiHomePomps(APIView):
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+
         page_count = math.ceil(product_query.count()/int(page_size))
 
         return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
@@ -278,18 +317,24 @@ class DoParvaneHomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی دو پروانه')
 
-
-
-        brand = self.request.query_params.getlist('brand[]')
-        if brand:
-            product_query=product_query.filter(brand__id__in=brand)
+        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            
+            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+        brand_query = brand_query_before
+        
+        brand = self.request.query_params.getlist('brand[]')
+        if brand:
+            product_query=product_query.filter(brand__id__in=brand)
+        else:
+            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
 
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
@@ -305,8 +350,9 @@ class DoParvaneHomePomps(APIView):
         paginator = Paginator(product_query , page_size)
 
         product_serializer= AllProductSerializer(paginator.page(page_number),many=True,context={"request": request}) 
-        brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+
+
+
         page_count = math.ceil(product_query.count()/int(page_size))
 
         return Response({'current_page':int(page_number),'page_count':page_count,'product':product_serializer.data,'brands':brand_query},status=status.HTTP_200_OK)
-
