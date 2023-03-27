@@ -65,7 +65,7 @@ class Product(models.Model):
     waranty_taviz=models.BooleanField()
     month_of_waranty=models.IntegerField()
     created_at=models.DateField(auto_now_add=True,null=True)
-    attr=models.JSONField(default=product_json)
+    # attr=models.JSONField(default=product_json)
 
 
 
