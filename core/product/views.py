@@ -137,7 +137,7 @@ class HomePomps(APIView):
         if brand:
             product_query=product_query.filter(brand__id__in=brand)
         else:
-            brand_query =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+            brand_query =  product_query.values('brand__id').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         ordering = self.request.query_params.get('ordering', None)
