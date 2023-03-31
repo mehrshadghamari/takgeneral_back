@@ -121,14 +121,14 @@ class HomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی').order_by('-created_at')
 
-        brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+        brand_query_before =  product_query.values('brand__id').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         min_price = self.request.query_params.get('min_price', None) 
         max_price = self.request.query_params.get('max_price', None)
         if min_price and max_price:
             product_query=product_query.filter(final_price_Manager__gte=int(min_price),final_price_Manager__lte=int(max_price)) 
-            brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
+            brand_query_before =  product_query.values('brand__id').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
         brand_query = brand_query_before
