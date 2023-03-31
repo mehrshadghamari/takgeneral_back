@@ -10,7 +10,7 @@ from .serializers import OrderlistSerializer
 
 class ShoworderlistBeforLogin(APIView):
     def post(self,request):
-        datas = self.request.data['cartsData']
+        datas = self.request.data.get('cartsData',None)
         # datas=[{'id':3,'count':3},{'id':2,'count':1}]
         l=[]
         all_count=0
