@@ -12,6 +12,8 @@ class ShoworderlistBeforLogin(APIView):
     def post(self,request):
         datas = self.request.data.get('cartsData',None)
         # datas=[{'id':3,'count':3},{'id':2,'count':1}]
+        print(datas)
+        print('*********************')
         l=[]
         all_count=0
         for data in datas:

@@ -120,6 +120,7 @@ class Pomps(APIView):
 class HomePomps(APIView):
     def get(self,request):
         product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی').order_by('-created_at')
+
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
@@ -145,8 +146,6 @@ class HomePomps(APIView):
                 product_query = product_query.order_by('final_price_Manager')
             elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
-
-        product_query = product_query.order_by('-created_at')
 
         page_number = self.request.query_params.get('page', 1)
         # page_size = 20
