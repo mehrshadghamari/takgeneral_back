@@ -83,7 +83,7 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Product
-        fields=('id','name','main_image','price','final_price','discount','brand')
+        fields=('id','name','main_image','price','final_price','discount','brand',)
 
     def get_brand(self,obj):
         return obj.brand.name

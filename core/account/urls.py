@@ -1,7 +1,6 @@
 from django.urls import path
 from account import views
 
-# from azbankgateways.urls import az_bank_gateways_urls
 
 
 urlpatterns = [

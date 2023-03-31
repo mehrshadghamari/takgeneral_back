@@ -24,7 +24,7 @@ class ProductDetail(APIView):
 # helping api for front
 class ProductID(APIView):
     def get(self,request):
-        ids=Product.objects.all()[:30]
+        ids=Product.objects.all().values_list('id',flat=True)[:30]
         srz=ProductIDSerializer(ids,many=True)
         return Response(srz.data,status=status.HTTP_200_OK)
 
@@ -72,7 +72,7 @@ class ProductID(APIView):
 class Pomps(APIView):
     
     def get(self,request):
-        product_query=Product.objects.with_final_price().filter(category__name='پمپ')
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ').order_by('-created_at')
 
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
@@ -119,7 +119,7 @@ class Pomps(APIView):
 
 class HomePomps(APIView):
     def get(self,request):
-        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی')
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی').order_by('-created_at')
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
 
@@ -146,6 +146,8 @@ class HomePomps(APIView):
             elif ordering=='-price':
                 product_query = product_query.order_by('-final_price_Manager')
 
+        product_query = product_query.order_by('-created_at')
+
         page_number = self.request.query_params.get('page', 1)
         # page_size = 20
         page_size = self.request.query_params.get('page_size', 20)
@@ -167,7 +169,7 @@ class HomePomps(APIView):
 
 class MohitiHomePomps(APIView):
     def get(self,request):
-        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی محیطی')
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی محیطی').order_by('-created_at')
 
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
@@ -216,7 +218,7 @@ class MohitiHomePomps(APIView):
 
 class BoshghabiHomePomps(APIView):
     def get(self,request):
-        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی بشقابی')
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی بشقابی').order_by('-created_at')
 
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
@@ -266,7 +268,7 @@ class BoshghabiHomePomps(APIView):
 
 class JetiHomePomps(APIView):
     def get(self,request):
-        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی جتی')
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی جتی').order_by('-created_at')
 
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
@@ -315,7 +317,7 @@ class JetiHomePomps(APIView):
 
 class DoParvaneHomePomps(APIView):
     def get(self,request):
-        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی دو پروانه')
+        product_query=Product.objects.with_final_price().filter(category__name='پمپ اب خانگی دو پروانه').order_by('-created_at')
 
         brand_query_before =  product_query.values('brand__name').annotate(product_count=Count('brand')).values('brand__id','brand__name','product_count')
 
