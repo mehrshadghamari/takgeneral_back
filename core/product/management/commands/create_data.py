@@ -157,7 +157,7 @@ class Command(BaseCommand):
         doparvane_category=ProductCategory.objects.filter(name__in=['پمپ','پمپ اب خانگی','پمپ اب خانگی دو پروانه'])
 
         # Generate random data for the mohiti
-        for i in range(30):
+        for i in range(60):
             name = f"Pomp khanegi mohiti {i+1}"
             model_brand = f"Model p-m {i+1}"
             count_of_product = random.randint(1, 100)
@@ -187,7 +187,7 @@ class Command(BaseCommand):
             )
             product.category.set(mohiti_category)
             # Generate random data for the boshghabi
-        for i in range(30):
+        for i in range(60):
             name = f"Pomp khanegi boshghabi {i+1}"
             model_brand = f"Model p-b {i+1}"
             count_of_product = random.randint(1, 100)
@@ -217,7 +217,7 @@ class Command(BaseCommand):
             )
             product.category.set(boshghabi_category)
             # Generate random data for the jeti
-        for i in range(30):
+        for i in range(60):
             name = f"Pomp khanegi jeti {i+1}"
             model_brand = f"Model p-j {i+1}"
             count_of_product = random.randint(1, 100)
@@ -248,7 +248,7 @@ class Command(BaseCommand):
             product.category.set(jeti_category)
 
                 # Generate random data for the doparvane
-        for i in range(30):
+        for i in range(60):
             name = f"Pomp khanegi doparvane {i+1}"
             model_brand = f"Model p-dp {i+1}"
             count_of_product = random.randint(1, 100)

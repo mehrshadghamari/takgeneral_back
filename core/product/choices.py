@@ -33,3 +33,115 @@ khazen_choice=[('نوکار','نوکار'),]
 
 
 # ('',home)
+
+
+pomp_json={
+        'values':{
+                'country': {
+                    'name':'کشور سازنده',
+                    'value':''
+                },
+                'tavan':{
+                    'name':'توان',
+                    'value':'',
+                },
+                'min_head':{
+                    'name':'حداقل ارتفاع پمپاژ ( کمترین هد )',
+                    'value':''
+                },
+                'max_head':{
+                    'name':'حداکثر ارتفاع پمپاژ (بیشترین هد)',
+                    'value':''                    
+                },
+                'min_deby':{
+                    'name':'حداقل میزان آبدهی ( کمترین دبی )',
+                    'value':''
+                },
+                'max_deby':{
+                    'name':'حداکثر میزان آبدهی ( بیشترین دبی )',
+                    'value':''
+                },
+                'tedad_parvane':{
+                    'name':'تعداد پروانه',
+                    'value':''
+                },
+                'tedad_faz':{
+                    'name':'تعداد فاز',
+                    'value':''
+                },
+                'hade_aksar_feshar_ab':{
+                    'name':'حداکثر تحمل فشار آب ورودی به پمپ',
+                    'value':''
+                },
+                'hade_aksar_doregardesh':{
+                    'name':'حداکثر دور گردش',
+                    'value':''
+                },
+                'voltaj':{
+                    'name':'ولتاژ',
+                    'value':''
+                },
+                'vazn':{
+                    'name':'وزن',
+                    'value':''
+                },
+                'ferekans':{
+                    'name':'فرکانس',
+                    'value':''
+                },
+                'karbord_mahsol':{
+                    'name':'کاربرد محصول',
+                    'value':''
+                },
+                'noe_sayal':{
+                    'name':'نوع سیال یا مواد',
+                    'value':''
+                },
+                'ghotre_vorodi':{
+                    'name':'قطر ورودی',
+                    'value':''
+                },
+                'ghotre_khoroji':{
+                    'name':'قطر خروجی',
+                    'value':''
+                },
+                'hadeaksar_dama_sayal':{
+                    'name':'حداکثر تحمل دمای سیال',
+                    'value':''
+                },
+                'jense_parvane':{
+                    'name':'جنس پروانه',
+                    'value':''
+                },
+                'jense_parvane':{
+                    'name':'جنس پروانه',
+                    'value':''
+                }
+            },
+
+            'search_value':{
+                    'tavan':{
+                        'name':'توان',
+                        'value':''
+                        },
+                    'min_head':{
+                        'name':'حداقل ارتفاع پمپاژ ( کمترین هد )',
+                        'value':''
+                        },
+                    'max_head':{
+                        'name':'حداکثر ارتفاع پمپاژ (بیشترین هد)',
+                        'value':''                    
+                        },
+                    'min_deby':{
+                        'name':'حداقل میزان آبدهی ( کمترین دبی )',
+                        'value':''
+                        },
+                    'max_deby':{
+                        'name':'حداکثر میزان آبدهی ( بیشترین دبی )',
+                        'value':''
+                        }
+
+                }
+                
+                
+              }

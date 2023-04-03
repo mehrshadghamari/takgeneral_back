@@ -4,17 +4,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from .choices import keshvar_sazande_choice,kase_seyl_choice,khazen_choice,faz_choice,volt_choice,jense_ababand_choice,jense_badane_choice,jense_parvane_choice,jense_shaft_choice,jense_simpich_choice,jense_vaset_choice,jese_poste_va_paye_choice,daraje_hefazati_motor_choice,yataghan_choice
 # from .management.commands.create_data import product_json
 
-product_json={
-                'country': {
-                    'name':'کشور سازنده',
-                    'value':''
-                },
-                'tavan':{
-                    'name':'توان',
-                    'value':''
-                }
-                
-              }
 # Create your models here.
 
 
@@ -66,7 +55,7 @@ class Product(models.Model):
     waranty_taviz=models.BooleanField()
     month_of_waranty=models.IntegerField()
     created_at=models.DateField(auto_now_add=True,null=True)
-    # attr=models.JSONField(default=product_json)
+    # Attributes=models.JSONField(default={'attr':None})
 
 
 
@@ -126,6 +115,8 @@ class Attribute(models.Model):
 
     def __str__(self):
         return f'{self.title}  -  {self.value} -  for {self.product.name}'
+
+
 
     # power=models.FloatField(verbose_name='tavane')
     # min_head=models.FloatField(verbose_name='hadeaghal ertefae popmaj')
