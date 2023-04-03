@@ -1,6 +1,9 @@
-from django.core.management.base import BaseCommand, CommandError
+import random
+from datetime import timedelta, datetime
+from django.core.management.base import BaseCommand
+from django.utils.timezone import make_aware
+from product.models import TitleAttribute,ProductCategory,ProductBrand,Product
 
-from product.models import TitleAttribute,ProductCategory,ProductBrand
 
 
 all_title=['کشور سازنده','توان','حداقل ارتفاع پمپاژ ( کمترین هد )','حداکثر ارتفاع پمپاژ (بیشترین هد)',
@@ -148,4 +151,130 @@ class Command(BaseCommand):
             ProductBrand.objects.create(name=b)
 
 
+        mohiti_category=ProductCategory.objects.filter(name__in=['پمپ','پمپ اب خانگی','پمپ اب خانگی محیطی'])
+        boshghabi_category=ProductCategory.objects.filter(name__in=['پمپ','پمپ اب خانگی','پمپ اب خانگی بشقابی'])
+        jeti_category=ProductCategory.objects.filter(name__in=['پمپ','پمپ اب خانگی','پمپ اب خانگی جتی'])
+        doparvane_category=ProductCategory.objects.filter(name__in=['پمپ','پمپ اب خانگی','پمپ اب خانگی دو پروانه'])
+
+        # Generate random data for the mohiti
+        for i in range(30):
+            name = f"Pomp khanegi mohiti {i+1}"
+            model_brand = f"Model p-m {i+1}"
+            count_of_product = random.randint(1, 100)
+            discount = random.randint(0, 50)
+            price = round(random.randint(1000000, 10000000))
+            special_offer = random.choice([True, False])
+            seven_days_back = random.choice([True, False])
+            free_send = random.choice([True, False])
+            waranty_tamir = random.choice([True, False])
+            waranty_taviz = random.choice([True, False])
+            month_of_waranty = random.choice([6, 12, 24])
+
+            # Create the product object
+            product = Product.objects.create(
+                name=name,
+                brand=ProductBrand.objects.order_by('?')[0],
+                model_brand=model_brand,
+                count_of_product=count_of_product,
+                discount=discount,
+                price=price,
+                special_offer=special_offer,
+                seven_days_back=seven_days_back,
+                free_send=free_send,
+                waranty_tamir=waranty_tamir,
+                waranty_taviz=waranty_taviz,
+                month_of_waranty=month_of_waranty,
+            )
+            product.category.set(mohiti_category)
+            # Generate random data for the boshghabi
+        for i in range(30):
+            name = f"Pomp khanegi boshghabi {i+1}"
+            model_brand = f"Model p-b {i+1}"
+            count_of_product = random.randint(1, 100)
+            discount = random.randint(0, 50)
+            price = round(random.randint(1000000, 10000000))
+            special_offer = random.choice([True, False])
+            seven_days_back = random.choice([True, False])
+            free_send = random.choice([True, False])
+            waranty_tamir = random.choice([True, False])
+            waranty_taviz = random.choice([True, False])
+            month_of_waranty = random.choice([6, 12, 24])
+
+            # Create the product object
+            product = Product.objects.create(
+                name=name,
+                brand=ProductBrand.objects.order_by('?')[0],
+                model_brand=model_brand,
+                count_of_product=count_of_product,
+                discount=discount,
+                price=price,
+                special_offer=special_offer,
+                seven_days_back=seven_days_back,
+                free_send=free_send,
+                waranty_tamir=waranty_tamir,
+                waranty_taviz=waranty_taviz,
+                month_of_waranty=month_of_waranty,
+            )
+            product.category.set(boshghabi_category)
+            # Generate random data for the jeti
+        for i in range(30):
+            name = f"Pomp khanegi jeti {i+1}"
+            model_brand = f"Model p-j {i+1}"
+            count_of_product = random.randint(1, 100)
+            discount = random.randint(0, 50)
+            price = round(random.randint(1000000, 10000000))
+            special_offer = random.choice([True, False])
+            seven_days_back = random.choice([True, False])
+            free_send = random.choice([True, False])
+            waranty_tamir = random.choice([True, False])
+            waranty_taviz = random.choice([True, False])
+            month_of_waranty = random.choice([6, 12, 24])
+
+            # Create the product object
+            product = Product.objects.create(
+                name=name,
+                brand=ProductBrand.objects.order_by('?')[0],
+                model_brand=model_brand,
+                count_of_product=count_of_product,
+                discount=discount,
+                price=price,
+                special_offer=special_offer,
+                seven_days_back=seven_days_back,
+                free_send=free_send,
+                waranty_tamir=waranty_tamir,
+                waranty_taviz=waranty_taviz,
+                month_of_waranty=month_of_waranty,
+            )
+            product.category.set(jeti_category)
+
+                # Generate random data for the doparvane
+        for i in range(30):
+            name = f"Pomp khanegi doparvane {i+1}"
+            model_brand = f"Model p-dp {i+1}"
+            count_of_product = random.randint(1, 100)
+            discount = random.randint(0, 50)
+            price = round(random.randint(1000000, 10000000))
+            special_offer = random.choice([True, False])
+            seven_days_back = random.choice([True, False])
+            free_send = random.choice([True, False])
+            waranty_tamir = random.choice([True, False])
+            waranty_taviz = random.choice([True, False])
+            month_of_waranty = random.choice([6, 12, 24])
+
+            # Create the product object
+            product = Product.objects.create(
+                name=name,
+                brand=ProductBrand.objects.order_by('?')[0],
+                model_brand=model_brand,
+                count_of_product=count_of_product,
+                discount=discount,
+                price=price,
+                special_offer=special_offer,
+                seven_days_back=seven_days_back,
+                free_send=free_send,
+                waranty_tamir=waranty_tamir,
+                waranty_taviz=waranty_taviz,
+                month_of_waranty=month_of_waranty,
+            )
+            product.category.set(doparvane_category)
 
