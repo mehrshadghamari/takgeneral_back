@@ -4,6 +4,6 @@ from order import views
 
 
 urlpatterns = [
-    path('order-befor-login/',views.ShoworderlistBeforLogin.as_view()),
+    path('order-list/',views.ShowOrderListBeforeLogin.as_view()),
     
     ]
