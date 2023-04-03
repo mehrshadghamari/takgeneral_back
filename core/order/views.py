@@ -42,7 +42,7 @@ class CartDetailsPreview(APIView):
             'products': product_serializer.data,
             'total_price': total_price,
             'total_final_price': total_final_price,
-            'total_discount':total_discount_price,
+            'total_discount_price':total_discount_price,
             'total_count': total_count,
         }
 
