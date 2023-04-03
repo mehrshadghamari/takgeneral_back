@@ -8,33 +8,10 @@ from .serializers import OrderlistSerializer,CartSerializer
 
 
 
-# class ShoworderlistBeforLogin(APIView):
-#     def post(self,request):
-#         datas=OrderInput(request.data,many=True)
-#         # datas = self.request.data.get('cartsData',None)
-#         # datas=[{'id':3,'count':3},{'id':2,'count':1}]
-#         print(datas)
-#         print(type(datas))
-#         print('*********************')
-#         l=[]
-#         all_count=0
-#         for data in datas:
-#             print(data)
-#             print(type(data))
-#             all_count+=data['count']
-#             p=Product.objects.with_final_price().filter(id=data['id']).annotate(quantity=Value(data['count'],FloatField()),sum_price = F('final_price_Manager') * Value(data['count'],FloatField()))
-#             l.append(p.first())
-
-            
-        
-#         serz=OrderlistSerializer(l,many=True)
-
-#         return Response({'order_list':serz.data,'all_count':all_count},status=status.HTTP_200_OK)
-
-
 # cart_data=[{'id':3,'count':3},{'id':2,'count':1}]
 
-class ShowOrderListBeforeLogin(APIView):
+
+class CartDetailsPreview(APIView):
     def post(self, request):
         cart_data = request.data.get('cartsData', None)
         if not cart_data:
@@ -58,6 +35,7 @@ class ShowOrderListBeforeLogin(APIView):
         total_discount_price = sum([p.sum_discount_price for p in products])
         total_count = sum([p.quantity for p in products])
 
+
         # Serialize response data
         product_serializer = OrderlistSerializer(products, many=True)
         order_data = {
@@ -69,3 +47,5 @@ class ShowOrderListBeforeLogin(APIView):
         }
 
         return Response(order_data, status=status.HTTP_200_OK)
+
+
