@@ -5,9 +5,11 @@ from product.models import Product
 
 
 class OrderlistSerializer(serializers.ModelSerializer):
-    sum_price=serializers.FloatField()
-    sum_final_price=serializers.FloatField()
-    sum_discount_price=serializers.FloatField()
+    price=serializers.IntegerField()
+    final_price= serializers.IntegerField()
+    sum_price=serializers.IntegerField()
+    sum_final_price=serializers.IntegerField()
+    sum_discount_price=serializers.IntegerField()
     quantity = serializers.IntegerField()
     warranty=serializers.CharField()
 

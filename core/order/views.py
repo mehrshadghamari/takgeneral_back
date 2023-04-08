@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import F,Value,FloatField
+from django.db.models import F,Value,FloatField,IntegerField
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,9 +14,12 @@ from .serializers import OrderlistSerializer,CartSerializer
 class CartDetailsPreview(APIView):
     def post(self, request):
         cart_data = request.data.get('cartsData', None)
-        if not cart_data:
+        if cart_data is None:
             return Response({'error': 'Invalid input data'}, status=status.HTTP_400_BAD_REQUEST)
-
+        elif not cart_data:
+            return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
+        
+        
         # Validate input data
         serializer = CartSerializer(data=cart_data, many=True)
         serializer.is_valid(raise_exception=True)
@@ -24,9 +27,9 @@ class CartDetailsPreview(APIView):
 
         # Calculate order details
         products = [Product.objects.with_final_price().filter(id=item['id']).annotate(
-            quantity=Value(item['count'], FloatField()),
-            sum_final_price = F('final_price_Manager') * Value(item['count'], FloatField()),
-            sum_price = F('price') * Value(item['count'], FloatField()),
+            quantity=Value(item['count'], IntegerField()),
+            sum_final_price = F('final_price_Manager') * Value(item['count'], IntegerField()),
+            sum_price = F('price') * Value(item['count'], IntegerField()),
             sum_discount_price = F('sum_price') - F('sum_final_price')
         ).first() for item in cart_items]
 

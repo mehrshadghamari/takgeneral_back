@@ -40,7 +40,6 @@ class ProductManager(models.Manager):
 class Product(models.Model):
 
     name=models.CharField(max_length=64)
-    # country=models.CharField(max_length=64,choices=keshvar_sazande_choice)
     category=models.ManyToManyField('product.ProductCategory')
     brand=models.ForeignKey('product.ProductBrand',on_delete=models.CASCADE)
     model_brand=models.CharField(max_length=64)
@@ -71,7 +70,7 @@ class Product(models.Model):
     def final_price(self):
         if self.discount==0:
             return self.price
-        return self.price - self.price*(self.discount/100)
+        return int(self.price - self.price*(self.discount/100))
 
 
     @property
