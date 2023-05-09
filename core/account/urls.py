@@ -1,7 +1,5 @@
 from django.urls import path
-from account import views
-
-
+from . import views
 
 urlpatterns = [
     path('user-register-or-login-send-otp/',views.UserRegisterOrLoginSendOTp.as_view()),

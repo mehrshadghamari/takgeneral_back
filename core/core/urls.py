@@ -30,6 +30,7 @@ urlpatterns = [
     path('',include('extention.urls')),
     path('',include('product.urls')),
     path('',include('order.urls')),
+    path('',include('product_action.urls')),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
