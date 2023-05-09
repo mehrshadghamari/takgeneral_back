@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'account',
     'extention',
     'product',
+    'order',
     'product_action',
     'rest_framework',
     'rest_framework_simplejwt',
