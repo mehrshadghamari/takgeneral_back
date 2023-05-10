@@ -94,6 +94,10 @@ class Product(models.Model):
             return f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
 
 
+    @property
+    def product_comments(self):
+        return self.comments.filter(status='active')
+
 
     def __str__(self):
         return  f'id : {self.id} -- name : {self.name} ' 
