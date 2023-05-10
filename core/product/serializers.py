@@ -48,13 +48,18 @@ class productImaagesSerilizer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
 class CommentsSerializer(serializers.ModelSerializer):
+    diss_likes_count=serializers.IntegerField()
+    likes_count=serializers.IntegerField()
+
     class Meta:
         model = Comment
-        fields = ('user_alias_name', 'content', 'rate1', 'rate2', 'created_at')
+        fields = ('user_alias_name', 'content','likes_count','diss_likes_count', 'suggest_me','arzesh_rate', 'kefiyat_rate', 'created_at')
 
 
-class HomePompDetailSerializer(serializers.ModelSerializer):
+
+class productDetailSerializer(serializers.ModelSerializer):
 
     category = CategorySerializer(many=True)
     attributes = AttributeSerilizer(many=True)
@@ -65,7 +70,7 @@ class HomePompDetailSerializer(serializers.ModelSerializer):
     product_available = serializers.BooleanField()
     warranty = serializers.CharField()
 
-    product_comments = CommentsSerializer()
+
 
     class Meta:
         model = Product

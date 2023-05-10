@@ -17,13 +17,22 @@ class Comment(models.Model):
     user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE)
     user_alias_name = models.CharField(max_length=64,default='alias')
     content = models.TextField()
-    rate1 = models.FloatField(
+    suggest_me=models.BooleanField(null=True,default=None)
+    kefiyat_rate = models.FloatField(
         validators=[MaxValueValidator(5.0), MinValueValidator(1.0)],default=0
     )
-    rate2 = models.FloatField(
+    arzesh_rate = models.FloatField(
         validators=[MaxValueValidator(5.0), MinValueValidator(1.0)],default=0
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def likes_count(self):
+        return self.likes.filter(like_vote=True ,dislike_vote=False).count()
+
+    @property
+    def diss_likes_count(self):
+        return self.likes.filter(dislike_vote=True,like_vote=False).count()
 
     def __str__(self):
         return self.content[:50]
@@ -43,7 +52,7 @@ class CommentLike(models.Model):
         unique_together = ('user', 'comment')
 
     def __str__(self):
-        return f'{self.user} {self.get_vote_display().lower()}s {self.comment.content[:50]}'
+        return f'{self.user}  {self.comment.content[:50]}'
 
 
 

@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .serializers import CreateCommentSerializer,CommentLikeSerializer
 from product_action.models import Comment,CommentLike
-
+from account.models import MyUser
 
 
 class ProductComment(APIView):
@@ -32,35 +32,12 @@ class CreateComment(APIView):
     
         
 
-class CommentDetail(APIView):
-    def get(self,request,id):
-        queryset = Comment.objects.filter(id=id)
-        serializer = CreateCommentSerializer(queryset)
-        return Response(serializer.data,status=status.HTTP_200_OK)
-    
-    # def post(self,request):
-    #     user_id=request.user.id
-    #     # product_id=id
-    #     serializer = CommentSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save(user=user_id)
-
-    # def post(self,request):
-    #     data = request.data.copy()
-    #     data['user']=request.user.id
-    #     serializer = CreateCommentSerializer(data=data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
 
-class CommentLikeAPIView(APIView):
+class CommentLikeOrDisslike(APIView):
     def post(self, request, comment_id):
         # Check if the comment exists
         try:
@@ -69,7 +46,8 @@ class CommentLikeAPIView(APIView):
             return Response({'error': 'Comment does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the user has already liked or disliked the comment
-        user = request.user  # assuming you're using authentication
+        user_id = request.user.id  # assuming you're using authentication
+        user=MyUser.objects.get(id=user_id)
         try:
             comment_like = CommentLike.objects.get(comment=comment, user=user)
         except CommentLike.DoesNotExist:

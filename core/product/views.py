@@ -1,12 +1,13 @@
 from django.shortcuts import render,get_object_or_404
-from django.db.models import Count,Q
+from django.db.models import Count,Q,Avg,Sum
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 # from rest_framework.filters import 
 from rest_framework import generics
 from .models import Product,ProductBrand
-from .serializers import HomePompDetailSerializer,ProductIDSerializer,AllProductSerializer,productCountFromSpecificBrand
+from product_action.models import Comment
+from .serializers import productDetailSerializer,ProductIDSerializer,AllProductSerializer,productCountFromSpecificBrand,CommentsSerializer
 
 from rest_framework.pagination import LimitOffsetPagination
 from django.core.paginator import Paginator
@@ -16,9 +17,12 @@ import math
 class ProductDetail(APIView):
     def get(self,request,id):
         # pomp_instance=Product.objects.filter(id=id).first()
-        pomp_instance=get_object_or_404(Product,id=id)
-        serilizer=HomePompDetailSerializer(pomp_instance,context={"request": request})
-        return Response(serilizer.data,status=status.HTTP_200_OK)
+        product_instance=get_object_or_404(Product,id=id)
+        product_serilizer=productDetailSerializer(product_instance,context={"request": request})
+        comments=Comment.objects.filter(product__id=id)
+        comments_serializer=CommentsSerializer(comments,many=True)
+        avg=comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'),avg_arzesh_rate=Avg('arzesh_rate'))
+        return Response({'product':product_serilizer.data,'comments':comments_serializer.data,'avg_rate':avg},status=status.HTTP_200_OK)
     
 
 # helping api for front
