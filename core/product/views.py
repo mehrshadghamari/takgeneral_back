@@ -21,7 +21,7 @@ class ProductDetail(APIView):
         product_serilizer=productDetailSerializer(product_instance,context={"request": request})
         comments=Comment.objects.filter(product__id=id)
         comments_serializer=CommentsSerializer(comments,many=True)
-        avg=comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'),avg_arzesh_rate=Avg('arzesh_rate'))
+        avg=comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'),avg_arzesh_rate=Avg('arzesh_rate'),avg_user_rate=(Avg('kefiyat_rate')+Avg('arzesh_rate'))/2)
         return Response({'product':product_serilizer.data,'comments':comments_serializer.data,'avg_rate':avg},status=status.HTTP_200_OK)
     
 

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Product, ProductCategory, Attribute, ProductImage, ProductBrand
 from product_action.models import Comment
 
+from datetime import datetime
 
 # class HomePompDetailSerializer(serializers.ModelSerializer):
 #
@@ -48,15 +49,18 @@ class productImaagesSerilizer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class CommentsSerializer(serializers.ModelSerializer):
-    diss_likes_count=serializers.IntegerField()
-    likes_count=serializers.IntegerField()
+    diss_likes_count = serializers.IntegerField()
+    likes_count = serializers.IntegerField()
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, obj):
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Comment
-        fields = ('user_alias_name', 'content','likes_count','diss_likes_count', 'suggest_me','arzesh_rate', 'kefiyat_rate', 'created_at')
-
+        fields = ('user_alias_name', 'title', 'content', 'likes_count',
+                  'diss_likes_count', 'suggest_me', 'arzesh_rate', 'kefiyat_rate', 'created_at')
 
 
 class productDetailSerializer(serializers.ModelSerializer):
@@ -69,8 +73,6 @@ class productDetailSerializer(serializers.ModelSerializer):
     final_price = serializers.FloatField()
     product_available = serializers.BooleanField()
     warranty = serializers.CharField()
-
-
 
     class Meta:
         model = Product
