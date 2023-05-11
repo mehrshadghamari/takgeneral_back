@@ -51,7 +51,7 @@ class CommentLike(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     like_vote = models.BooleanField(default=False)
     dislike_vote = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('user', 'comment')
@@ -70,6 +70,10 @@ class Question(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
 
 
+    def __str__(self):
+        return f'{self.user}  {self.content[:50]}'
+
+
 
 
 class Reply(models.Model):
@@ -77,7 +81,7 @@ class Reply(models.Model):
         "product_action.Question", on_delete=models.CASCADE, related_name='replies')
     user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.content[:50]
