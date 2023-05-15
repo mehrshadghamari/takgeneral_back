@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 # from rest_framework.filters import 
 from rest_framework import generics
 from .models import Product,ProductBrand
-from product_action.models import Comment
-from .serializers import productDetailSerializer,ProductIDSerializer,AllProductSerializer,productCountFromSpecificBrand,CommentsSerializer
+from product_action.models import Comment,Question
+from .serializers import productDetailSerializer,ProductIDSerializer,AllProductSerializer,productCountFromSpecificBrand,CommentsSerializer,QuestionSerializer
 
 from rest_framework.pagination import LimitOffsetPagination
 from django.core.paginator import Paginator
@@ -21,8 +21,10 @@ class ProductDetail(APIView):
         product_serilizer=productDetailSerializer(product_instance,context={"request": request})
         comments=Comment.objects.filter(product__id=id)
         comments_serializer=CommentsSerializer(comments,many=True)
+        questions= Question.objects.filter(product__id=id)
+        questions_serializer=QuestionSerializer(questions,many=True)
         avg=comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'),avg_arzesh_rate=Avg('arzesh_rate'),avg_user_rate=(Avg('kefiyat_rate')+Avg('arzesh_rate'))/2)
-        return Response({'product':product_serilizer.data,'comments':comments_serializer.data,'avg_rate':avg},status=status.HTTP_200_OK)
+        return Response({'product':product_serilizer.data,'comments':comments_serializer.data,'questions':questions_serializer.data,'avg_rate':avg},status=status.HTTP_200_OK)
     
 
 # helping api for front

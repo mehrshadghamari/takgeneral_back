@@ -3,24 +3,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .serializers import CreateCommentSerializer, CommentLikeSerializer
+from .serializers import CreateCommentSerializer, CommentLikeSerializer,CreateQuestionSerializer,CreateReplySerializer
 from product_action.models import Comment, CommentLike
 from account.models import MyUser
 
 
-class ProductComment(APIView):
-    def get(self, request):
-        queryset = Comment.objects.filter(id=1)
-        serializer = CreateCommentSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class CreateComment(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data.copy()
-        data['user'] = request.user.id
+        data['user'] = 1
         serializer = CreateCommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -41,7 +35,7 @@ class CommentLikeOrDisslike(APIView):
             return Response({'error': 'Comment does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the user has already liked or disliked the comment
-        user_id = 1
+        user_id = request.user.id
         user = MyUser.objects.get(id=user_id)
         try:
             comment_like = CommentLike.objects.get(comment=comment, user=user)
@@ -57,10 +51,8 @@ class CommentLikeOrDisslike(APIView):
             like_vote = False
 
         if 'dislike_vote' in data:
-            print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-            print(data)
+
             dislike_vote = bool(data['dislike_vote'])
-            print(dislike_vote)
         else:
             dislike_vote = False
 
@@ -79,7 +71,6 @@ class CommentLikeOrDisslike(APIView):
             serializer = CommentLikeSerializer(comment_like,data=data)
         # Otherwise, create a new like or dislike for the comment
         else:
-            print("************************************")
             data['comment'] = comment.id
             data['user'] = user_id
             if like_vote:
@@ -96,3 +87,32 @@ class CommentLikeOrDisslike(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ProducrQuestion(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+        data = request.data.copy()
+        data['user'] = 1
+        serializer = CreateQuestionSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class ReplyQuestion(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+        data = request.data.copy()
+        data['user'] = 1
+        serializer = CreateReplySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

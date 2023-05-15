@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Product, ProductCategory, Attribute, ProductImage, ProductBrand
-from product_action.models import Comment
+from product_action.models import Comment,Question,Reply
 
 from datetime import datetime
 
@@ -59,8 +59,21 @@ class CommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('user_alias_name', 'title', 'content', 'likes_count',
+        fields = ('id','user_alias_name', 'title', 'content', 'likes_count',
                   'diss_likes_count', 'suggest_me', 'arzesh_rate', 'kefiyat_rate', 'created_at')
+
+
+class ReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Reply
+        fields=('id','user','content','created_at')
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    replys=ReplySerializer()
+    class Meta:
+        model=Question
+        fields=('id','user','title','content','created_at')
 
 
 class productDetailSerializer(serializers.ModelSerializer):

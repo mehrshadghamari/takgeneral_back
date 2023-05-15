@@ -1,16 +1,27 @@
 from rest_framework import serializers
-from .models import Comment,CommentLike
+from .models import Comment,CommentLike,Question,Reply
 
 
 class CreateCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['user_alias_name','product', 'user','title','content', 'suggest_me','kefiyat_rate','arzesh_rate',]
-        read_only_fields = ['id', 'created_at']
+        fields = ('user_alias_name','product', 'user','title','content', 'suggest_me','kefiyat_rate','arzesh_rate',)
+        read_only_fields = ('id', 'created_at',)
 
 
+class CreateQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Question
+        fields=('id','user','title','content','created_at')
+        read_only_fields = ('id', 'created_at',)
 
+
+class CreateReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Reply
+        fields=('id','user','question','content','created_at')
+        read_only_fields = ('id', 'created_at',)
 
 
 class CommentLikeSerializer(serializers.ModelSerializer):

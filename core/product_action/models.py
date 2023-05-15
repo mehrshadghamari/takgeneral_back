@@ -64,11 +64,17 @@ class CommentLike(models.Model):
 
 
 class Question(models.Model):
+    product = models.ForeignKey(
+    "product.Product", on_delete=models.CASCADE, related_name='questions',default=None)
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=128,default= None,null=True)
     content = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
 
+
+    @property
+    def replys(self):
+        return self.replies.all()
 
     def __str__(self):
         return f'{self.user}  {self.content[:50]}'
