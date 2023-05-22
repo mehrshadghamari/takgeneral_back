@@ -84,7 +84,7 @@ class Question(models.Model):
 
 class Reply(models.Model):
     question = models.ForeignKey(
-        "product_action.Question", on_delete=models.CASCADE, related_name='replies')
+        "product_action.Question", on_delete=models.CASCADE, related_name='replies',null=True)
     user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE)
     content = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)

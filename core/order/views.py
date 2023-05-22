@@ -67,10 +67,11 @@ class CartDetailsPreview(APIView):
             return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
 
         user_id = request.user.id
+        # user_id = 1
         print(user_id)
         # user authentiicated
         if user_id is not None:
-            print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+            print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
             user=MyUser.objects.get(id=user_id)
             # Get the user's unpaid order, if any
             order = Order.objects.filter(user=user, paid=False).first()
@@ -95,6 +96,7 @@ class CartDetailsPreview(APIView):
                     # order_item.price = product.final_price_Manager
                     order_item.quantity = item['count']
                     order_item.save()
+
 
             # Calculate order details
             products = order.items.annotate(
@@ -129,6 +131,7 @@ class CartDetailsPreview(APIView):
 
             return Response(order_data, status=status.HTTP_200_OK)
         
+
         # user not authentiicated
         else:
             print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')

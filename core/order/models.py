@@ -3,37 +3,51 @@ from account.models import MyUser
 from product.models import Product
 
 
-
 class Order(models.Model):
-	user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE, related_name='orders')
-	paid = models.BooleanField(default=False)
-	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        "account.MyUser", on_delete=models.CASCADE, related_name='orders')
+    paid = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-	class Meta:
-		ordering = ('paid', '-updated')
-
-
-	def __str__(self):
-		return f'{self.user} - {str(self.id)}'
+    class Meta:
+        ordering = ('paid', '-updated')
 
 
-	# def get_total_price(self):
-	# 	total = sum(item.get_cost() for item in self.items.all())
-	# 	if self.discount:
-	# 		discount_price = (self.discount / 100) * total
-	# 		return int(total - discount_price)
-	# 	return total
+
+    def total_price(self):
+        return sum(item.sum_price for item in self.items.all())
+
+
+    def total_final_price(self):
+        return sum(item.sum_final_price for item in self.items.all())
+    
+
+    def total_discount_price(self):
+        return sum(item.sum_discount_price for item in self.items.all())
+
+
+    def total_count(self):
+        return sum(item.quantity for item in self.items.all())
+
+
 
 
 class OrderItem(models.Model):
-	order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-	product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
-	# price = models.IntegerField()
-	quantity = models.IntegerField(default=1)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
+    # price = models.IntegerField()
+    quantity = models.IntegerField(default=1)
 
-	
-	
+    @property
+    def sum_final_price(self):
+        return ((self.product.price) - (self.product.price * (self.product.discount / 100)) * self.quantity)
 
+    @property
+    def sum_price(self):
+        return ((self.product.price) * self.quantity)
 
-
+    @property
+    def sum_discount_price(self):
+        return ((self.product.price) - (self.product.price * (self.product.discount / 100)) * self.quantity) - (
+                (self.product.price) * self.quantity)

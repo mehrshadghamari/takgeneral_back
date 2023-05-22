@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Product, ProductCategory, Attribute, ProductImage, ProductBrand
-from product_action.models import Comment,Question,Reply
+from product_action.models import Comment, Question, Reply
 
 from datetime import datetime
 
@@ -59,21 +59,31 @@ class CommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id','user_alias_name', 'title', 'content', 'likes_count',
+        fields = ('id', 'user_alias_name', 'title', 'content', 'likes_count',
                   'diss_likes_count', 'suggest_me', 'arzesh_rate', 'kefiyat_rate', 'created_at')
 
 
 class ReplySerializer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, obj):
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+
     class Meta:
-        model=Reply
-        fields=('id','user','content','created_at')
+        model = Reply
+        fields = ('id', 'user', 'content', 'created_at')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    replys=ReplySerializer()
+    replys = ReplySerializer(many=True)
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, obj):
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+
     class Meta:
-        model=Question
-        fields=('id','user','title','content','created_at')
+        model = Question
+        fields = ('id', 'user', 'title', 'content', 'created_at', 'replys')
 
 
 class productDetailSerializer(serializers.ModelSerializer):

@@ -13,7 +13,7 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 class CreateQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model=Question
-        fields=('id','user','title','content','created_at')
+        fields=('id','user','title','content','product','created_at')
         read_only_fields = ('id', 'created_at',)
 
 
