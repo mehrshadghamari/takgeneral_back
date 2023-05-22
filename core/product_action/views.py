@@ -10,11 +10,11 @@ from account.models import MyUser
 
 
 class CreateComment(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data.copy()
-        data['user'] = 1
+        data['user'] = self.request.user.id
         serializer = CreateCommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -25,7 +25,7 @@ class CreateComment(APIView):
 
 
 class CommentLikeOrDisslike(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request,):
         # Check if the comment exists
@@ -91,11 +91,11 @@ class CommentLikeOrDisslike(APIView):
 
 
 class ProducrQuestion(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self,request):
         data = request.data.copy()
-        data['user'] = 1
+        data['user'] = self.request.user.id
         serializer = CreateQuestionSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -105,11 +105,11 @@ class ProducrQuestion(APIView):
     
 
 class ReplyQuestion(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self,request):
         data = request.data.copy()
-        data['user'] = 1
+        data['user'] = self.request.user.id
         serializer = CreateReplySerializer(data=data)
         if serializer.is_valid():
             serializer.save()

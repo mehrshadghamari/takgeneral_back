@@ -1,4 +1,5 @@
 import random
+import requests
 import redis
 from datetime import timedelta
 import jdatetime
@@ -204,3 +205,14 @@ class UserStatus(APIView):
         else:
             full_name=request.user.full_name
         return Response({'phone_number':phone_number,'full_name':full_name})
+    
+
+class LocationApi(APIView):
+    def post(self,request):
+        LATITUDE=self.request.data.get('lat',None)
+        LONGITUDE=self.request.data.get('lng',None)
+        TERM=self.request.data.get('term',None)
+        url=f'https://api.neshan.org/v1/search?term={TERM}&lat={LATITUDE}&lng={LONGITUDE}'
+        headers = {'Api-Key': 'service.0378d5fd9fed448a88ea1e27a5e7f08c'}
+        req=requests.get(url=url,headers=headers)
+        return Response(req.json(),status=req.status_code)
