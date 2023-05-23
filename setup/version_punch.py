@@ -5,8 +5,6 @@ import sys
 
 import git
 
-
-
 COMMITID = git.Repo().head.object.hexsha[:8]
 
 # USAGE : python3 setup/version_punch patch v b p
@@ -50,4 +48,3 @@ else:
     print(
         "\ncommands options are: ['major', 'minor', 'patch'] [b | v | p | --tag]\n\n- b for creating build number\n- v for bumpversion\n- p for total commit and push\n"
     )
-
