@@ -1,6 +1,7 @@
 from django.contrib import admin
-
-from extention.models import Slider,ProductClassification,Advertisement
+from extention.models import Advertisement
+from extention.models import ProductClassification
+from extention.models import Slider
 
 admin.site.register(Slider)
 admin.site.register(ProductClassification)

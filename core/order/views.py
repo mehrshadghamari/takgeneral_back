@@ -1,13 +1,17 @@
-from django.shortcuts import render
-from django.db.models import F, Value, FloatField, IntegerField, Sum
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from product.models import Product
-from .serializers import OrderlistSerializer, CartSerializer, OrderItemSerializer
-from . models import Order, OrderItem
 from account.models import MyUser
+from django.db.models import F
+from django.db.models import IntegerField
+from django.db.models import Value
+from product.models import Product
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from .models import Order
+from .models import OrderItem
+from .serializers import CartSerializer
+from .serializers import OrderItemSerializer
+from .serializers import OrderlistSerializer
 
 
 class CartDetailsPreview(APIView):
@@ -51,10 +55,10 @@ class CartDetailsPreview(APIView):
 
             order_items = order.items.all()
             items = OrderItemSerializer(order_items, many=True)
- 
+
             order_data = {
                 'order_id': order.id,
-                'paid':order.paid,
+                'paid': order.paid,
                 'products': items.data,
                 'total_price': order.total_price,
                 'total_final_price': order.total_final_price,
@@ -89,7 +93,7 @@ class CartDetailsPreview(APIView):
             product_serializer = OrderlistSerializer(products, many=True)
             order_data = {
                 'order_id': None,
-                'paid':None,
+                'paid': None,
                 'products': product_serializer.data,
                 'total_price': total_price,
                 'total_final_price': total_final_price,

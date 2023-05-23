@@ -1,6 +1,7 @@
-from rest_framework import serializers
+from order.models import Order
+from order.models import OrderItem
 from product.models import Product
-from order.models import Order, OrderItem
+from rest_framework import serializers
 
 
 class OrderlistSerializer(serializers.ModelSerializer):
@@ -19,15 +20,14 @@ class OrderlistSerializer(serializers.ModelSerializer):
                   'quantity', 'price', 'final_price', 'sum_price', 'sum_final_price', 'sum_discount_price',)
 
 
-
-
-
 class OrderItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source='product.id')
     name = serializers.CharField(source='product.name')
-    main_image = serializers.ImageField(source='product.main_image', allow_null=True)
+    main_image = serializers.ImageField(
+        source='product.main_image', allow_null=True)
     discount = serializers.IntegerField(source='product.discount')
-    seven_days_back = serializers.BooleanField(source='product.seven_days_back')
+    seven_days_back = serializers.BooleanField(
+        source='product.seven_days_back')
     free_send = serializers.BooleanField(source='product.free_send')
     warranty = serializers.CharField(source='product.warranty')
     price = serializers.FloatField(source='product.price')
@@ -45,11 +45,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
                   'quantity', 'price', 'final_price', 'sum_price', 'sum_final_price', 'sum_discount_price')
 
 
-
 class CartSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     count = serializers.IntegerField()
-
-
-
-

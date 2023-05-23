@@ -1,14 +1,15 @@
-from django.db import models
-from django_jalali.db import models as jmodels
 from random import random
-from django.core import validators
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, send_mail
+
 from account.validators import national_code_validator
-
-
-
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import send_mail
+from django.core import validators
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from django_jalali.db import models as jmodels
 
 
 class UserManager(BaseUserManager):
@@ -61,9 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     # choise_user = (('doctor', 'doctor'), ('patient', 'patient'))
     # doctor_or_patient = models.CharField(
-        # choices=choise_user, max_length=10, null=True, blank=True)
+    # choices=choise_user, max_length=10, null=True, blank=True)
 
-        
     # profile_image = models.ImageField(null=True, blank=True)
     username = models.CharField(('username'), max_length=32, unique=True, null=True, blank=True,
                                 help_text=(
@@ -79,18 +79,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     }
     )
     # full_name = models.CharField(('full name'), max_length=80)
-    first_name= models.CharField(max_length=80)
-    last_name= models.CharField(max_length=80)
-    national_code = models.CharField(max_length=10,unique=True,
+    first_name = models.CharField(max_length=80)
+    last_name = models.CharField(max_length=80)
+    national_code = models.CharField(max_length=10, unique=True,
                                      null=True, validators=[national_code_validator])
     # national_code = models.CharField(max_length=10,
-                                    #  null=True, )
+    #  null=True, )
     # gender_choice = (
-        # ('male', 'male'),
-        # ('female', 'female'),
+    # ('male', 'male'),
+    # ('female', 'female'),
     # )
     # gender = models.CharField(choices=gender_choice,
-                            #   max_length=10, null=True, blank=True)
+    #   max_length=10, null=True, blank=True)
 
     email = models.EmailField(
         ('email address'), unique=True, null=True, blank=True)
@@ -133,7 +133,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
-    
+
     @property
     def is_loggedin_user(self):
         """
@@ -150,36 +150,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f'{str(self.phone_number)} - {self.full_name} '
 
 
-
-
-
 class MyUser(User):
     registeration_date = jmodels.jDateTimeField(
         auto_now_add=True, null=True, blank=True)
-    
+
     @property
     def addresses(self):
         self.address_set.all()
 
 
-
-
-
-
-
 class Address (models.Model):
-    user=models.ForeignKey('account.MyUser',on_delete=models.CASCADE)
-    title=models.CharField(max_length=80)
-    post_code=models.CharField(max_length=10)
-    full_address=models.TextField()
-    pelak=models.IntegerField()
-    vahed=models.IntegerField()
-    lt=models.FloatField()
-    lng=models.FloatField()
-
-
-
-
+    user = models.ForeignKey('account.MyUser', on_delete=models.CASCADE)
+    title = models.CharField(max_length=80)
+    post_code = models.CharField(max_length=10)
+    full_address = models.TextField()
+    pelak = models.IntegerField()
+    vahed = models.IntegerField()
+    lt = models.FloatField()
+    lng = models.FloatField()
 
 
 # email !  fname  lname  code meli phone_meli  addrese (onvane neshani - code posti  -neshani kamel pelak vahed lt lng)

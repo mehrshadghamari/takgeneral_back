@@ -1,34 +1,33 @@
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import F,Q
-from django.core.validators import MaxValueValidator, MinValueValidator
-from .choices import keshvar_sazande_choice,kase_seyl_choice,khazen_choice,faz_choice,volt_choice,jense_ababand_choice,jense_badane_choice,jense_parvane_choice,jense_shaft_choice,jense_simpich_choice,jense_vaset_choice,jese_poste_va_paye_choice,daraje_hefazati_motor_choice,yataghan_choice
+from django.db.models import F
 # from .management.commands.create_data import product_json
 from product.choices import pomp_json
+
 # Create your models here.
 
 
 class ProductImage(models.Model):
-    image=models.ImageField()
-    product=models.ForeignKey('product.Product',on_delete=models.CASCADE,related_name='other_images')
-
-
+    image = models.ImageField()
+    product = models.ForeignKey(
+        'product.Product', on_delete=models.CASCADE, related_name='other_images')
 
 
 # category many to many
 class ProductCategory(models.Model):
-    name=models.CharField(max_length=64)
+    name = models.CharField(max_length=64)
     # url=models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
-    
 
 
 class ProductBrand(models.Model):
-    name=models.CharField(max_length=64)
-    image=models.ImageField(null=True)
+    name = models.CharField(max_length=64)
+    image = models.ImageField(null=True)
 
-    def __str__(self) :
+    def __str__(self):
         return self.name
 
 
@@ -39,84 +38,76 @@ class ProductManager(models.Manager):
 
 class Product(models.Model):
 
-    name=models.CharField(max_length=64)
-    category=models.ManyToManyField('product.ProductCategory')
-    brand=models.ForeignKey('product.ProductBrand',on_delete=models.CASCADE)
-    model_brand=models.CharField(max_length=64)
-    main_image=models.ImageField()
-    count_of_product=models.IntegerField(default=1)
-    discount=models.IntegerField(default=0,validators=[MaxValueValidator(99), MinValueValidator(0)])
-    price=models.FloatField()
-    special_offer=models.BooleanField(default=False)
-    seven_days_back=models.BooleanField(default=False)
-    free_send=models.BooleanField(default=True)
-    waranty_tamir=models.BooleanField()
-    waranty_taviz=models.BooleanField()
-    month_of_waranty=models.IntegerField()
-    created_at=models.DateField(auto_now_add=True,null=True)
-    Attributes=models.JSONField(default=pomp_json)
+    name = models.CharField(max_length=64)
+    category = models.ManyToManyField('product.ProductCategory')
+    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
+    model_brand = models.CharField(max_length=64)
+    main_image = models.ImageField()
+    count_of_product = models.IntegerField(default=1)
+    discount = models.IntegerField(
+        default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
+    price = models.FloatField()
+    special_offer = models.BooleanField(default=False)
+    seven_days_back = models.BooleanField(default=False)
+    free_send = models.BooleanField(default=True)
+    waranty_tamir = models.BooleanField()
+    waranty_taviz = models.BooleanField()
+    month_of_waranty = models.IntegerField()
+    created_at = models.DateField(auto_now_add=True, null=True)
+    Attributes = models.JSONField(default=pomp_json)
 
-
-
-    objects= ProductManager()
-
+    objects = ProductManager()
 
     @property
     def other_images(self):
         return self.other_images.all()
 
-
     @property
     def final_price(self):
-        if self.discount==0:
+        if self.discount == 0:
             return self.price
         return int(self.price - self.price*(self.discount/100))
 
-
     @property
     def product_available(self):
-        if self.count_of_product==0:
+        if self.count_of_product == 0:
             return False
         return True
 
     @property
     def warranty(self):
-        if self.waranty_tamir==False and self.waranty_taviz==False:
+        if self.waranty_tamir == False and self.waranty_taviz == False:
             return ''
 
-        elif self.waranty_taviz==False:
+        elif self.waranty_taviz == False:
             return f'{self.month_of_waranty} ماه گارانتی تعمیر '
 
-        elif self.waranty_tamir==False:
+        elif self.waranty_tamir == False:
             return f'{self.month_of_waranty} ماه گارانتی تعویض '
 
-        elif self.waranty_taviz==True and self.waranty_tamir==True:
+        elif self.waranty_taviz == True and self.waranty_tamir == True:
             return f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
 
-
-
-
     def __str__(self):
-        return  f'id : {self.id} -- name : {self.name} ' 
+        return f'id : {self.id} -- name : {self.name} '
 
 
 class TitleAttribute(models.Model):
-    name=models.CharField(max_length=127)
+    name = models.CharField(max_length=127)
 
     def __str__(self):
         return self .name
 
 
-
 class Attribute(models.Model):
-    title=models.ForeignKey('product.TitleAttribute',on_delete=models.CASCADE)
-    value=models.CharField(max_length=127)
-    product=models.ForeignKey('product.Product',on_delete=models.CASCADE,related_name='attributes')
+    title = models.ForeignKey('product.TitleAttribute',
+                              on_delete=models.CASCADE)
+    value = models.CharField(max_length=127)
+    product = models.ForeignKey(
+        'product.Product', on_delete=models.CASCADE, related_name='attributes')
 
     def __str__(self):
         return f'{self.title}  -  {self.value} -  for {self.product.name}'
-
-
 
     # power=models.FloatField(verbose_name='tavane')
     # min_head=models.FloatField(verbose_name='hadeaghal ertefae popmaj')
@@ -151,32 +142,27 @@ class Attribute(models.Model):
     # bearinge=models.CharField(verbose_name='yataghan',max_length=64,choices=yataghan_choice)
     # khazen=models.CharField(verbose_name='khazen',max_length=64,choices=khazen_choice)
 
-
-
     # @property
     # def waranty(self):
         # if self.waranty_tamir==False and self.waranty_taviz==False:
-            # return f'گارانتی تعویض و تعمیر ندارد'
-        # 
+        # return f'گارانتی تعویض و تعمیر ندارد'
+        #
         # elif self.waranty_taviz==False:
-            # return f'{self.month_of_waranty}  ماه گارانتی   {self.waranty_tamir} '
-        # 
+        # return f'{self.month_of_waranty}  ماه گارانتی   {self.waranty_tamir} '
+        #
         # elif self.waranty_tamir==False:
-            # return f'{self.month_of_waranty}  ماه گارانتی   {self.waranty_taviz} '
-        # 
+        # return f'{self.month_of_waranty}  ماه گارانتی   {self.waranty_taviz} '
+        #
         # elif self.waranty_taviz==True and self.waranty_tamir==True:
-            # return f'{self.month_of_waranty}  ماه گارانتی   {self.waranty_taviz} و {self.waranty_tamir} '
-
+        # return f'{self.month_of_waranty}  ماه گارانتی   {self.waranty_taviz} و {self.waranty_tamir} '
 
     # @property
     # def horse_power(self):
         # self.power*1.34
 
-
-
     # class Meta:
         # abstract = True
-# 
+#
 
 
 # class HomePomp(BasePomp):
@@ -191,16 +177,10 @@ class Attribute(models.Model):
     # masire_bay_pas=models.BooleanField(null=True)
     # mohafeze_hararti=models.BooleanField(null=True)
 
-
-
     # @property
     # def title(self):
         # f'{self.type} + {self.home_type} + {self.horse_power} + {self.model_brand} + {self.brand} '
 
-
     # @property
     # def similar_pomp(self):
         # return HomePomp.objects.filter(voltage__gte=self.voltage-.5,voltage__lte=self.voltage+.5)
-
-
-

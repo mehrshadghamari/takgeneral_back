@@ -1,8 +1,15 @@
-from rest_framework import serializers
-from .models import Product, ProductCategory, Attribute, ProductImage, ProductBrand
-from product_action.models import Comment, Question, Reply
-
 from datetime import datetime
+
+from product_action.models import Comment
+from product_action.models import Question
+from product_action.models import Reply
+from rest_framework import serializers
+
+from .models import Attribute
+from .models import Product
+from .models import ProductBrand
+from .models import ProductCategory
+from .models import ProductImage
 
 # class HomePompDetailSerializer(serializers.ModelSerializer):
 #

@@ -1,11 +1,17 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .serializers import CreateCommentSerializer, CommentLikeSerializer, CreateQuestionSerializer, CreateReplySerializer
-from product_action.models import Comment, CommentLike
 from account.models import MyUser
+from django.shortcuts import render
+from product_action.models import Comment
+from product_action.models import CommentLike
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import CommentLikeSerializer
+from .serializers import CreateCommentSerializer
+from .serializers import CreateQuestionSerializer
+from .serializers import CreateReplySerializer
 
 
 class CreateComment(APIView):

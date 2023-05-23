@@ -1,10 +1,13 @@
 import random
-from datetime import timedelta, datetime
+from datetime import datetime
+from datetime import timedelta
+
 from django.core.management.base import BaseCommand
 from django.utils.timezone import make_aware
-from product.models import TitleAttribute,ProductCategory,ProductBrand,Product
-
-
+from product.models import Product
+from product.models import ProductBrand
+from product.models import ProductCategory
+from product.models import TitleAttribute
 
 all_title=['کشور سازنده','توان','حداقل ارتفاع پمپاژ ( کمترین هد )','حداکثر ارتفاع پمپاژ (بیشترین هد)',
            'حداقل میزان آبدهی ( کمترین دبی )','حداکثر میزان آبدهی ( بیشترین دبی )',
@@ -32,7 +35,7 @@ product_json={
                 },
                 'max_head':{
                     'name':'حداکثر ارتفاع پمپاژ (بیشترین هد)',
-                    'value':''                    
+                    'value':''
                 },
                 'min_deby':{
                     'name':'حداقل میزان آبدهی ( کمترین دبی )',
@@ -111,7 +114,7 @@ product_json={
                         },
                     'max_head':{
                         'name':'حداکثر ارتفاع پمپاژ (بیشترین هد)',
-                        'value':''                    
+                        'value':''
                         },
                     'min_deby':{
                         'name':'حداقل میزان آبدهی ( کمترین دبی )',
@@ -123,8 +126,8 @@ product_json={
                         }
 
                 }
-                
-                
+
+
               }
 
 
@@ -277,4 +280,3 @@ class Command(BaseCommand):
                 month_of_waranty=month_of_waranty,
             )
             product.category.set(doparvane_category)
-
