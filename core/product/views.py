@@ -11,14 +11,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Product
-from .models import ProductBrand
 from .serializers import AllProductSerializer
 from .serializers import CommentsSerializer
 from .serializers import ProductIDSerializer
 from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
-n
+
 
 
 
