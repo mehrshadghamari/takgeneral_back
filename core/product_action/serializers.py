@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Comment,CommentLike,Question,Reply
+from .models import Comment, CommentLike, Question, Reply
 
 
 class CreateCommentSerializer(serializers.ModelSerializer):
@@ -8,10 +8,10 @@ class CreateCommentSerializer(serializers.ModelSerializer):
     def get_created_at(self, obj):
         return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
 
-
     class Meta:
         model = Comment
-        fields = ('id','user_alias_name','product', 'user','title','content', 'suggest_me','kefiyat_rate','arzesh_rate','created_at')
+        fields = ('id', 'user_alias_name', 'product', 'user', 'title',
+                  'content', 'suggest_me', 'kefiyat_rate', 'arzesh_rate', 'created_at')
         read_only_fields = ('id', 'created_at',)
 
 
@@ -22,8 +22,8 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
         return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
-        model=Question
-        fields=('id','user','title','content','product','created_at')
+        model = Question
+        fields = ('id', 'user', 'title', 'content', 'product', 'created_at')
         read_only_fields = ('id', 'created_at',)
 
 
@@ -34,8 +34,8 @@ class CreateReplySerializer(serializers.ModelSerializer):
         return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
-        model=Reply
-        fields=('id','user','question','content','created_at')
+        model = Reply
+        fields = ('id', 'user', 'question', 'content', 'created_at')
         read_only_fields = ('id', 'created_at',)
 
 
@@ -47,10 +47,10 @@ class CommentLikeSerializer(serializers.ModelSerializer):
     def get_created_at(self, obj):
         return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
 
-
     class Meta:
         model = CommentLike
-        fields = ('id' ,'comment', 'user', 'like_vote', 'dislike_vote', 'created_at')
+        fields = ('id', 'comment', 'user', 'like_vote',
+                  'dislike_vote', 'created_at')
 
     # def validate(self, attrs):
     #     # Check if the comment exists and is active

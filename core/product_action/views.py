@@ -3,10 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .serializers import CreateCommentSerializer, CommentLikeSerializer,CreateQuestionSerializer,CreateReplySerializer
+from .serializers import CreateCommentSerializer, CommentLikeSerializer, CreateQuestionSerializer, CreateReplySerializer
 from product_action.models import Comment, CommentLike
 from account.models import MyUser
-
 
 
 class CreateComment(APIView):
@@ -21,7 +20,6 @@ class CreateComment(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class CommentLikeOrDisslike(APIView):
@@ -43,7 +41,7 @@ class CommentLikeOrDisslike(APIView):
             comment_like = None
 
         data = request.data.copy()
-        data['user']=user_id
+        data['user'] = user_id
 
         if 'like_vote' in data:
             like_vote = bool(data['like_vote'])
@@ -68,7 +66,7 @@ class CommentLikeOrDisslike(APIView):
                 comment_like.like_vote = False
                 comment_like.dislike_vote = True
 
-            serializer = CommentLikeSerializer(comment_like,data=data)
+            serializer = CommentLikeSerializer(comment_like, data=data)
         # Otherwise, create a new like or dislike for the comment
         else:
             data['comment'] = comment.id
@@ -89,11 +87,10 @@ class CommentLikeOrDisslike(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class ProducrQuestion(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self,request):
+    def post(self, request):
         data = request.data.copy()
         data['user'] = self.request.user.id
         serializer = CreateQuestionSerializer(data=data)
@@ -102,12 +99,12 @@ class ProducrQuestion(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class ReplyQuestion(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self,request):
+    def post(self, request):
         data = request.data.copy()
         data['user'] = self.request.user.id
         serializer = CreateReplySerializer(data=data)
