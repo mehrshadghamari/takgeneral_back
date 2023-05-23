@@ -18,9 +18,6 @@ from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
 
-
-
-
 class ProductDetail(APIView):
     def get(self, request, id):
         # pomp_instance=Product.objects.filter(id=id).first()
