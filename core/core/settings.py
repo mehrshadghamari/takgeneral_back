@@ -28,7 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ["https://takback.soroushes.tk", "https://www.takback.soroushes.tk"]
+CSRF_TRUSTED_ORIGINS = ["https://takback.soroushes.tk",
+                        "https://www.takback.soroushes.tk"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -110,9 +111,9 @@ REST_FRAMEWORK = {
         'verfiy_code': '3/min',
     },
     'DEFAULT_FILTER_BACKENDS': [
-    'django_filters.rest_framework.DjangoFilterBackend',
-    'rest_framework.filters.SearchFilter',
-    'rest_framework.filters.OrderingFilter',
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
     ]
 
 }
@@ -187,11 +188,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATICFILES_DIRS = [
-    # os.path.join(BASE_DIR, 'static'),
+# os.path.join(BASE_DIR, 'static'),
 # ]
 
 # Default primary key field type
