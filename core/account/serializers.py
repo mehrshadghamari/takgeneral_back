@@ -39,6 +39,15 @@ class UserInfoSerialozer(serializers.ModelSerializer):
         read_only_fields = ('phone_number',)
 
 
+    def validate_national_code(self, value):
+        """
+        Validate that the national_code is unique.
+        """
+        if MyUser.objects.filter(national_code=value).exists():
+            raise serializers.ValidationError("This national code is already in use vvv.")
+        return value
+    
+
 class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
