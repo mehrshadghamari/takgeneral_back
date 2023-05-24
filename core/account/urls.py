@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view()),
     path('user-info/', views.UserAddInfo.as_view()),
     path('user-address/', views.UserAdress.as_view()),
+    path('update-address/<int:id>', views.UpdateAddress.as_view()),
     path('user-status/', views.UserStatus.as_view()),
     path('location/', views.LocationApi.as_view()),
 

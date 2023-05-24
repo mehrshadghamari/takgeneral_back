@@ -18,6 +18,12 @@ class CreateCommentSerializer(serializers.ModelSerializer):
                   'content', 'suggest_me', 'kefiyat_rate', 'arzesh_rate', 'created_at')
         read_only_fields = ('id', 'created_at',)
 
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Comment.objects.all(),
+                fields=('user', 'product'),
+                message="Some custom message."
+            )]
 
 class CreateQuestionSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()

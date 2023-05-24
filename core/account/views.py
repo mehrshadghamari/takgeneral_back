@@ -165,6 +165,18 @@ class UserAdress(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UpdateAddress(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request,id):
+        address_instance= Address.objects.get(id=id)
+        serializer = UserAddressSerializer(instance=address_instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UserStatus(APIView):
     permission_classes = [IsAuthenticated]
 
