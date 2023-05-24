@@ -62,7 +62,7 @@ class Question(models.Model):
     product = models.ForeignKey(
         "product.Product", on_delete=models.CASCADE, related_name='questions', default=None)
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    title = models.CharField(max_length=128, default=None, null=True)
+    # title = models.CharField(max_length=128, default=None, null=True)
     content = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
 
