@@ -60,11 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     admin-compliant permissions.
     Username, password and email are required. Other fields are optional.
     """
-    # choise_user = (('doctor', 'doctor'), ('patient', 'patient'))
-    # doctor_or_patient = models.CharField(
-    # choices=choise_user, max_length=10, null=True, blank=True)
 
-    # profile_image = models.ImageField(null=True, blank=True)
     username = models.CharField(('username'), max_length=32, unique=True, null=True, blank=True,
                                 help_text=(
                                     'Required. 30 characters or fewer starting with a letter. Letters, digits and underscore only.'),
@@ -78,19 +74,11 @@ class User(AbstractBaseUser, PermissionsMixin):
                                     'unique': ("A user with that username already exists."),
     }
     )
-    # full_name = models.CharField(('full name'), max_length=80)
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
     national_code = models.CharField(max_length=10, unique=True,
                                      null=True, validators=[national_code_validator])
-    # national_code = models.CharField(max_length=10,
-    #  null=True, )
-    # gender_choice = (
-    # ('male', 'male'),
-    # ('female', 'female'),
-    # )
-    # gender = models.CharField(choices=gender_choice,
-    #   max_length=10, null=True, blank=True)
+
 
     email = models.EmailField(
         ('email address'), unique=True, null=True, blank=True)

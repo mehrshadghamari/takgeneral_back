@@ -22,9 +22,9 @@ class CartDetailsPreview(APIView):
         elif not cart_data:
             return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
 
-        # user_id = request.user.id
-        user_id = 1
-        print(user_id)
+        user_id = request.user.id
+        # user_id = 1
+        # print(user_id)
         # user authentiicated
         if user_id is not None:
             print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
