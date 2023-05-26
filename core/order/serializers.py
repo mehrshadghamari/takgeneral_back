@@ -48,3 +48,5 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     count = serializers.IntegerField()
+
+

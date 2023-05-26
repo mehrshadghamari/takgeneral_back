@@ -19,9 +19,14 @@ class CartDetailsPreview(APIView):
         cart_data = request.data.get('cartsData', None)
         if cart_data is None:
             return Response({'error': 'Invalid input data'}, status=status.HTTP_400_BAD_REQUEST)
-        elif not cart_data:
-            return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
+        # elif not cart_data:
+        #     return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
 
+         # Filter out objects with count = 0 from the cart_data list
+        # filtered_cart_data = [item for item in cart_data if item['count'] != 0]
+
+        print('tttttttttttttttttttttttttttt')
+        print(cart_data)
         user_id = request.user.id
         # user_id = 1
         # print(user_id)
@@ -44,14 +49,19 @@ class CartDetailsPreview(APIView):
             # Add cart items to the order or update the quantity if the product is already in the order
             for item in cart_items:
                 product = Product.objects.get(id=item['id'])
-                order_item, created = OrderItem.objects.get_or_create(
-                    order=order, product=product)
-                if not created:
-                    order_item.quantity = item['count']
-                    order_item.save()
+                count = item['count']
+                if count == 0:  # Check if count is zero
+                    # Delete the OrderItem if it exists and count is zero
+                    OrderItem.objects.filter(order=order, product=product).delete()
                 else:
-                    order_item.quantity = item['count']
-                    order_item.save()
+                    order_item, created = OrderItem.objects.get_or_create(
+                        order=order, product=product)
+                    if not created:
+                        order_item.quantity = item['count']
+                        order_item.save()
+                    else:
+                        order_item.quantity = item['count']
+                        order_item.save()
 
             order_items = order.items.all()
             items = OrderItemSerializer(order_items, many=True)
@@ -69,8 +79,14 @@ class CartDetailsPreview(APIView):
 
         # user not authentiicated
         else:
+            if not cart_data:
+                return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
+            
+            #  Filter out objects with count = 0 from the cart_data list
+            filtered_cart_data = [item for item in cart_data if item['count'] != 0]
+
             print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-            serializer = CartSerializer(data=cart_data, many=True)
+            serializer = CartSerializer(data=filtered_cart_data, many=True)
             serializer.is_valid(raise_exception=True)
             cart_items = serializer.validated_data
 
