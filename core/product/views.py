@@ -24,9 +24,9 @@ class ProductDetail(APIView):
         product_instance = get_object_or_404(Product, id=id)
         product_serilizer = productDetailSerializer(
             product_instance, context={"request": request})
-        comments = Comment.objects.filter(product__id=id)
+        comments = Comment.objects.filter(product__id=id).order_by('-created_at')
         comments_serializer = CommentsSerializer(comments, many=True)
-        questions = Question.objects.filter(product__id=id)
+        questions = Question.objects.filter(product__id=id).order_by('-created_at')
         questions_serializer = QuestionSerializer(questions, many=True)
         avg = comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'), avg_arzesh_rate=Avg(
             'arzesh_rate'), avg_user_rate=(Avg('kefiyat_rate')+Avg('arzesh_rate'))/2)
