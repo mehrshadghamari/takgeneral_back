@@ -18,9 +18,24 @@ from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
 
+# class ProductDetail(APIView):
+#     def get(self, request, id):
+#         # pomp_instance=Product.objects.filter(id=id).first()
+#         product_instance = get_object_or_404(Product, id=id)
+#         product_serilizer = productDetailSerializer(
+#             product_instance, context={"request": request})
+#         comments = Comment.objects.filter(product__id=id).order_by('-created_at')
+#         comments_serializer = CommentsSerializer(comments, many=True)
+#         questions = Question.objects.filter(product__id=id).order_by('-created_at')
+#         questions_serializer = QuestionSerializer(questions, many=True)
+#         similar_product=Product.objects.filter(price__lte=product_instance.price+1000000,price__gte=product_instance.price-1000000)
+#         similar_product_serializer=AllProductSerializer(similar_product,context={"request": request},many=True)
+#         avg = comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'), avg_arzesh_rate=Avg(
+#             'arzesh_rate'), avg_user_rate=(Avg('kefiyat_rate')+Avg('arzesh_rate'))/2)
+#         return Response({'product': product_serilizer.data, 'comments': comments_serializer.data, 'questions': questions_serializer.data, 'avg_rate': avg,'similar_product':similar_product_serializer.data}, status=status.HTTP_200_OK)
+
 class ProductDetail(APIView):
     def get(self, request, id):
-        # pomp_instance=Product.objects.filter(id=id).first()
         product_instance = get_object_or_404(Product, id=id)
         product_serilizer = productDetailSerializer(
             product_instance, context={"request": request})
@@ -28,9 +43,30 @@ class ProductDetail(APIView):
         comments_serializer = CommentsSerializer(comments, many=True)
         questions = Question.objects.filter(product__id=id).order_by('-created_at')
         questions_serializer = QuestionSerializer(questions, many=True)
-        avg = comments.aggregate(avg_keyfiyat_rate=Avg('kefiyat_rate'), avg_arzesh_rate=Avg(
-            'arzesh_rate'), avg_user_rate=(Avg('kefiyat_rate')+Avg('arzesh_rate'))/2)
-        return Response({'product': product_serilizer.data, 'comments': comments_serializer.data, 'questions': questions_serializer.data, 'avg_rate': avg}, status=status.HTTP_200_OK)
+        
+        # Retrieve similar products based on price and category
+        similar_product = Product.objects.filter(
+            price__lte=product_instance.price + 1000000,
+            price__gte=product_instance.price - 1000000,
+            category__in=product_instance.category.all()
+        )
+        similar_product_serializer = AllProductSerializer(
+            similar_product, context={"request": request}, many=True)
+        
+        avg = comments.aggregate(
+            avg_keyfiyat_rate=Avg('kefiyat_rate'),
+            avg_arzesh_rate=Avg('arzesh_rate'),
+            avg_user_rate=(Avg('kefiyat_rate') + Avg('arzesh_rate')) / 2
+        )
+        
+        return Response({
+            'product': product_serilizer.data,
+            'comments': comments_serializer.data,
+            'questions': questions_serializer.data,
+            'avg_rate': avg,
+            'similar_product': similar_product_serializer.data
+        }, status=status.HTTP_200_OK)
+
 
 
 # helping api for front
