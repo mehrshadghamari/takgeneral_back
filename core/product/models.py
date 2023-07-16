@@ -14,24 +14,21 @@ class ProductImage(models.Model):
     image = models.ImageField()
     product = models.ForeignKey(
         'product.Product', on_delete=models.CASCADE, related_name='other_images')
-    # alt_text = models.CharField(max_length=255)
-    # is_main = models.BooleanField(default=False)
-    # created_at = models.DateTimeField(auto_now_add=True,editable=False)
-    # upload_at = models.DateTimeField(auto_now=True)
+    alt_text = models.CharField(max_length=255,null=True)
+    is_main = models.BooleanField(default=False,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,editable=False,null=True)
+    upload_at = models.DateTimeField(auto_now=True,null=True)
 
-
-# category many to many
-class ProductCategory(models.Model):
-    name = models.CharField(max_length=64)
-    # url=models.CharField(max_length=64)
-
-    def __str__(self):
-        return self.name
 
 
 class ProductBrand(models.Model):
     name = models.CharField(max_length=64)
-    image = models.ImageField(null=True)
+    logo = models.ImageField(null=True) #new
+    url = models.CharField(max_length=64,null=True) # indexing
+    # blog brand  desc image (alt)
+
+# other baner (link to) and main banner for category
+
 
     def __str__(self):
         return self.name
@@ -43,12 +40,10 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-
-    # product_type = models.ForeignKey("product.ProductType", on_delete=models.RESTRICT)
-    # category= models.ForeignKey("product.Category",on_delete=models.RESTRICT)
-    # slug=models.SlugField(max_length=255,unique=True)
+    product_type = models.ForeignKey("product.ProductType",null=True, on_delete=models.RESTRICT)
+    category= models.ForeignKey("product.Category",on_delete=models.RESTRICT,null=True)
+    slug=models.SlugField(max_length=255,unique=True,null=True)
     name = models.CharField(max_length=64)
-    category = models.ManyToManyField('product.ProductCategory')
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
     model_brand = models.CharField(max_length=64)
     main_image = models.ImageField()
@@ -63,7 +58,6 @@ class Product(models.Model):
     waranty_taviz = models.BooleanField()
     month_of_waranty = models.IntegerField()
     created_at = models.DateField(auto_now_add=True, null=True)
-    # Attributes = models.JSONField(default=pomp_json)
 
     objects = ProductManager()
 
@@ -101,67 +95,46 @@ class Product(models.Model):
         return f'id : {self.id} -- name : {self.name} '
 
 
-# class TitleAttribute(models.Model):
-#     name = models.CharField(max_length=127)
-
-#     def __str__(self):
-#         return self .name
-
-
-# class Attribute(models.Model):
-#     title = models.ForeignKey('product.TitleAttribute',
-#                               on_delete=models.CASCADE)
-#     value = models.CharField(max_length=127)
-#     product = models.ForeignKey(
-#         'product.Product', on_delete=models.CASCADE, related_name='attributes')
-
-#     def __str__(self):
-#         return f'{self.title}  -  {self.value} -  for {self.product.name}'
-
-
-
-
-
 # for release 2
 
-# class Category(MPTTModel):
-#     name= models.CharField(max_length=255,unique=True)
-#     slug=models.SlugField(max_length=255,unique=True)
-#     parent= TreeForeignKey("self",on_delete=models.CASCADE,null=True,blank=True,related_name='children')
-#     is_active = models.BooleanField(default=False)
+class Category(MPTTModel):
+    name= models.CharField(max_length=255,unique=True)
+    slug=models.SlugField(max_length=255,unique=True)
+    parent= TreeForeignKey("self",on_delete=models.CASCADE,null=True,blank=True,related_name='children')
+    is_active = models.BooleanField(default=False)
 
 
-#     class MPTTMeta:
-#         order_insertion_by = ['name']
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
 
 
-# class ProductType (models.Model):
-#     name= models.CharField(max_length=255,unique=True)
-#     is_active = models.BooleanField(default=True)
+class ProductType (models.Model):
+    name= models.CharField(max_length=255,unique=True)
+    is_active = models.BooleanField(default=True)
 
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
-# class ProductSpecification(models.Model):
-#     product_type= models.ForeignKey("product.ProductType",on_delete=models.RESTRICT)
-#     name= models.CharField(max_length=255,)
+class ProductSpecification(models.Model):
+    product_type= models.ForeignKey("product.ProductType",on_delete=models.RESTRICT)
+    name= models.CharField(max_length=255,)
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
-# class ProductSpecificationValue(models.Model):
-#     product= models.ForeignKey("product.Product", on_delete=models.CASCADE)
-#     specification= models.ForeignKey("product.ProductSpecification",on_delete=models.RESTRICT)
-#     value= models.CharField(max_length=255,)
+class ProductSpecificationValue(models.Model):
+    product= models.ForeignKey("product.Product", on_delete=models.CASCADE)
+    specification= models.ForeignKey("product.ProductSpecification",on_delete=models.RESTRICT)
+    value= models.CharField(max_length=255,)
 
-#     def __str__(self) :
-#         return self.value
+    def __str__(self) :
+        return self.value

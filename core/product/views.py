@@ -16,6 +16,99 @@ from .serializers import CommentsSerializer
 from .serializers import ProductIDSerializer
 from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
+from .models import Category
+from .serializers import AllCategorySerializer,CategorySerializer
+
+
+
+
+class  AllCategoryList(APIView):
+    def get(self,request):
+        queryset = Category.objects.filter(parent=None)
+        serializer = AllCategorySerializer(queryset,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+
+class products(APIView):
+    def get(self, request,cat_id):
+
+        category_obj=Category.objects.get(id=cat_id)
+        if category_obj.parent ==None:
+            main_category_serilizer = CategorySerializer(category_obj)
+            categories = category_obj.get_children()
+            sub_categories_serilizer = CategorySerializer(categories,many=True)
+            brands= Product.objects.values('brand__id').annotate(
+                product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
+            return Response({
+                            'main_banner':"",
+                            'other_banner':'',
+                            'brands':brands,
+                            "main_category":main_category_serilizer.data,
+                            "sub_category":sub_categories_serilizer.data},
+                            status=status.HTTP_200_OK)
+
+        else :
+            if category_obj.is_leaf_node():
+                main_category_serilizer= CategorySerializer(category_obj.parent)
+                sub_categories_serilizer = CategorySerializer(category_obj.parent.get_children(),many=True)
+
+            else:
+                main_category_serilizer= CategorySerializer(category_obj)
+                sub_categories_serilizer = CategorySerializer(category_obj.get_children(),many=True)
+
+
+            product_query = Product.objects.with_final_price().filter(
+                category=category_obj).order_by('-created_at')
+
+            brand_query_before = product_query.values('brand__id').annotate(
+                product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
+
+            min_price = self.request.query_params.get('min_price', None)
+            max_price = self.request.query_params.get('max_price', None)
+            if min_price and max_price:
+                product_query = product_query.filter(final_price_Manager__gte=int(
+                    min_price), final_price_Manager__lte=int(max_price))
+                brand_query_before = product_query.values('brand__id').annotate(
+                    product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
+
+            brand_query = brand_query_before
+
+            brand = self.request.query_params.getlist('brand[]')
+            if brand:
+                product_query = product_query.filter(brand__id__in=brand)
+            else:
+                brand_query = product_query.values('brand__id').annotate(product_count=Count(
+                    'brand')).values('brand__id', 'brand__name', 'product_count')
+
+            ordering = self.request.query_params.get('ordering', None)
+            if ordering is not None:
+                if ordering == 'price':
+                    product_query = product_query.order_by('final_price_Manager')
+                elif ordering == '-price':
+                    product_query = product_query.order_by('-final_price_Manager')
+
+            page_number = self.request.query_params.get('page', 1)
+            # page_size = 20
+            page_size = self.request.query_params.get('page_size', 20)
+
+            paginator = Paginator(product_query, page_size)
+
+            product_serializer = AllProductSerializer(paginator.page(
+                page_number), many=True, context={"request": request})
+
+            page_count = math.ceil(product_query.count()/int(page_size))
+
+            return Response({
+                            'main_banner':"",
+                            'other_banner':'',
+                            'current_page': int(page_number),
+                            'page_count': page_count, 
+                            "main_category":main_category_serilizer.data,
+                            "sub_category":sub_categories_serilizer.data,
+                            'product': product_serializer.data, 
+                            'brands': brand_query},
+                            status=status.HTTP_200_OK)
 
 
 # class ProductDetail(APIView):

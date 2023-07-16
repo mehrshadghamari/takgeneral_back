@@ -1,5 +1,6 @@
 from django.db import models
-
+# from ckeditor.fields import RichTextField
+ 
 
 class Slider(models.Model):
     name = models.CharField(max_length=64)
@@ -22,19 +23,32 @@ class Advertisement(models.Model):
     url = models.CharField(max_length=64, null=True)
 
 
-# class PompMain(models.Model):
-    # name=models.CharField(max_length=64)
-    # image=models.ImageField()
-    # url = models.CharField(max_length=64,null=True)
+
+class MainBanner(models.Model):
+    image = models.ImageField()
+    mobile_image = models.ImageField()
+    alt = models.CharField(max_length=127)
+    slug = models.CharField(max_length=64)
+    linke_url = models.CharField(max_length=257)
 
 
-# class PompType(models.Model):
-    # name=models.CharField(max_length=64)
-    # image=models.ImageField()
-    # url = models.CharField(max_length=64,null=True)
+class Banner(models.Model):
+    image=models.ImageField()
+    alt=models.CharField(max_length=127)
+    slug= models.CharField(max_length=64)
+    link_url=models.CharField(max_length=257)
 
 
-# class PompBrand(models.Model):
-    # name=models.CharField(max_length=64)
-    # image=models.ImageField()
-    # url =models.CharField(max_length=64,null=True)
+
+class Content(models.Model):
+    desc= models.TextField()
+
+
+class ContentImage(models.Model):
+    content = models.ForeignKey("extention.Content", on_delete=models.CASCADE)
+    image= models.ImageField()
+
+
+
+
+# class MetaTag(models.Model):
