@@ -20,6 +20,15 @@ from .models import Category
 from .serializers import AllCategorySerializer,CategorySerializer
 
 
+# class Brands(APIView):
+#     def get(self,request):
+#         return Response({
+#                             'page_content':"",
+#                             'main_banner':"",
+#                             'brands':'',
+#                             'products':'',},
+#                             status=status.HTTP_200_OK)
+
 
 
 class  AllCategoryList(APIView):
@@ -39,8 +48,9 @@ class products(APIView):
             categories = category_obj.get_children()
             sub_categories_serilizer = CategorySerializer(categories,many=True)
             brands= Product.objects.values('brand__id').annotate(
-                product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
+                product_count=Count('brand')).values('brand__id', 'brand__name','brand__logo', 'product_count')
             return Response({
+                            'page_content':"",
                             'main_banner':"",
                             'other_banner':'',
                             'brands':brands,
@@ -100,6 +110,7 @@ class products(APIView):
             page_count = math.ceil(product_query.count()/int(page_size))
 
             return Response({
+                            'page_content':"",
                             'main_banner':"",
                             'other_banner':'',
                             'current_page': int(page_number),
