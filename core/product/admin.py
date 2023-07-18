@@ -1,15 +1,18 @@
-from django.contrib import admin
-from mptt.admin import MPTTModelAdmin
 from django import forms
+from django.contrib import admin
+from extention.admin import ContentInline
+from mptt.admin import MPTTModelAdmin
+
+# from .models import ProductCategory
 # from .models import Attribute
 from .models import Category
 from .models import Product
 from .models import ProductBrand
-# from .models import ProductCategory
 from .models import ProductImage
 from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
+
 # from .models import TitleAttribute
 
 # Register your models here.
@@ -101,13 +104,10 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [
         ProductImageInline,
         ProductSpecificationValueInline,
+        ContentInline,
     ]
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['product_type'].widget.can_add_related = False
         return form
-
-
-    
-

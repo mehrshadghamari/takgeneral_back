@@ -1,4 +1,6 @@
 from extention.models import Advertisement
+from extention.models import Content
+from extention.models import ContentImage
 from extention.models import ProductClassification
 from extention.models import Slider
 from rest_framework import serializers
@@ -53,3 +55,9 @@ class AdvertisementSerilizer(serializers.ModelSerializer):
         request = self.context.get('request')
         pc_image_url = obj.pc_image.url
         return request.build_absolute_uri(pc_image_url)
+
+
+class ContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Content
+        fields = "__all__"
