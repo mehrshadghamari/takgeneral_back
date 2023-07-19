@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'mptt',
-    'tinymce'
+    'tinymce',
+    'nested_inline',
 ]
 
 MIDDLEWARE = [

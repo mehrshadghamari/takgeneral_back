@@ -4,6 +4,8 @@ from extention.models import Content
 from extention.models import ContentImage
 from extention.models import ProductClassification
 from extention.models import Slider
+from nested_inline.admin import NestedModelAdmin
+from nested_inline.admin import NestedTabularInline
 
 admin.site.register(Slider)
 admin.site.register(ProductClassification)
@@ -15,11 +17,11 @@ admin.site.register(Advertisement)
 
 
 
-class ContentImageInline(admin.TabularInline):
+class ContentImageInline(NestedTabularInline):
     model = ContentImage
-    extra = 3
+    extra = 2
 
-class ContentInline(admin.TabularInline):
+class ContentInline(NestedTabularInline):
     model = Content
     extra = 1
     fields = ["desc"]
@@ -27,7 +29,7 @@ class ContentInline(admin.TabularInline):
 
 
 @admin.register(Content)
-class ProductAdmin(admin.ModelAdmin):
+class ContenttAdmin(admin.ModelAdmin):
     # ...
     fields = ["url","desc",]
     inlines = [

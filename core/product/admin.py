@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin
 from extention.admin import ContentInline
 from mptt.admin import MPTTModelAdmin
+from nested_inline.admin import NestedModelAdmin
+from nested_inline.admin import NestedTabularInline
 
 # from .models import ProductCategory
 # from .models import Attribute
@@ -20,7 +22,7 @@ from .models import ProductType
 
 # admin.site.register(HomePomp)
 # admin.site.register(Product)
-admin.site.register(ProductImage)
+# admin.site.register(ProductImage)
 admin.site.register(ProductBrand)
 # admin.site.register(ProductCategory)
 # admin.site.register(Attribute)
@@ -98,7 +100,7 @@ class ProductSpecificationValueInline(admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(NestedModelAdmin):
     # ...
 
     inlines = [
