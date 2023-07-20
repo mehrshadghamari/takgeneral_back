@@ -1,6 +1,7 @@
 from django.db import models
 # from ckeditor.fields import RichTextField
- 
+from tinymce import models as tinymce_model
+
 
 class Slider(models.Model):
     name = models.CharField(max_length=64)
@@ -41,7 +42,9 @@ class Banner(models.Model):
 
 
 class Content(models.Model):
-    desc= models.TextField()
+    product= models.ForeignKey("product.Product",on_delete=models.CASCADE,null=True,blank=True)
+    url=models.CharField(max_length=128,null=True)
+    desc = tinymce_model.HTMLField()
 
 
 class ContentImage(models.Model):

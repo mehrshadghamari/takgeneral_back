@@ -2,9 +2,11 @@ from django.db.models import F
 from django.db.models import Q
 from django.shortcuts import render
 from extention.models import Advertisement
+from extention.models import Content
 from extention.models import ProductClassification
 from extention.models import Slider
 from extention.serializers import AdvertisementSerilizer
+from extention.serializers import ContentSerializer
 from extention.serializers import ProductClassificationSerializer
 from extention.serializers import SliderSerializer
 from product.models import Product
@@ -48,4 +50,12 @@ class AdvertisementAPi(APIView):
         advertisement = Advertisement.objects.all()
         advertisement_serializer = AdvertisementSerilizer(
             advertisement, many=True, context={"request": request})
+        return Response(advertisement_serializer.data, status=status.HTTP_200_OK)
+
+
+class contentAPI(APIView):
+    def get(self, request):
+        advertisement = Content.objects.all()
+        advertisement_serializer = ContentSerializer(
+            advertisement, many=True,)
         return Response(advertisement_serializer.data, status=status.HTTP_200_OK)
