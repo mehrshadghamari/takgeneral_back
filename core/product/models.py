@@ -100,9 +100,9 @@ class Product(models.Model):
 class Category(MPTTModel):
     name= models.CharField(max_length=255,unique=True)
     slug=models.SlugField(max_length=255,unique=True)
-    # image=models.ImageField()
-    # alt_text= models.CharField(max_length=64)
-    # description = models.CharField(max_length=127)
+    image=models.ImageField(null=True,blank=True)
+    alt_text= models.CharField(max_length=64,null=True,blank=True)
+    description = models.CharField(max_length=127,null=True,blank=True)
     parent= TreeForeignKey("self",on_delete=models.CASCADE,null=True,blank=True,related_name='children')
     is_active = models.BooleanField(default=False)
 

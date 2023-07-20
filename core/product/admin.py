@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.forms import BaseInlineFormSet
-from extention.admin import ContentInline
+from extention.admin import ContentInline,ContentImageInline,MainBannerInline,BannerInline
 from mptt.admin import MPTTModelAdmin
 from nested_inline.admin import NestedModelAdmin
 
@@ -12,15 +12,24 @@ from .models import ProductImage
 from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
-
+from django.utils.translation import get_language_bidi, gettext as _, gettext_lazy
 # Register your models here.
 
-admin.site.register(ProductBrand)
+
+
+@admin.register(ProductBrand)
+class ProductBrandAdmin(NestedModelAdmin):
+    inlines=[ContentInline,MainBannerInline,BannerInline]
 
 
 
 
-admin.site.register(Category,MPTTModelAdmin)
+# admin.site.register(Category,MPTTModelAdmin)
+@admin.register(Category)
+class CategotyAdmin(NestedModelAdmin,MPTTModelAdmin):
+    inlines=[ContentInline,MainBannerInline,BannerInline]
+
+
 
 class ProductSpecificationInline(admin.TabularInline):
     model= ProductSpecification
@@ -98,6 +107,7 @@ class ProductAdmin(NestedModelAdmin):
         ProductImageInline,
         ProductSpecificationValueInline,
         ContentInline,
+        # ContentImageInline,
     ]
 
     def get_form(self, request, obj=None, **kwargs):

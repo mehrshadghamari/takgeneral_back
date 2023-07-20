@@ -4,5 +4,5 @@ from extention import views
 
 urlpatterns = [
     path('home/',views.HomeApi.as_view()),
-    path('ads/',views.AdvertisementAPi.as_view()),
+    path('ads/',views.contentAPI.as_view()),
 ]

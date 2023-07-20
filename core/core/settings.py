@@ -204,3 +204,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'selector': 'textarea',
+    'plugins': 'code', # along with other plugins, e.g. 'link lists code'
+    'toolbar': 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code', # along with other buttons, e.g. 'bold italic | code'
+    
+}
