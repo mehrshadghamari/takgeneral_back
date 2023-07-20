@@ -218,7 +218,7 @@ TINYMCE_DEFAULT_CONFIG = {
    ''',
     'toolbar': 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code', # along with other buttons, e.g. 'bold italic | code'
     'height': 560,
-   'width': 750,
+   'width': 920,
    'cleanup_on_startup': True,
    'custom_undo_redo_levels': 20,
    'toolbar1': '''
