@@ -46,9 +46,9 @@ class Banner(models.Model):
 
 
 class Content(models.Model):
-    product= models.ForeignKey("product.Product",on_delete=models.CASCADE,null=True,blank=True)
-    category= models.ForeignKey("product.Category",on_delete=models.CASCADE,null=True,blank=True)
-    brand = models.ForeignKey("product.ProductBrand",on_delete=models.CASCADE,null=True,blank=True)
+    product= models.OneToOneField("product.Product",on_delete=models.CASCADE,null=True,blank=True)
+    category= models.OneToOneField("product.Category",on_delete=models.CASCADE,null=True,blank=True)
+    brand = models.OneToOneField("product.ProductBrand",on_delete=models.CASCADE,null=True,blank=True)
     url=models.CharField(max_length=128,null=True)
     desc = tinymce_model.HTMLField()
     # desc2 = models.TextField(null=True) 
