@@ -4,21 +4,27 @@ from django.core.paginator import Paginator
 from django.db.models import Avg
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from extention.models import Banner
+from extention.models import Content
+from extention.models import MainBanner
+from extention.serializers import BannerSAerializer
+from extention.serializers import ContentSerializer
+from extention.serializers import MainBannerSAerializer
 from product_action.models import Comment
 from product_action.models import Question
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .models import Category
 from .models import Product
+from .serializers import AllCategorySerializer
 from .serializers import AllProductSerializer
+from .serializers import CategorySerializer
 from .serializers import CommentsSerializer
 from .serializers import ProductIDSerializer
 from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
-from .models import Category
-from .serializers import AllCategorySerializer,CategorySerializer
-
 
 # class Brands(APIView):
 #     def get(self,request):
@@ -49,10 +55,16 @@ class products(APIView):
             sub_categories_serilizer = CategorySerializer(categories,many=True)
             brands= Product.objects.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name','brand__logo', 'product_count')
+            main_banner = category_obj.mainbanner_set.all()
+            main_banner_serializer = MainBannerSAerializer(main_banner,many=True,context={"request": request})
+            other_banner = category_obj.banner_set.all()
+            other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
+            page_content= Content.objects.filter(category=category_obj).first()
+            page_content_serializer = ContentSerializer(page_content)
             return Response({
-                            'page_content':"",
-                            'main_banner':"",
-                            'other_banner':'',
+                            'page_content':page_content_serializer.data,
+                            'main_banner':main_banner_serializer.data,
+                            'other_banner':other_banner_serializer.data,
                             'brands':brands,
                             "main_category":main_category_serilizer.data,
                             "sub_category":sub_categories_serilizer.data},
@@ -109,15 +121,24 @@ class products(APIView):
 
             page_count = math.ceil(product_query.count()/int(page_size))
 
+
+
+            main_banner = category_obj.mainbanner_set.all()
+            main_banner_serializer = MainBannerSAerializer(main_banner,many=True,context={"request": request})
+            other_banner = category_obj.banner_set.all()
+            other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
+            page_content= Content.objects.filter(category=category_obj).first()
+            page_content_serializer = ContentSerializer(page_content)
+
             return Response({
-                            'page_content':"",
-                            'main_banner':"",
-                            'other_banner':'',
+                            'page_content':page_content_serializer.data,
+                            'main_banner':main_banner_serializer.data,
+                            'other_banner':other_banner_serializer.data,
                             'current_page': int(page_number),
-                            'page_count': page_count, 
+                            'page_count': page_count,
                             "main_category":main_category_serilizer.data,
                             "sub_category":sub_categories_serilizer.data,
-                            'product': product_serializer.data, 
+                            'product': product_serializer.data,
                             'brands': brand_query},
                             status=status.HTTP_200_OK)
 
@@ -147,7 +168,7 @@ class ProductDetail(APIView):
         comments_serializer = CommentsSerializer(comments, many=True)
         questions = Question.objects.filter(product__id=id).order_by('-created_at')
         questions_serializer = QuestionSerializer(questions, many=True)
-        
+
         # Retrieve similar products based on price and category
         similar_product = Product.objects.filter(
             price__lte=product_instance.price + 1000000,
@@ -156,13 +177,13 @@ class ProductDetail(APIView):
         )
         similar_product_serializer = AllProductSerializer(
             similar_product, context={"request": request}, many=True)
-        
+
         avg = comments.aggregate(
             avg_keyfiyat_rate=Avg('kefiyat_rate'),
             avg_arzesh_rate=Avg('arzesh_rate'),
             avg_user_rate=(Avg('kefiyat_rate') + Avg('arzesh_rate')) / 2
         )
-        
+
         return Response({
             'product': product_serilizer.data,
             'comments': comments_serializer.data,

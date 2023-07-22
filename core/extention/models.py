@@ -31,7 +31,7 @@ class MainBanner(models.Model):
     image = models.ImageField()
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
-    slug = models.CharField(max_length=64)
+    url = models.CharField(max_length=64)
     link_url = models.CharField(max_length=257)
 
 
@@ -40,7 +40,7 @@ class Banner(models.Model):
     brand = models.ForeignKey("product.ProductBrand",on_delete=models.CASCADE,null=True,blank=True)
     image=models.ImageField()
     alt=models.CharField(max_length=127)
-    slug= models.CharField(max_length=64)
+    url= models.CharField(max_length=64)
     link_url=models.CharField(max_length=257)
 
 
