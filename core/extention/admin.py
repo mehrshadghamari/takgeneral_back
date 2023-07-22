@@ -1,17 +1,22 @@
 from django.contrib import admin
 from extention.models import Advertisement
+from extention.models import Banner
 from extention.models import Content
-from extention.models import ContentImage,Banner,MainBanner
+from extention.models import ContentImage
+from extention.models import MainBanner
+from extention.models import MetaTag
 from extention.models import ProductClassification
 from extention.models import Slider
 from nested_inline.admin import NestedModelAdmin
+from nested_inline.admin import NestedStackedInline
 from nested_inline.admin import NestedTabularInline
 
 admin.site.register(Slider)
 admin.site.register(ProductClassification)
 admin.site.register(Advertisement)
 
-
+admin.site.register(MainBanner)
+admin.site.register(Banner)
 
 class MainBannerInline(NestedTabularInline):
     model=MainBanner
@@ -27,6 +32,25 @@ class BannerInline(NestedTabularInline):
 
 
 
+class MetaTagInline(NestedStackedInline):
+    model=MetaTag
+
+    fields=("title",
+            "desc",
+            "og_title",
+            "og_desc",
+            "og_type",
+            "og_url",
+            "og_site_name",
+            "og_image",
+            "twiter_cart",
+            "script")
+    extra = 1
+
+
+
+
+
 class ContentImageInline(NestedTabularInline):
     model = ContentImage
     extra = 2
@@ -38,8 +62,6 @@ class ContentInline(NestedTabularInline):
     inlines = [ContentImageInline]
 
 
-admin.site.register(MainBanner)
-admin.site.register(Banner)
 
 
 

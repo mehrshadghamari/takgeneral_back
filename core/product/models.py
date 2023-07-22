@@ -15,7 +15,7 @@ class ProductImage(models.Model):
     product = models.ForeignKey(
         'product.Product', on_delete=models.CASCADE, related_name='other_images')
     alt_text = models.CharField(max_length=255,null=True)
-    is_main = models.BooleanField(default=False,null=True)
+    is_main = models.BooleanField(default=False,)
     created_at = models.DateTimeField(auto_now_add=True,editable=False,null=True)
     upload_at = models.DateTimeField(auto_now=True,null=True)
 
@@ -45,8 +45,8 @@ class Product(models.Model):
     slug=models.SlugField(max_length=255,unique=True,null=True)
     name = models.CharField(max_length=64)
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
-    model_brand = models.CharField(max_length=64)
-    main_image = models.ImageField()
+    # model_brand = models.CharField(max_length=64)
+    # main_image = models.ImageField()
     count_of_product = models.IntegerField(default=1)
     discount = models.IntegerField(
         default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])

@@ -217,8 +217,8 @@ TINYMCE_DEFAULT_CONFIG = {
    anchor pagebreak
    ''',
     'toolbar': 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code', # along with other buttons, e.g. 'bold italic | code'
-    'height': 560,
-   'width': 920,
+    'height': 660,
+   'width': 1500,
    'cleanup_on_startup': True,
    'custom_undo_redo_levels': 20,
    'toolbar1': '''

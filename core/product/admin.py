@@ -1,7 +1,14 @@
 from django import forms
 from django.contrib import admin
 from django.forms import BaseInlineFormSet
-from extention.admin import ContentInline,ContentImageInline,MainBannerInline,BannerInline
+from django.utils.translation import get_language_bidi
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
+from extention.admin import BannerInline
+from extention.admin import ContentImageInline
+from extention.admin import ContentInline
+from extention.admin import MainBannerInline
+from extention.admin import MetaTagInline
 from mptt.admin import MPTTModelAdmin
 from nested_inline.admin import NestedModelAdmin
 
@@ -12,40 +19,38 @@ from .models import ProductImage
 from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
-from django.utils.translation import get_language_bidi, gettext as _, gettext_lazy
+
 # Register your models here.
 
 
 
-@admin.register(ProductBrand)
-class ProductBrandAdmin(NestedModelAdmin):
-    inlines=[ContentInline,MainBannerInline,BannerInline]
+# form
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        product_type = cleaned_data.get('product_type')
+        if not product_type:
+            raise forms.ValidationError("A product type must be selected.")
+        return cleaned_data
 
 
-
-
-# admin.site.register(Category,MPTTModelAdmin)
-@admin.register(Category)
-class CategotyAdmin(NestedModelAdmin,MPTTModelAdmin):
-    inlines=[ContentInline,MainBannerInline,BannerInline]
-
+# inlines
 
 
 class ProductSpecificationInline(admin.TabularInline):
+    search_fields = ['name',]
     model= ProductSpecification
 
 
 
-@admin.register(ProductType)
-class ProductTypeAdmin(admin.ModelAdmin):
-    inlines=[ProductSpecificationInline,]
-
 
 class ProductImageInline(admin.TabularInline):
     model=ProductImage
-
-
-
 
 
 
@@ -64,23 +69,6 @@ class ProductImageInline(admin.TabularInline):
 #         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-
-
-
-
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
-    def clean(self):
-        cleaned_data = super().clean()
-        product_type = cleaned_data.get('product_type')
-        if not product_type:
-            raise forms.ValidationError("A product type must be selected.")
-        return cleaned_data
-
-
 class ProductSpecificationValueInline(admin.TabularInline):
     model = ProductSpecificationValue
 
@@ -97,17 +85,41 @@ class ProductSpecificationValueInline(admin.TabularInline):
 
 
 
+# admin
+
+@admin.register(ProductBrand)
+class ProductBrandAdmin(NestedModelAdmin):
+    search_fields = ['name',]
+    inlines=[ContentInline,MainBannerInline,BannerInline,MetaTagInline]
+
+
+
+@admin.register(Category)
+class CategotyAdmin(NestedModelAdmin,MPTTModelAdmin):
+    search_fields = ['name',]
+    inlines=[ContentInline,MainBannerInline,BannerInline,MetaTagInline]
+
+
+
+
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
+    search_fields = ['name',]
+    inlines=[ProductSpecificationInline,]
+
+
+
 
 
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
-    # ...
     form = ProductForm
+    raw_id_fields = ("brand","category","product_type",)
     inlines = [
         ProductImageInline,
         ProductSpecificationValueInline,
         ContentInline,
-        # ContentImageInline,
+        MetaTagInline,
     ]
 
     def get_form(self, request, obj=None, **kwargs):

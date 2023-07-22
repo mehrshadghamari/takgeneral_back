@@ -51,13 +51,13 @@ class Content(models.Model):
     brand = models.OneToOneField("product.ProductBrand",on_delete=models.CASCADE,null=True,blank=True)
     url=models.CharField(max_length=128,null=True)
     desc = tinymce_model.HTMLField()
-    # desc2 = models.TextField(null=True) 
+    # desc2 = models.TextField(null=True)
 
 
 class ContentImage(models.Model):
     content = models.ForeignKey("extention.Content", on_delete=models.CASCADE,null=True,blank=True)
     image= models.ImageField(null=True,blank=True)
-    alt = models.CharField(max_length=127,null=True,blank=True)
+    # alt = models.CharField(max_length=127,null=True,blank=True)
 
 
 
@@ -76,6 +76,3 @@ class MetaTag(models.Model):
     og_image= models.CharField(max_length=257)
     twiter_cart = models.CharField(max_length=257)
     script = models.TextField()
-
-
-
