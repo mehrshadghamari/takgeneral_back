@@ -236,3 +236,36 @@ TINYMCE_DEFAULT_CONFIG = {
    'statusbar': True,
 
 }
+
+
+
+# # AWS S3 settings
+# AWS_ACCESS_KEY_ID = "c687e10c-cee2-4c03-be8f-5655ca7ba04a"
+# AWS_SECRET_ACCESS_KEY = "b9acbb6ef2075290b90b261db76d868a7967dfe437dbf496e49c39f0c773af3b"
+# AWS_STORAGE_BUCKET_NAME = "arbaeen2"
+# AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ir-thr-at1.arvanstorage.ir"
+# AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
+# AWS_SERVICE_NAME = "s3"
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = "public-read"
+
+# # AWS S3 additional parameters
+# AWS_S3_OBJECT_PARAMETERS = {
+#     "CacheControl": "max-age=86400",
+# }
+# AWS_QUERYSTRING_AUTH = False
+
+# # AWS S3 storage settings
+# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# # Static files settings
+# AWS_LOCATION = "mehrshad"
+# STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "staticfiles"),
+# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+# AWS_MEDIA_LOCATION = "media"
+# MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/"
