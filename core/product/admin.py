@@ -114,7 +114,7 @@ class ProductTypeAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
     form = ProductForm
-    raw_id_fields = ("brand","category","product_type",)
+    raw_id_fields = ("brand","product_type",)
     inlines = [
         ProductImageInline,
         ProductSpecificationValueInline,
@@ -126,3 +126,10 @@ class ProductAdmin(NestedModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['product_type'].widget.can_add_related = False
         return form
+
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "category":
+            # Filter the category field's queryset to show only leaf nodes
+            kwargs["queryset"] = Category.objects.filter(children__isnull=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

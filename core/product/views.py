@@ -10,6 +10,7 @@ from extention.models import MainBanner
 from extention.serializers import BannerSAerializer
 from extention.serializers import ContentSerializer
 from extention.serializers import MainBannerSAerializer
+from product.models import ProductBrand
 from product_action.models import Comment
 from product_action.models import Question
 from rest_framework import status
@@ -20,20 +21,46 @@ from .models import Category
 from .models import Product
 from .serializers import AllCategorySerializer
 from .serializers import AllProductSerializer
+from .serializers import BrandSerializer
 from .serializers import CategorySerializer
 from .serializers import CommentsSerializer
 from .serializers import ProductIDSerializer
 from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
-# class Brands(APIView):
-#     def get(self,request):
-#         return Response({
-#                             'page_content':"",
-#                             'main_banner':"",
-#                             'brands':'',
-#                             'products':'',},
-#                             status=status.HTTP_200_OK)
+
+class Brands(APIView):
+    def get(self,request,brand_id):
+        brand_obj= ProductBrand.objects.filter(id=brand_id).first()
+        brand_serializer = BrandSerializer(brand_obj,context={"request": request})
+        main_banner = brand_obj.mainbanner_set.all()
+        main_banner_serializer = MainBannerSAerializer(main_banner,many=True,context={"request": request})
+        other_banner = brand_obj.banner_set.all()
+        other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
+        page_content= Content.objects.filter(brand=brand_obj).first()
+        page_content_serializer = ContentSerializer(page_content)
+        product_query = Product.objects.filter(brand=brand_obj)
+        #default page number = 1
+        page_number = self.request.query_params.get('page', 1)
+        #default page_size = 20
+        page_size = self.request.query_params.get('page_size', 20)
+
+        paginator = Paginator(product_query, page_size)
+
+        product_serializer = AllProductSerializer(paginator.page(
+                page_number), many=True, context={"request": request})
+
+        page_count = math.ceil(product_query.count()/int(page_size))
+
+        return Response({
+                            'page_content':page_content_serializer.data,
+                            'main_banner':main_banner_serializer.data,
+                            'other_banner':other_banner_serializer.data,
+                            'current_page': int(page_number),
+                            'page_count': page_count,
+                            'brand':brand_serializer.data,
+                            'products':product_serializer.data,},
+                            status=status.HTTP_200_OK)
 
 
 

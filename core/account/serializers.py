@@ -46,7 +46,7 @@ class UserInfoSerialozer(serializers.ModelSerializer):
         if MyUser.objects.filter(national_code=value).exists():
             raise serializers.ValidationError("This national code is already in use vvv.")
         return value
-    
+
 
 class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:

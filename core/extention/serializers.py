@@ -72,7 +72,7 @@ class MainBannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainBanner
-        fields = '__all__'
+        exclude = ("category","brand")
 
     def get_mobile_image_url(self, obj):
         request = self.context.get('request')
@@ -90,7 +90,7 @@ class BannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        fields = '__all__'
+        exclude = ("category","brand")
 
     def get_image_url(self, obj):
         request = self.context.get('request')

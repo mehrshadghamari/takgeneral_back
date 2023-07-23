@@ -5,12 +5,12 @@ from product_action.models import Question
 from product_action.models import Reply
 from rest_framework import serializers
 
+# from .models import ProductCategory
 # from .models import Attribute
+from .models import Category
 from .models import Product
 from .models import ProductBrand
-# from .models import ProductCategory
 from .models import ProductImage
-from .models import Category
 
 # class HomePompDetailSerializer(serializers.ModelSerializer):
 #
@@ -120,7 +120,7 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'main_image', 'price',
+        fields = ('id', 'name', 'price',
                   'final_price', 'discount', 'brand',)
 
     def get_brand(self, obj):
@@ -160,3 +160,19 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'slug', 'parent', 'is_active',]
+
+
+
+class BrandSerializer(serializers.ModelSerializer):
+    logo = serializers.SerializerMethodField("get_logo_url")
+
+    def get_logo_url(self, obj):
+        request = self.context.get('request')
+        logo = obj.logo
+        if logo and logo.url:
+            return request.build_absolute_uri(logo.url)
+        return None
+
+    class Meta:
+        model = ProductBrand
+        fields = ['id', 'name', 'logo', 'url',]

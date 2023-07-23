@@ -4,12 +4,11 @@ from datetime import timedelta
 
 from django.core.management.base import BaseCommand
 from django.utils.timezone import make_aware
+from product.models import Category
 from product.models import Product
 from product.models import ProductBrand
-from product.models import ProductCategory
-from product.models import TitleAttribute
 
-all_model=[TitleAttribute,ProductCategory,ProductBrand,Product]
+all_model=[Product,ProductBrand,Product,Category]
 
 class Command(BaseCommand):
     help = 'create some data'

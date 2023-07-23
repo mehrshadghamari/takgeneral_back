@@ -1,13 +1,11 @@
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
-# from .management.commands.create_data import product_json
-from product.choices import pomp_json
-
-# Create your models here.
+from PIL import Image as PilImage
 
 
 class ProductImage(models.Model):
@@ -20,14 +18,45 @@ class ProductImage(models.Model):
     upload_at = models.DateTimeField(auto_now=True,null=True)
 
 
+    # def save(self, *args, **kwargs):
+
+        # super().save()
+        # img = PilImage.open(self.original_image)
+
+        # # Resize image for small size
+        # small_size = IMAGE_SIZE.get("small", (100, 100))
+        # small_img = img.copy()
+        # small_img.thumbnail(small_size)
+        # small_img_io = BytesIO()
+        # small_img.save(small_img_io, format="PNG")
+        # small_img_file = InMemoryUploadedFile(small_img_io, None, f"{self.original_image.name.split('.')[:-1]}_small.png", "image/png", small_img_io.tell(), None)
+        # self.small_image = small_img_file
+
+        # # Resize image for medium size
+        # medium_size = IMAGE_SIZE.get("medium", (300, 300))
+        # medium_img = img.copy()
+        # medium_img.thumbnail(medium_size)
+        # medium_img_io = BytesIO()
+        # medium_img.save(medium_img_io, format="PNG")
+        # medium_img_file = InMemoryUploadedFile(medium_img_io, None, f"{self.original_image.name.split('.')[:-1]}_medium.png", "image/png", medium_img_io.tell(), None)
+        # self.medium_image = medium_img_file
+
+        # # Resize image for large size
+        # large_size = IMAGE_SIZE.get("large", (800, 800))
+        # large_img = img.copy()
+        # large_img.thumbnail(large_size)
+        # large_img_io = BytesIO()
+        # large_img.save(large_img_io, format="PNG")
+        # large_img_file = InMemoryUploadedFile(large_img_io, None, f"{self.original_image.name.split('.')[:-1]}_large.png", "image/png", large_img_io.tell(), None)
+        # self.large_image = large_img_file
+
+        # super().save(*args, **kwargs)
+
 
 class ProductBrand(models.Model):
     name = models.CharField(max_length=64)
     logo = models.ImageField(null=True) #new
-    url = models.CharField(max_length=64,null=True) # indexing
-    # blog brand  desc image (alt)
-
-# other baner (link to) and main banner for category
+    url = models.CharField(max_length=64,null=True,unique=True) # indexing
 
 
     def __str__(self):
@@ -45,8 +74,6 @@ class Product(models.Model):
     slug=models.SlugField(max_length=255,unique=True,null=True)
     name = models.CharField(max_length=64)
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
-    # model_brand = models.CharField(max_length=64)
-    # main_image = models.ImageField()
     count_of_product = models.IntegerField(default=1)
     discount = models.IntegerField(
         default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
