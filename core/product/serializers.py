@@ -5,56 +5,29 @@ from product_action.models import Question
 from product_action.models import Reply
 from rest_framework import serializers
 
-# from .models import ProductCategory
-# from .models import Attribute
 from .models import Category
 from .models import Product
 from .models import ProductBrand
 from .models import ProductImage
-
-# class HomePompDetailSerializer(serializers.ModelSerializer):
-#
-# brand=serializers.SerializerMethodField('get_brand')
-# main_image=serializers.SerializerMethodField('get_main_image')
-# final_price=serializers.IntegerField()
-# pomp_available=serializers.BooleanField()
-#
-#
-#
-# class Meta:
-# model=HomePomp
-# fields='__all__'
-#
-# def get_brand(self,obj):
-# return obj.name
-#
-# def get_main_image(self, obj):
-# request = self.context.get('request')
-# main_image_url = obj.main_image.url
-# return request.build_absolute_uri(main_image_url)
+from .models import ProductSpecification
+from .models import ProductSpecificationValue
 
 
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ProductCategory
-#         fields = '__all__'
+class AttributeSerilizer(serializers.ModelSerializer):
+    specification = serializers.SerializerMethodField("get_specification")
 
+    def get_specification(self,obj):
+        return obj.specification.name
 
-# class AttributeSerilizer(serializers.ModelSerializer):
-#     title = serializers.SerializerMethodField('get_title')
-
-#     class Meta:
-#         model = Attribute
-#         fields = ('id', 'title', 'value',)
-
-#     def get_title(self, obj):
-#         return obj.title.name
+    class Meta:
+        model = ProductSpecificationValue
+        fields=("specification","value")
 
 
 class productImaagesSerilizer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = '__all__'
+        exclude= ("created_at","upload_at","product")
 
 
 class CommentsSerializer(serializers.ModelSerializer):
@@ -94,11 +67,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'content', 'created_at', 'replys')
 
 
+
 class productDetailSerializer(serializers.ModelSerializer):
 
-    # category = CategorySerializer(many=True)
-    # attributes = AttributeSerilizer(many=True)
-    other_images = productImaagesSerilizer(many=True)
+    attributes = AttributeSerilizer(many=True)
+    all_images = productImaagesSerilizer(many=True)
 
     brand = serializers.SerializerMethodField('get_brand')
     final_price = serializers.FloatField()
@@ -117,10 +90,12 @@ class productDetailSerializer(serializers.ModelSerializer):
 
 class AllProductSerializer(serializers.ModelSerializer):
     brand = serializers.SerializerMethodField('get_brand')
+    main_image = productImaagesSerilizer()
+
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'price',
+        fields = ('id','main_image', 'name', 'price',
                   'final_price', 'discount', 'brand',)
 
     def get_brand(self, obj):

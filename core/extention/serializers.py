@@ -3,6 +3,7 @@ from extention.models import Banner
 from extention.models import Content
 from extention.models import ContentImage
 from extention.models import MainBanner
+from extention.models import MetaTag
 from extention.models import ProductClassification
 from extention.models import Slider
 from rest_framework import serializers
@@ -64,6 +65,11 @@ class ContentSerializer(serializers.ModelSerializer):
         model= Content
         fields = ("desc",)
 
+
+class MetaTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= MetaTag
+        exclude = ("product","category","brand")
 
 
 class MainBannerSAerializer(serializers.ModelSerializer):

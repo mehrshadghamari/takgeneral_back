@@ -11,7 +11,7 @@ from PIL import Image as PilImage
 class ProductImage(models.Model):
     image = models.ImageField()
     product = models.ForeignKey(
-        'product.Product', on_delete=models.CASCADE, related_name='other_images')
+        'product.Product', on_delete=models.CASCADE, related_name='images')
     alt_text = models.CharField(max_length=255,null=True)
     is_main = models.BooleanField(default=False,)
     created_at = models.DateTimeField(auto_now_add=True,editable=False,null=True)
@@ -89,8 +89,28 @@ class Product(models.Model):
     objects = ProductManager()
 
     @property
-    def other_images(self):
-        return self.other_images.all()
+    def attributes(self):
+        return self.productspecificationvalue_set.all()
+
+    @property
+    def main_image (self):
+        return self.images.filter(is_main=True).first()
+        # if not main_image:
+            # main_image = self.images.all().first()
+        # return main_image
+
+    @property
+    def all_images(self):
+        return self.images.all()
+
+
+
+    # def similar_product(self):
+    #     return self.filter(
+    #         price__lte=self.price + 1000000,
+    #         price__gte=self.price - 1000000,
+    #         category=self.category
+    #     ).distinct()[:10]
 
     @property
     def final_price(self):
