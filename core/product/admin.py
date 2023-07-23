@@ -114,7 +114,7 @@ class ProductTypeAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
     form = ProductForm
-    raw_id_fields = ("brand","product_type",)
+    autocomplete_fields = ("brand","product_type",)
     inlines = [
         ProductImageInline,
         ProductSpecificationValueInline,

@@ -73,7 +73,7 @@ class Command(BaseCommand):
 
 
         # create products
-            for i in range(300):
+            for i in range(500):
 
                 brand_instance = ProductBrand.objects.order_by('?')[0]
                 category_instance =  Category.objects.filter(children__isnull=True).order_by('?')[0]
