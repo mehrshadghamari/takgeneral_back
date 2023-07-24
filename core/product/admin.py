@@ -11,6 +11,7 @@ from extention.admin import MainBannerInline
 from extention.admin import MetaTagInline
 from mptt.admin import MPTTModelAdmin
 from nested_inline.admin import NestedModelAdmin
+from nested_inline.admin import NestedTabularInline
 
 from .models import Category
 from .models import Product
@@ -55,18 +56,21 @@ class ProductImageInline(admin.TabularInline):
 
 
 
-# class ProductSpecificationValueInline(admin.TabularInline):
-#     model = ProductSpecificationValue
 
-#     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-#         if db_field.name == 'specification':
-#             product_id = request.resolver_match.kwargs.get('object_id')
-#             if product_id:
-#                 product = Product.objects.get(pk=product_id)
-#                 kwargs['queryset'] = ProductSpecification.objects.filter(product_type=product.product_type)
-#             else:
-#                 kwargs['queryset'] = ProductSpecification.objects.all()
-#         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+# class FilterOptionTypeInline(NestedTabularInline):
+#     model=FilterOptionType
+#     extra=1
+
+
+
+# class FilterOptionInline(NestedTabularInline):
+#     model=FilterOption
+#     extra=1
+
+
+# admin.site.register(FilterOptionType)
+
+
 
 
 class ProductSpecificationValueInline(admin.TabularInline):
@@ -97,7 +101,7 @@ class ProductBrandAdmin(NestedModelAdmin):
 @admin.register(Category)
 class CategotyAdmin(NestedModelAdmin,MPTTModelAdmin):
     search_fields = ['name',]
-    inlines=[ContentInline,MainBannerInline,BannerInline,MetaTagInline]
+    inlines=[ContentInline,MainBannerInline,BannerInline,MetaTagInline,]
 
 
 

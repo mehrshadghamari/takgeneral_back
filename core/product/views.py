@@ -41,8 +41,7 @@ class  AllCategoryList(APIView):
 
 class products(APIView):
     def get(self, request,cat_id):
-
-        category_obj=Category.objects.get(id=cat_id)
+        category_obj=get_object_or_404(Category,id=cat_id)
         if category_obj.parent ==None:
             main_category_serilizer = CategorySerializer(category_obj)
             categories = category_obj.get_children()
@@ -72,14 +71,17 @@ class products(APIView):
             if category_obj.is_leaf_node():
                 main_category_serilizer= CategorySerializer(category_obj.parent)
                 sub_categories_serilizer = CategorySerializer(category_obj.parent.get_children(),many=True)
+                product_query = Product.objects.with_final_price().filter(
+                category=category_obj).order_by('-created_at')
 
             else:
                 main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.get_children(),many=True)
+                product_query = Product.objects.with_final_price().filter(
+                category_obj.get_children()).order_by('-created_at')
 
 
-            product_query = Product.objects.with_final_price().filter(
-                category=category_obj).order_by('-created_at')
+
 
             brand_query_before = product_query.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
@@ -129,6 +131,7 @@ class products(APIView):
             page_content_serializer = ContentSerializer(page_content)
             meta_tag= MetaTag.objects.filter(category=category_obj).first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
+
 
             return Response({
                             'page_content':page_content_serializer.data,
@@ -212,6 +215,8 @@ class ProductDetail(APIView):
         page_content_serializer = ContentSerializer(page_content)
         meta_tag= MetaTag.objects.filter(product=product_instance).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
+
+
 
         return Response({
             'product': product_serilizer.data,

@@ -151,3 +151,15 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductBrand
         fields = ['id', 'name', 'logo', 'url',]
+
+
+
+# class FilterOptionSerializer(serializers.ModelSerializer):
+#     filter_option_type = serializers.SerializerMethodField("get_filter_option_type")
+
+#     def get_filter_option_type(self,obj):
+#         return obj.filter_option_type.get_options
+
+#     class Meta:
+#         model = FilterOption
+#         fields = ['specification_name', 'filter_option_type', 'min_value', 'max_value',]

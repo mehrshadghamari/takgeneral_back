@@ -1,3 +1,5 @@
+import json
+
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
@@ -75,15 +77,14 @@ class Product(models.Model):
     name = models.CharField(max_length=64)
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
     count_of_product = models.IntegerField(default=1)
-    discount = models.IntegerField(
-        default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
+    discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
     price = models.FloatField()
     special_offer = models.BooleanField(default=False)
     seven_days_back = models.BooleanField(default=False)
     free_send = models.BooleanField(default=True)
     waranty_tamir = models.BooleanField()
     waranty_taviz = models.BooleanField()
-    month_of_waranty = models.IntegerField()
+    month_of_waranty = models.PositiveSmallIntegerField()
     created_at = models.DateField(auto_now_add=True, null=True)
 
     objects = ProductManager()
@@ -174,8 +175,8 @@ class ProductType (models.Model):
 
 
 class ProductSpecification(models.Model):
-    product_type= models.ForeignKey("product.ProductType",on_delete=models.RESTRICT)
-    name= models.CharField(max_length=255,)
+    product_type = models.ForeignKey(ProductType, on_delete=models.RESTRICT)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
@@ -185,6 +186,33 @@ class ProductSpecificationValue(models.Model):
     product= models.ForeignKey("product.Product", on_delete=models.CASCADE)
     specification= models.ForeignKey("product.ProductSpecification",on_delete=models.RESTRICT)
     value= models.CharField(max_length=255,)
+    search_value= models.CharField(max_length=255,null=True,blank=True)
 
     def __str__(self) :
         return self.value
+
+
+
+# class FilterOptionType(models.Model):
+#     name = models.CharField(max_length=50, unique=True)
+#     options = models.CharField(max_length=500, blank=True)  # Store options as a comma-separated string for enum
+
+#     @property
+#     def get_options(self):
+#         if self.options:
+#             return self.options.split(',')
+#         return []
+
+#     def __str__(self):
+#         return self.name
+
+
+# class FilterOption(models.Model):
+#     category = models.ForeignKey("product.Category", on_delete=models.CASCADE, related_name='filter_options')
+#     specification_name = models.CharField(max_length=255,null=True)
+#     filter_option_type = models.OneToOneField("product.FilterOptionType", on_delete=models.SET_NULL, null=True, blank=True)
+#     min_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+#     max_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+#     def __str__(self):
+#         return self.specification_name if self.specification_name else ""

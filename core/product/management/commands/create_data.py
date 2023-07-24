@@ -17,30 +17,39 @@ from product.models import ProductImage
 all_brand=['پمپ پنتاکس pentax','ابارا Ebara','پمپ دیزل ساز Dieselsaz','پمپ ورتکس wortex','پمپ لئو Leo','پمپ الکتروژن Electrogen','پمپ گراندفوس Grundfos']
 
 
-# Define the main categories, subcategories, and sub-subcategories
+
 main_categories = [
-    'Main Category 1',
-    'Main Category 2',
-    'Main Category 3',
+    'پمپ',
+    'ابزار دقیق',
+    'کولر',
+    'فلومتر',
 ]
 
 subcategories = [
-    ('Subcategory 1-1', 0),  # The second element in each tuple represents the index of the main category it belongs to (0-based).
-    ('Subcategory 1-2', 0),
-    ('Subcategory 2-1', 1),
-    ('Subcategory 2-2', 1),
-    ('Subcategory 3-1', 2),
-    ('Subcategory 3-2', 2),
+    ('پمپ اب خانگی', 0),  # The second element in each tuple represents the index of the main category it belongs to (0-based).
+    ('پمپ آب طبقاتی', 0),
+    ('پمپ آب کشاورزی و صنعتی', 0),
+    ('پمپ سیرکولاتور یا پمپ شوفاژ', 0),
+    ('پمپ استخری', 0),
+    ('پمپ شناور یا پمپ چاه', 0),
+    ('لوازم جانبی پمپ', 0),
+    ('تجهیزات کنترل', 1),
+    ('کولر گازی یا اسپیلت پرتابل', 2),
+    ('کولر گازی یا اسپیلت دیواری', 2),
+    ('برند های کولر گازی یا اسپیلت', 2),
 ]
 
+
 sub_subcategories = [
-    ('Sub-Subcategory 1-1-1', 0),  # The second element in each tuple represents the index of the subcategory it belongs to (0-based).
-    ('Sub-Subcategory 1-1-2', 0),
-    ('Sub-Subcategory 2-1-1', 2),
-    ('Sub-Subcategory 2-1-2', 2),
-    ('Sub-Subcategory 3-2-1', 5),
-    ('Sub-Subcategory 3-2-2', 5),
+    ('پمپ آب بشقابی', 0),  # The second element in each tuple represents the index of the subcategory it belongs to (0-based).
+    ('پمپ آب جتی', 0),
+    ('پمپ آب دو پروانه', 0),
+    ('پمپ آب محیطی', 0),
+    ('شیر برقی گاز', 7),
+    ('کولر گازی ایران رادیاتور', 10),
 ]
+
+
 
 class Command(BaseCommand):
     help = 'create some data'
@@ -49,20 +58,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         with transaction.atomic():
          # Create main categories
+
             for main_category_name in main_categories:
-                main_category_slug = slugify(main_category_name)
+
+                main_category_slug = slugify(str(uuid.uuid4()))
                 main_category = Category.objects.create(name=main_category_name, slug=main_category_slug, is_active=True)
 
                 # Create subcategories
                 for subcategory_name, main_category_index in subcategories:
                     if main_category_index == main_categories.index(main_category_name):
-                        subcategory_slug = slugify(subcategory_name)
+                        subcategory_slug = slugify(str(uuid.uuid4()))
                         subcategory = Category.objects.create(name=subcategory_name, slug=subcategory_slug, parent=main_category, is_active=True)
 
                         # Create sub-subcategories
                         for sub_subcategory_name, subcategory_index in sub_subcategories:
                             if subcategory_index == subcategories.index((subcategory_name, main_category_index)):
-                                sub_subcategory_slug = slugify(sub_subcategory_name)
+                                sub_subcategory_slug = slugify(str(uuid.uuid4()))
                                 Category.objects.create(name=sub_subcategory_name, slug=sub_subcategory_slug, parent=subcategory, is_active=True)
 
 
@@ -73,12 +84,12 @@ class Command(BaseCommand):
 
 
         # create products
-            for i in range(500):
+            for i in range(1500):
 
                 brand_instance = ProductBrand.objects.order_by('?')[0]
                 category_instance =  Category.objects.filter(children__isnull=True).order_by('?')[0]
 
-                name = f"Product - {i+1}"
+                name = f"محصول - {i+1} <{category_instance.name}> "
                 slug =slugify(name + category_instance.name + brand_instance.name)
                 count_of_product = random.randint(1, 100)
                 discount = random.randint(0, 50)
