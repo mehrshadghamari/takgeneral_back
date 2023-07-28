@@ -78,7 +78,7 @@ class products(APIView):
                 main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.get_children(),many=True)
                 product_query = Product.objects.with_final_price().filter(
-                category_obj.get_children()).order_by('-created_at')
+                category__in=category_obj.get_children()).order_by('-created_at')
 
 
 
