@@ -69,7 +69,7 @@ class products(APIView):
 
         else :
             if category_obj.is_leaf_node():
-                main_category_serilizer= CategorySerializer(category_obj.parent)
+                main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.parent.get_children(),many=True)
                 product_query = Product.objects.with_final_price().filter(
                 category=category_obj).order_by('-created_at')
