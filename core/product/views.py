@@ -134,6 +134,7 @@ class products(APIView):
 
 
             return Response({
+                            'breadcrumb':'',
                             'page_content':page_content_serializer.data,
                             'meta_tag':meta_tag_serializer.data,
                             'main_banner':main_banner_serializer.data,
@@ -159,13 +160,20 @@ class Brands(APIView):
         other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
         page_content= Content.objects.filter(brand=brand_obj).first()
         page_content_serializer = ContentSerializer(page_content)
-        product_query = Product.objects.filter(brand=brand_obj)
+        product_query = Product.objects.with_final_price().filter(brand=brand_obj).order_by('-created_at')
         meta_tag= MetaTag.objects.filter(brand=brand_obj).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
         #default page number = 1
         page_number = self.request.query_params.get('page', 1)
         #default page_size = 20
         page_size = self.request.query_params.get('page_size', 20)
+
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            if ordering == 'price':
+                product_query = product_query.order_by('final_price_Manager')
+            elif ordering == '-price':
+                product_query = product_query.order_by('-final_price_Manager')
 
         paginator = Paginator(product_query, page_size)
 
@@ -219,6 +227,7 @@ class ProductDetail(APIView):
 
 
         return Response({
+            'breadcrumb':'',
             'product': product_serilizer.data,
             'comments': comments_serializer.data,
             'questions': questions_serializer.data,
@@ -236,3 +245,12 @@ class ProductID(APIView):
         ids = Product.objects.all().values_list('id', flat=True)[:30]
         srz = ProductIDSerializer(ids, many=True)
         return Response(srz.data, status=status.HTTP_200_OK)
+
+
+
+class productsMeta ():
+    pass
+
+
+class BrandsMeta():
+    pass
