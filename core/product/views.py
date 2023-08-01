@@ -1,6 +1,8 @@
 import math
 
 from django.core.paginator import Paginator
+from django.db import connection
+from django.db import reset_queries
 from django.db.models import Avg
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
@@ -71,13 +73,13 @@ class products(APIView):
             if category_obj.is_leaf_node():
                 main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.parent.get_children(),many=True)
-                product_query = Product.objects.with_final_price().filter(
+                product_query = Product.objects.with_final_price().select_related("brand","category").filter(
                 category=category_obj).order_by('-created_at')
 
             else:
                 main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.get_children(),many=True)
-                product_query = Product.objects.with_final_price().filter(
+                product_query = Product.objects.with_final_price().select_related("brand","category").filter(
                 category__in=category_obj.get_children()).order_by('-created_at')
 
 
@@ -118,6 +120,7 @@ class products(APIView):
 
             product_serializer = AllProductSerializer(paginator.page(
                 page_number), many=True, context={"request": request})
+
 
             page_count = math.ceil(product_query.count()/int(page_size))
 
@@ -160,7 +163,7 @@ class Brands(APIView):
         other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
         page_content= Content.objects.filter(brand=brand_obj).first()
         page_content_serializer = ContentSerializer(page_content)
-        product_query = Product.objects.with_final_price().filter(brand=brand_obj).order_by('-created_at')
+        product_query = Product.objects.with_final_price().select_related("brand","category").filter(brand=brand_obj).order_by('-created_at')
         meta_tag= MetaTag.objects.filter(brand=brand_obj).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
         #default page number = 1

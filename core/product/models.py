@@ -72,10 +72,10 @@ class ProductManager(models.Manager):
 
 class Product(models.Model):
     product_type = models.ForeignKey("product.ProductType",null=True, on_delete=models.RESTRICT)
-    category= models.ForeignKey("product.Category",on_delete=models.RESTRICT,null=True)
-    slug=models.SlugField(max_length=255,unique=True,null=True)
+    category= models.ForeignKey("product.Category",on_delete=models.RESTRICT,null=True,db_index=True)
+    url=models.SlugField(max_length=255,unique=True,null=True,db_index=True)
     name = models.CharField(max_length=64)
-    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
+    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE,db_index=True)
     count_of_product = models.IntegerField(default=1)
     discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
     price = models.FloatField()
@@ -147,7 +147,7 @@ class Product(models.Model):
 
 class Category(MPTTModel):
     name= models.CharField(max_length=255,unique=True)
-    slug=models.SlugField(max_length=255,unique=True)
+    url=models.SlugField(max_length=255,unique=True,db_index=True)
     image=models.ImageField(null=True,blank=True)
     alt_text= models.CharField(max_length=64,null=True,blank=True)
     description = models.CharField(max_length=127,null=True,blank=True)
