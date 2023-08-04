@@ -176,7 +176,7 @@ AUTH_USER_MODEL = 'account.MyUser'
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa'
 
 TIME_ZONE = 'UTC'
 
@@ -216,9 +216,10 @@ TINYMCE_DEFAULT_CONFIG = {
    visualchars code fullscreen autolink lists charmap print hr
    anchor pagebreak
    ''',
+    "directionality" : "rtl",
     'toolbar': 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code', # along with other buttons, e.g. 'bold italic | code'
     'height': 660,
-   'width': 1500,
+   'width': 1200,
    'cleanup_on_startup': True,
    'custom_undo_redo_levels': 20,
    'toolbar1': '''

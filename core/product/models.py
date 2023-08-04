@@ -11,13 +11,15 @@ from PIL import Image as PilImage
 
 
 class ProductImage(models.Model):
-    image = models.ImageField()
+    image = models.ImageField(verbose_name="تصویر")
     product = models.ForeignKey(
-        'product.Product', on_delete=models.CASCADE, related_name='images')
-    alt_text = models.CharField(max_length=255,null=True)
-    is_main = models.BooleanField(default=False,)
-    created_at = models.DateTimeField(auto_now_add=True,editable=False,null=True)
-    upload_at = models.DateTimeField(auto_now=True,null=True)
+        'product.Product', on_delete=models.CASCADE, related_name='images', verbose_name="محصول")
+    alt_text = models.CharField(max_length=255, null=True, verbose_name="متن جایگزین")
+    is_main = models.BooleanField(default=False, verbose_name="تصویر اصلی")
+    created_at = models.DateTimeField(
+        auto_now_add=True, editable=False, null=True, verbose_name="تاریخ ایجاد")
+    upload_at = models.DateTimeField(
+        auto_now=True, null=True, verbose_name="تاریخ بارگذاری")
 
 
     # def save(self, *args, **kwargs):
@@ -56,13 +58,17 @@ class ProductImage(models.Model):
 
 
 class ProductBrand(models.Model):
-    name = models.CharField(max_length=64)
-    logo = models.ImageField(null=True) #new
-    url = models.CharField(max_length=64,null=True,unique=True) # indexing
-
+    name = models.CharField(max_length=64, verbose_name="نام برند")
+    logo = models.ImageField(null=True, verbose_name="لوگو")
+    url = models.CharField(
+        max_length=64, null=True, unique=True, verbose_name="آدرس اینترنتی")
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "برند"
+        verbose_name_plural = "برندها"
 
 
 class ProductManager(models.Manager):
@@ -71,21 +77,35 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    product_type = models.ForeignKey("product.ProductType",null=True, on_delete=models.RESTRICT)
-    category= models.ForeignKey("product.Category",on_delete=models.RESTRICT,null=True)
-    slug=models.SlugField(max_length=255,unique=True,null=True)
-    name = models.CharField(max_length=64)
-    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE)
-    count_of_product = models.IntegerField(default=1)
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
-    price = models.FloatField()
-    special_offer = models.BooleanField(default=False)
-    seven_days_back = models.BooleanField(default=False)
-    free_send = models.BooleanField(default=True)
-    waranty_tamir = models.BooleanField()
-    waranty_taviz = models.BooleanField()
-    month_of_waranty = models.PositiveSmallIntegerField()
-    created_at = models.DateField(auto_now_add=True, null=True)
+    product_type = models.ForeignKey(
+        "product.ProductType", null=True, on_delete=models.RESTRICT, verbose_name="نوع محصول")
+    category = models.ForeignKey(
+        "product.Category", on_delete=models.RESTRICT, null=True, verbose_name="دسته‌بندی")
+    slug = models.SlugField(max_length=255, unique=True, null=True, verbose_name="اسلاگ")
+    name = models.CharField(max_length=64, verbose_name="نام محصول")
+    brand = models.ForeignKey(
+        'product.ProductBrand', on_delete=models.CASCADE, verbose_name="برند")
+    count_of_product = models.IntegerField(
+        default=1, verbose_name="تعداد موجودی محصول")
+    discount = models.PositiveSmallIntegerField(
+        default=0, validators=[MaxValueValidator(99), MinValueValidator(0)], verbose_name="تخفیف")
+    price = models.FloatField(verbose_name="قیمت محصول")
+    special_offer = models.BooleanField(
+        default=False, verbose_name="پیشنهاد ویژه")
+    seven_days_back = models.BooleanField(
+        default=False, verbose_name="۷ روز ضمانت بازگشت")
+    free_send = models.BooleanField(
+        default=True, verbose_name="ارسال رایگان")
+    waranty_tamir = models.BooleanField(
+        verbose_name="گارانتی تعمیر")
+    waranty_taviz = models.BooleanField(
+        verbose_name="گارانتی تعویض")
+    month_of_waranty = models.PositiveSmallIntegerField(
+        verbose_name="مدت گارانتی (ماه)")
+    created_at = models.DateField(
+        auto_now_add=True, null=True, verbose_name="تاریخ ایجاد")
+
+    is_active = models.BooleanField(default=False, verbose_name="فعال / غیرفعال")
 
     objects = ProductManager()
 
@@ -143,16 +163,20 @@ class Product(models.Model):
         return f'id : {self.id} -- name : {self.name} '
 
 
+    class Meta:
+        verbose_name = "محصول"
+        verbose_name_plural = "محصولات"
+
 # for release 2
 
 class Category(MPTTModel):
-    name= models.CharField(max_length=255,unique=True)
-    slug=models.SlugField(max_length=255,unique=True)
-    image=models.ImageField(null=True,blank=True)
-    alt_text= models.CharField(max_length=64,null=True,blank=True)
-    description = models.CharField(max_length=127,null=True,blank=True)
-    parent= TreeForeignKey("self",on_delete=models.CASCADE,null=True,blank=True,related_name='children')
-    is_active = models.BooleanField(default=False)
+    name = models.CharField(max_length=255, unique=True, verbose_name="نام دسته‌بندی")
+    slug = models.SlugField(max_length=255, unique=True, verbose_name="اسلاگ")
+    image = models.ImageField(null=True, blank=True, verbose_name="تصویر")
+    alt_text = models.CharField(max_length=64, null=True, blank=True, verbose_name="متن جایگزین تصویر")
+    description = models.CharField(max_length=127, null=True, blank=True, verbose_name="توضیحات")
+    parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="دسته‌بندی والد")
+    is_active = models.BooleanField(default=False, verbose_name="فعال / غیرفعال")
 
 
     class MPTTMeta:
@@ -161,35 +185,56 @@ class Category(MPTTModel):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = "دسته‌بندی"
+        verbose_name_plural = "دسته‌بندی‌ها"
 
 
 
 
 class ProductType (models.Model):
-    name= models.CharField(max_length=255,unique=True)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(
+        max_length=255, unique=True, verbose_name="نوع محصول")
+    is_active = models.BooleanField(default=False, verbose_name="فعال / غیرفعال")
 
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = "نوع مشخصه محصول"
+        verbose_name_plural = "انواع مشخصات محصول"
 
 
 class ProductSpecification(models.Model):
-    product_type = models.ForeignKey(ProductType, on_delete=models.RESTRICT)
-    name = models.CharField(max_length=255)
+    product_type = models.ForeignKey(
+        ProductType, on_delete=models.RESTRICT, verbose_name="نوع محصول")
+    name = models.CharField(max_length=255, verbose_name="نام مشخصه")
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "مشخصه محصول"
+        verbose_name_plural = "مشخصه‌های محصول"
+
 
 class ProductSpecificationValue(models.Model):
-    product= models.ForeignKey("product.Product", on_delete=models.CASCADE)
-    specification= models.ForeignKey("product.ProductSpecification",on_delete=models.RESTRICT)
-    value= models.CharField(max_length=255,)
-    search_value= models.CharField(max_length=255,null=True,blank=True)
+    product = models.ForeignKey(
+        "product.Product", on_delete=models.CASCADE, verbose_name="محصول")
+    specification = models.ForeignKey(
+        "product.ProductSpecification", on_delete=models.RESTRICT, verbose_name="مشخصه")
+    value = models.CharField(max_length=255, verbose_name="مقدار")
+    search_value = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="مقدار برای جستجو")
 
-    def __str__(self) :
+    def __str__(self):
         return self.value
+
+    class Meta:
+        verbose_name = "مقدار مشخصه"
+        verbose_name_plural = "مقادیر مشخصه‌ها"
 
 
 

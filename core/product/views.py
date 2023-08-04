@@ -31,6 +31,7 @@ from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
 
+
 class  AllCategoryList(APIView):
     def get(self,request):
         queryset = Category.objects.filter(parent=None)
