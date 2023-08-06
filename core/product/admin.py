@@ -119,6 +119,7 @@ class ProductTypeAdmin(admin.ModelAdmin):
 class ProductAdmin(NestedModelAdmin):
     form = ProductForm
     autocomplete_fields = ("brand","product_type",)
+    # filter_horizontal = [""]
     inlines = [
         ProductImageInline,
         ProductSpecificationValueInline,
