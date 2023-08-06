@@ -6,6 +6,7 @@ from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import ProductClassification
 from extention.models import Slider
+from extention.models import Blog,BlogImage,BlogTag
 from rest_framework import serializers
 
 
@@ -102,3 +103,39 @@ class BannerSAerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
+
+
+class BlogTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogTag
+        fields="__all__"
+        
+
+class BlogImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_image_url')
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+    
+    class Meta:
+        model = BlogImage
+        fields="__all__"
+
+class BlogSerializer(serializers.ModelSerializer):
+    blog_images = BlogImageSerializer(many=True)
+    tag = BlogTagSerializer(many=True)
+
+    class Meta:
+        model= Blog
+        fields="__all__"
+
+
+class AllBlogSerializer(serializers.ModelSerializer):
+    main_image = BlogImageSerializer()
+    tag = BlogTagSerializer(many=True)
+
+    class Meta:
+        model= Blog
+        fields=("id","title","main_image","tag","create_time")

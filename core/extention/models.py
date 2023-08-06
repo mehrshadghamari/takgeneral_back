@@ -1,6 +1,7 @@
 from django.db import models
 # from ckeditor.fields import RichTextField
 from tinymce import models as tinymce_model
+from django_jalali.db import models as jmodels
 
 
 class Slider(models.Model):
@@ -59,6 +60,38 @@ class ContentImage(models.Model):
     image= models.ImageField(null=True,blank=True)
     # alt = models.CharField(max_length=127,null=True,blank=True)
 
+
+class Blog(models.Model):
+    title = models.CharField(max_length=257)
+    desc = tinymce_model.HTMLField()
+    tag = models.ManyToManyField("extention.BlogTag")
+    slug = models.CharField(max_length=127,null=True)
+    create_time = jmodels.jDateTimeField(auto_now_add=True)  
+
+    @property
+    def blog_images(self):
+        return self.blogimage_set.all()
+    
+    @property
+    def main_image(self):
+       return self.blogimage_set.filter(is_main=True).first()
+    
+       def __str__(self):
+        return self.name
+
+
+class BlogImage(models.Model):
+    blog = models.ForeignKey("extention.Blog", on_delete=models.CASCADE,null=True,blank=True)
+    image= models.ImageField(null=True,blank=True)
+    is_main= models.BooleanField(default=False)
+
+
+
+class BlogTag(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
 
 
 

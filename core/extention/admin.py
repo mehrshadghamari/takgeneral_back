@@ -7,6 +7,7 @@ from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import ProductClassification
 from extention.models import Slider
+from extention.models import Blog,BlogImage,BlogTag
 from nested_inline.admin import NestedModelAdmin
 from nested_inline.admin import NestedStackedInline
 from nested_inline.admin import NestedTabularInline
@@ -17,6 +18,13 @@ admin.site.register(Advertisement)
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)
+admin.site.register(BlogTag)
+
+
+class BlogInline(NestedTabularInline):
+    model=BlogImage
+    extra=1
+
 
 class MainBannerInline(NestedTabularInline):
     model=MainBanner
@@ -62,6 +70,11 @@ class ContentInline(NestedTabularInline):
     inlines = [ContentImageInline]
 
 
+
+@admin.register(Blog)
+class BlogAdmin(NestedModelAdmin):
+    inlines=[BlogInline,]
+    filter_horizontal = ["tag"]
 
 
 
