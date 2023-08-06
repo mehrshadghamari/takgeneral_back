@@ -95,7 +95,7 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id','main_image', 'name', 'price',
+        fields = ('id','url','main_image', 'name', 'price',
                   'final_price', 'discount', 'brand',)
 
     def get_brand(self, obj):
@@ -127,14 +127,14 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'parent', 'is_active', 'children']
+        fields = ['id', 'name', 'url', 'parent', 'is_active', 'children']
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'parent', 'is_active',]
+        fields = ['id', 'name', 'url', 'parent', 'is_active',]
 
 
 
