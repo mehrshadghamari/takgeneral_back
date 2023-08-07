@@ -9,8 +9,9 @@ from .models import Category
 from .models import Product
 from .models import ProductBrand
 from .models import ProductImage
-from .models import ProductSpecification
+from .models import ProductOptionType
 from .models import ProductSpecificationValue
+from .models import ProductVariant
 
 
 class AttributeSerilizer(serializers.ModelSerializer):
@@ -67,6 +68,24 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'content', 'created_at', 'replys')
 
 
+class ProductVariantSerializer(serializers.ModelSerializer):
+    final_price = serializers.DecimalField()
+    product_available = serializers.BooleanField()
+    warranty = serializers.CharField()
+
+    class Meta:
+        model =ProductVariant
+        fields = "__all__"
+
+
+class ProductOptionTypeSerializer(serializers.ModelSerializer):
+    product_variant = ProductVariantSerializer()
+    class Meta:
+        model =ProductOptionType
+        fields = "__all__"
+
+
+
 
 class productDetailSerializer(serializers.ModelSerializer):
 
@@ -74,9 +93,8 @@ class productDetailSerializer(serializers.ModelSerializer):
     all_images = productImaagesSerilizer(many=True)
 
     brand = serializers.SerializerMethodField('get_brand')
-    final_price = serializers.FloatField()
-    product_available = serializers.BooleanField()
-    warranty = serializers.CharField()
+    options = ProductOptionTypeSerializer()
+
 
     class Meta:
         model = Product
@@ -91,7 +109,9 @@ class productDetailSerializer(serializers.ModelSerializer):
 class AllProductSerializer(serializers.ModelSerializer):
     brand = serializers.SerializerMethodField('get_brand')
     main_image = productImaagesSerilizer()
-
+    price = serializers.SerializerMethodField()
+    final_price = serializers.SerializerMethodField()
+    discount = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -100,6 +120,20 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     def get_brand(self, obj):
         return obj.brand.name
+
+    def get_price(self, obj):
+        l=[]
+        for  option in obj.options.all():
+            for variant in option.product_variant.all():
+                l.append(variant)
+
+        return min(l)
+
+    def get_final_price(self, obj):
+        return None
+
+    def get_discount(self, obj):
+        return None
 
 
 class ProductIDSerializer(serializers.ModelSerializer):

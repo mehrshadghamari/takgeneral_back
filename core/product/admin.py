@@ -17,9 +17,11 @@ from .models import Category
 from .models import Product
 from .models import ProductBrand
 from .models import ProductImage
+from .models import ProductOptionType
 from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
+from .models import ProductVariant
 
 # Register your models here.
 
@@ -54,6 +56,19 @@ class ProductImageInline(admin.TabularInline):
     model=ProductImage
 
 
+
+
+
+class ProductVariantInline (NestedTabularInline):
+    model =ProductVariant
+    extra = 2
+
+
+
+class productProductOptionTypeInline(NestedTabularInline):
+    model=ProductOptionType
+    inlines = [ProductVariantInline]
+    extra = 1
 
 
 
@@ -121,6 +136,7 @@ class ProductAdmin(NestedModelAdmin):
     autocomplete_fields = ("brand","product_type",)
     # filter_horizontal = [""]
     inlines = [
+        productProductOptionTypeInline,
         ProductImageInline,
         ProductSpecificationValueInline,
         ContentInline,

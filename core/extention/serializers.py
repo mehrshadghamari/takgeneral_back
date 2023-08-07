@@ -1,12 +1,14 @@
 from extention.models import Advertisement
 from extention.models import Banner
+from extention.models import Blog
+from extention.models import BlogImage
+from extention.models import BlogTag
 from extention.models import Content
 from extention.models import ContentImage
 from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import ProductClassification
 from extention.models import Slider
-from extention.models import Blog,BlogImage,BlogTag
 from rest_framework import serializers
 
 
@@ -109,7 +111,7 @@ class BlogTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogTag
         fields="__all__"
-        
+
 
 class BlogImageSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField('get_image_url')
@@ -118,7 +120,7 @@ class BlogImageSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
-    
+
     class Meta:
         model = BlogImage
         fields="__all__"

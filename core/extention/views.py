@@ -1,14 +1,17 @@
 from django.db.models import F
 from django.db.models import Q
 from django.shortcuts import render
-from extention.models import Advertisement,Blog
+from extention.models import Advertisement
+from extention.models import Blog
 from extention.models import Content
 from extention.models import ProductClassification
 from extention.models import Slider
 from extention.serializers import AdvertisementSerilizer
+from extention.serializers import AllBlogSerializer
+from extention.serializers import BlogSerializer
 from extention.serializers import ContentSerializer
 from extention.serializers import ProductClassificationSerializer
-from extention.serializers import SliderSerializer,BlogSerializer,AllBlogSerializer
+from extention.serializers import SliderSerializer
 from product.models import Product
 from product.serializers import AllProductSerializer
 from rest_framework import status
@@ -67,7 +70,7 @@ class BlogsApi(APIView):
         blogs_serializer = AllBlogSerializer(
             blogs, many=True, context={"request": request})
         return Response(blogs_serializer.data, status=status.HTTP_200_OK)
-    
+
 
 
 class BlogDetail (APIView):
