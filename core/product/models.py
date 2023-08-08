@@ -8,11 +8,17 @@ from django.db import models
 from django.db.models import DecimalField
 from django.db.models import ExpressionWrapper
 from django.db.models import F
+from django.db.models import Min
 from django.db.models import OuterRef
+from django.db.models import Q
 from django.db.models import Subquery
+from django.db.models import Value
+from django.db.models.functions import Coalesce
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from PIL import Image as PilImage
+from product.managers import ProductManager
+from product.managers import ProductVariantManager
 
 
 class ProductImage(models.Model):
@@ -70,18 +76,7 @@ class ProductBrand(models.Model):
         return self.name
 
 
-# class ProductManager(models.Manager):
-#     def with_final_price(self):
-#         return self.annotate(final_price_Manager=F('price')-(F('price')*F('discount')/100))
 
-# class ProductManager(models.Manager):
-#     def with_final_price(self):
-#         return self.annotate(final_price=F('productvariant__price') - (F('productvariant__price') * F('productvariant__discount') / 100))
-
-class ProductManager(models.Manager):
-    def with_final_price(self):
-        variants_subquery = ProductVariant.objects.filter(product=OuterRef('pk')).with_final_price()
-        return self.annotate(final_price=Subquery(variants_subquery.values('final_price')[:1]))
 
 
 class Product(models.Model):
@@ -93,6 +88,7 @@ class Product(models.Model):
     special_offer = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True, null=True)
 
+
     objects = ProductManager()
 
     @property
@@ -102,9 +98,6 @@ class Product(models.Model):
     @property
     def main_image (self):
         return self.images.filter(is_main=True).first()
-        # if not main_image:
-            # main_image = self.images.all().first()
-        # return main_image
 
     @property
     def all_images(self):
@@ -113,6 +106,50 @@ class Product(models.Model):
     @property
     def options(self):
         return self.options.all()
+
+
+    @property
+    def prices(self):
+        product_variants = ProductVariant.objects.filter(option__product_id=self.id)
+        prices = [
+            {
+                "price": variant.price,
+                "final_price": variant.final_price,
+                "discount": variant.discount,
+            }
+            for variant in product_variants
+        ]
+        return prices
+
+
+    @property
+    def lowest_price(self):
+        variants = ProductVariant.objects.filter(option__product=self)
+        if variants.exists():
+            return min(variant.final_price for variant in variants)
+        return 0  # Default value if no variants exist
+
+
+    @property
+    def similar_product_ids(self):
+        first_option_price = float(self.options.first().values.first().price)
+        max_price = first_option_price + 1000000
+        min_price = first_option_price - 1000000
+
+        similar_product_ids = (
+            ProductVariant.objects
+            .select_related('option__product')
+            .filter(
+                ~Q(option__product__id=self.id),
+                price__lte=max_price,
+                price__gte=min_price,
+            )
+            .values_list("option__product__id", flat=True)
+        )
+
+        unique_similar_product_ids = list(set(similar_product_ids))
+
+        return unique_similar_product_ids
 
 
 
@@ -131,7 +168,6 @@ class ProductOptionType(models.Model):
 
 
 class ProductVariant(models.Model):
-    # product = models.ForeignKey(Product,on_delete=models.CASCADE)
     option = models.ForeignKey(ProductOptionType,on_delete=models.CASCADE,related_name='values')
     option_value = models.CharField(max_length=127)
     price = models.DecimalField(max_digits=12,decimal_places=2, default=0)
@@ -144,6 +180,8 @@ class ProductVariant(models.Model):
     month_of_waranty = models.PositiveSmallIntegerField()
 
 
+    objects = ProductVariantManager()
+
     @property
     def final_price(self):
         if self.discount == 0:
@@ -153,7 +191,13 @@ class ProductVariant(models.Model):
 
     @property
     def product_available(self):
-        return self.Inventory_number > 0
+        if self.Inventory_number > 0:
+            available = True
+        else:
+            available=False
+
+        return available
+
 
 
     @property
@@ -249,3 +293,16 @@ class ProductSpecificationValue(models.Model):
 
 #     def __str__(self):
 #         return self.specification_name if self.specification_name else ""
+
+
+class ProductManager(models.Manager):
+    def with_lowest_price(self):
+        lowest_prices_subquery = (
+            ProductVariant.objects.filter(option__product=OuterRef('pk'))
+            .annotate(lowest_price=Min('final_price'))
+            .values('lowest_price')
+        )
+
+        return self.get_queryset().annotate(
+            lowest_price=Subquery(lowest_prices_subquery)
+            )

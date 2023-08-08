@@ -28,7 +28,6 @@ from .serializers import AllProductSerializer
 from .serializers import BrandSerializer
 from .serializers import CategorySerializer
 from .serializers import CommentsSerializer
-from .serializers import ProductIDSerializer
 from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
@@ -59,7 +58,7 @@ class products(APIView):
             meta_tag= MetaTag.objects.filter(category=category_obj).first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
-            return Response({
+            respone=Response({
                             'page_content':page_content_serializer.data,
                             'meta_tag':meta_tag_serializer.data,
                             'main_banner':main_banner_serializer.data,
@@ -73,13 +72,13 @@ class products(APIView):
             if category_obj.is_leaf_node():
                 main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.parent.get_children(),many=True)
-                product_query = Product.objects.with_final_price().select_related("brand","category").filter(
+                product_query = Product.objects.select_related("brand","category","").filter(
                 category=category_obj).order_by('-created_at')
 
             else:
                 main_category_serilizer= CategorySerializer(category_obj)
                 sub_categories_serilizer = CategorySerializer(category_obj.get_children(),many=True)
-                product_query = Product.objects.with_final_price().select_related("brand","category").filter(
+                product_query = Product.objects.select_related("brand","category").filter(
                 category__in=category_obj.get_children()).order_by('-created_at')
 
 
@@ -108,9 +107,9 @@ class products(APIView):
             ordering = self.request.query_params.get('ordering', None)
             if ordering is not None:
                 if ordering == 'price':
-                    product_query = product_query.order_by('final_price_Manager')
+                    product_query = product_query.with_lowest_price().order_by('lowest_price')
                 elif ordering == '-price':
-                    product_query = product_query.order_by('-final_price_Manager')
+                    product_query = product_query.with_lowest_price().order_by('-lowest_price')
 
             page_number = self.request.query_params.get('page', 1)
             # page_size = 20
@@ -136,7 +135,7 @@ class products(APIView):
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
 
-            return Response({
+            respone= Response({
                             'breadcrumb':'',
                             'page_content':page_content_serializer.data,
                             'meta_tag':meta_tag_serializer.data,
@@ -149,6 +148,8 @@ class products(APIView):
                             'product': product_serializer.data,
                             'brands': brand_query},
                             status=status.HTTP_200_OK)
+
+        return respone
 
 
 
@@ -174,9 +175,9 @@ class Brands(APIView):
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
             if ordering == 'price':
-                product_query = product_query.order_by('final_price_Manager')
+                product_query = product_query.with_lowest_price().order_by('lowest_price')
             elif ordering == '-price':
-                product_query = product_query.order_by('-final_price_Manager')
+                product_query = product_query.with_lowest_price().order_by('-lowest_price')
 
         paginator = Paginator(product_query, page_size)
 
@@ -207,11 +208,8 @@ class ProductDetail(APIView):
         questions_serializer = QuestionSerializer(questions, many=True)
 
         # Retrieve similar products based on price and category
-        similar_product = Product.objects.filter(
-            price__lte=product_instance.price + 1000000,
-            price__gte=product_instance.price - 1000000,
-            category=product_instance.category
-        ).exclude(id=product_instance.id)[:10]
+        similar_product = Product.objects.filter (id__in= product_instance.similar_product_ids,category=product_instance.category)
+
 
         similar_product_serializer = AllProductSerializer(
             similar_product, context={"request": request}, many=True)
@@ -239,21 +237,3 @@ class ProductDetail(APIView):
             'page_content':page_content_serializer.data,
             'meta_tag':meta_tag_serializer.data,
         }, status=status.HTTP_200_OK)
-
-
-
-# helping api for front
-class ProductID(APIView):
-    def get(self, request):
-        ids = Product.objects.all().values_list('id', flat=True)[:30]
-        srz = ProductIDSerializer(ids, many=True)
-        return Response(srz.data, status=status.HTTP_200_OK)
-
-
-
-class productsMeta ():
-    pass
-
-
-class BrandsMeta():
-    pass

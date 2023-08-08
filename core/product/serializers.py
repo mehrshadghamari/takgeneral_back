@@ -69,20 +69,21 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
-    final_price = serializers.DecimalField()
+    final_price = serializers.DecimalField(max_digits=12,decimal_places=2)
     product_available = serializers.BooleanField()
     warranty = serializers.CharField()
 
     class Meta:
         model =ProductVariant
-        fields = "__all__"
+        exclude = ('option','Inventory_number', 'waranty_tamir',
+                   'waranty_taviz', 'month_of_waranty',)
 
 
 class ProductOptionTypeSerializer(serializers.ModelSerializer):
-    product_variant = ProductVariantSerializer()
+    product_variant = ProductVariantSerializer(many=True)
     class Meta:
         model =ProductOptionType
-        fields = "__all__"
+        fields = ("id","name","product_variant")
 
 
 
@@ -93,53 +94,34 @@ class productDetailSerializer(serializers.ModelSerializer):
     all_images = productImaagesSerilizer(many=True)
 
     brand = serializers.SerializerMethodField('get_brand')
-    options = ProductOptionTypeSerializer()
+    options = ProductOptionTypeSerializer(many=True)
 
 
     class Meta:
         model = Product
-        # fields='__all__'
-        exclude = ('count_of_product', 'waranty_tamir',
-                   'waranty_taviz', 'month_of_waranty',)
+        fields='__all__'
 
     def get_brand(self, obj):
         return obj.brand.name
 
+class ProductVariantPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductVariant
+        fields= ("price", "final_price", "discount")
 
 class AllProductSerializer(serializers.ModelSerializer):
     brand = serializers.SerializerMethodField('get_brand')
     main_image = productImaagesSerilizer()
-    price = serializers.SerializerMethodField()
-    final_price = serializers.SerializerMethodField()
-    discount = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Product
-        fields = ('id','url','main_image', 'name', 'price',
-                  'final_price', 'discount', 'brand',)
+    prices = ProductVariantPriceSerializer(many=True)
 
     def get_brand(self, obj):
         return obj.brand.name
 
-    def get_price(self, obj):
-        l=[]
-        for  option in obj.options.all():
-            for variant in option.product_variant.all():
-                l.append(variant)
-
-        return min(l)
-
-    def get_final_price(self, obj):
-        return None
-
-    def get_discount(self, obj):
-        return None
-
-
-class ProductIDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id',)
+        fields = ('id','url','main_image', 'name','prices','brand',)
+
+
 
 
 class productCountFromSpecificBrand(serializers.ModelSerializer):
