@@ -1,5 +1,5 @@
 import json
-from decimal import Decimal
+
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import MaxValueValidator
@@ -123,6 +123,26 @@ class Product(models.Model):
 
 
     @property
+    def min_price(self):
+        product_variants = ProductVariant.objects.filter(option__product_id=self.id)
+
+        if not product_variants:
+            return None  # No variants, so return None or appropriate default
+
+        # Find the variant with the minimum price
+        min_variant = min(product_variants, key=lambda variant: variant.final_price)
+
+        # Create a dictionary containing the minimum price information
+        min_price_info = {
+            "price": min_variant.price,
+            "final_price": min_variant.final_price,
+            "discount": min_variant.discount,
+        }
+
+        return min_price_info
+
+
+    @property
     def lowest_price(self):
         variants = ProductVariant.objects.filter(option__product=self)
         if variants.exists():
@@ -150,6 +170,58 @@ class Product(models.Model):
         unique_similar_product_ids = list(set(similar_product_ids))
 
         return unique_similar_product_ids
+    
+
+    def get_variant_with_min_final_price(self, variants):
+        min_final_price = float("inf")
+        selected_variant = None
+
+        for variant in variants:
+            if variant.final_price is not None and variant.final_price < min_final_price:
+                min_final_price = variant.final_price
+                selected_variant = variant
+
+        return selected_variant
+
+
+    def get_variant_with_max_discount(self, variants):
+        max_discount = float("-inf")
+        selected_variant = None
+
+        for variant in variants:
+            if variant.discount is not None and variant.discount > max_discount:
+                max_discount = variant.discount
+                selected_variant = variant
+
+        return selected_variant
+    
+    
+    @property
+    def best_price(self):
+        product_variants = ProductVariant.objects.filter(option__product_id=self.id)
+
+        if not product_variants:
+            return None  # No variants, so return None or appropriate default
+
+        variant_with_min_final_price = self.get_variant_with_min_final_price(product_variants)
+        variant_with_max_discount = self.get_variant_with_max_discount(product_variants)
+
+        if variant_with_min_final_price is None or variant_with_max_discount is None:
+            return None  # No valid variants found
+
+        if variant_with_min_final_price == variant_with_max_discount:
+            # If the same variant has both min final price and max discount, return it
+            return {
+                "price": variant_with_min_final_price.price,
+                "final_price": variant_with_min_final_price.final_price,
+                "discount": variant_with_min_final_price.discount,
+            }
+
+        return {
+            "price": variant_with_min_final_price.price,
+            "final_price": variant_with_min_final_price.final_price,
+            "discount": variant_with_max_discount.discount,
+        }
 
 
 
@@ -170,7 +242,7 @@ class ProductOptionType(models.Model):
 class ProductVariant(models.Model):
     option = models.ForeignKey(ProductOptionType,on_delete=models.CASCADE,related_name='values')
     option_value = models.CharField(max_length=127)
-    price = models.DecimalField(max_digits=12,decimal_places=2, default=0)
+    price = models.FloatField()
     discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField(default=1)
     seven_days_back = models.BooleanField(default=False)
@@ -185,8 +257,10 @@ class ProductVariant(models.Model):
     @property
     def final_price(self):
         if self.discount == 0:
-            return self.price
-        return self.price - (self.price * Decimal(self.discount) / 100)
+            final_price= self.price
+        else:
+            final_price= self.price - (self.price * (self.discount) / 100)
+        return final_price
 
 
     @property
@@ -215,8 +289,6 @@ class ProductVariant(models.Model):
             warranty = f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
 
         return warranty
-
-
 
 
 

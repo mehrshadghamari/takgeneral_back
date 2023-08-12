@@ -1,28 +1,6 @@
 from django.db import models
 from django_jalali.db import models as jmodels
-# from ckeditor.fields import RichTextField
 from tinymce import models as tinymce_model
-
-
-class Slider(models.Model):
-    name = models.CharField(max_length=64)
-    mobile_image = models.ImageField()
-    pc_image = models.ImageField()
-    url = models.CharField(max_length=64, null=True)
-
-
-class ProductClassification(models.Model):
-    name = models.CharField(max_length=64)
-    description = models.TextField()
-    product_image = models.ImageField()
-    url = models.CharField(max_length=64, null=True)
-
-
-class Advertisement(models.Model):
-    name = models.CharField(max_length=64)
-    mobile_image = models.ImageField()
-    pc_image = models.ImageField()
-    url = models.CharField(max_length=64, null=True)
 
 
 
@@ -76,8 +54,9 @@ class Blog(models.Model):
     def main_image(self):
        return self.blogimage_set.filter(is_main=True).first()
 
-       def __str__(self):
-        return self.name
+
+    def __str__(self):
+        return self.title
 
 
 class BlogImage(models.Model):

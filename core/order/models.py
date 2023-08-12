@@ -34,11 +34,11 @@ class OrderItem(models.Model):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
+    # product = models.ForeignKey("product.ProductVariant", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
     @property
     def sum_final_price(self):
-        # return ((self.product.price) - (self.product.price * (self.product.discount / 100)) * self.quantity)
         return (self.product.price * (1-(self.product.discount / 100))) * self.quantity
 
     @property
@@ -47,6 +47,4 @@ class OrderItem(models.Model):
 
     @property
     def sum_discount_price(self):
-        # return ((self.product.price) - (self.product.price * (self.product.discount / 100)) * self.quantity) - (
-        #     (self.product.price) * self.quantity)
         return self.sum_price - self.sum_final_price

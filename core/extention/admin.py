@@ -1,5 +1,4 @@
 from django.contrib import admin
-from extention.models import Advertisement
 from extention.models import Banner
 from extention.models import Blog
 from extention.models import BlogImage
@@ -8,15 +7,12 @@ from extention.models import Content
 from extention.models import ContentImage
 from extention.models import MainBanner
 from extention.models import MetaTag
-from extention.models import ProductClassification
-from extention.models import Slider
+
 from nested_inline.admin import NestedModelAdmin
 from nested_inline.admin import NestedStackedInline
 from nested_inline.admin import NestedTabularInline
 
-admin.site.register(Slider)
-admin.site.register(ProductClassification)
-admin.site.register(Advertisement)
+
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)

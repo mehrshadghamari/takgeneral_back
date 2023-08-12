@@ -24,5 +24,5 @@ class ProductManager(models.Manager):
         )
 
         return self.get_queryset().annotate(
-            lowest_price=Subquery(lowest_prices_subquery, output_field=models.DecimalField())
+            lowest_price=Subquery(lowest_prices_subquery, output_field=models.FloatField())
         )

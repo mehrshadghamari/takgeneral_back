@@ -69,7 +69,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
-    final_price = serializers.DecimalField(max_digits=12,decimal_places=2)
+    final_price = serializers.FloatField()
     product_available = serializers.BooleanField()
     warranty = serializers.CharField()
 
@@ -92,7 +92,6 @@ class productDetailSerializer(serializers.ModelSerializer):
 
     attributes = AttributeSerilizer(many=True)
     all_images = productImaagesSerilizer(many=True)
-
     brand = serializers.SerializerMethodField('get_brand')
     options = ProductOptionTypeSerializer(many=True)
 
@@ -104,22 +103,25 @@ class productDetailSerializer(serializers.ModelSerializer):
     def get_brand(self, obj):
         return obj.brand.name
 
+
 class ProductVariantPriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
         fields= ("price", "final_price", "discount")
 
+
 class AllProductSerializer(serializers.ModelSerializer):
     brand = serializers.SerializerMethodField('get_brand')
     main_image = productImaagesSerilizer()
-    prices = ProductVariantPriceSerializer(many=True)
+    min_price = ProductVariantPriceSerializer()
+
 
     def get_brand(self, obj):
         return obj.brand.name
 
     class Meta:
         model = Product
-        fields = ('id','url','main_image', 'name','prices','brand',)
+        fields = ('id','url','main_image', 'name','min_price' ,'brand',)
 
 
 
