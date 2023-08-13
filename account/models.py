@@ -1,6 +1,5 @@
 from random import random
 
-from account.validators import national_code_validator
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -8,8 +7,9 @@ from django.contrib.auth.models import send_mail
 from django.core import validators
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 from django_jalali.db import models as jmodels
+
+from account.validators import national_code_validator
 
 
 class UserManager(BaseUserManager):
@@ -69,16 +69,15 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                               ('Enter a valid username starting with a-z. '
                                                                'This value may contain only letters, numbers '
                                                                'and underscore characters.'), 'invalid'),
-    ],
-        error_messages={
+                                ],
+                                error_messages={
                                     'unique': ("A user with that username already exists."),
-    }
-    )
+                                }
+                                )
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
     national_code = models.CharField(max_length=10, unique=True,
                                      null=True, validators=[national_code_validator])
-
 
     email = models.EmailField(
         ('email address'), unique=True, null=True, blank=True)
@@ -86,11 +85,11 @@ class User(AbstractBaseUser, PermissionsMixin):
                                           validators=[
                                               validators.RegexValidator(r'^989[0-3,9]\d{8}$',
                                                                         ('Enter a valid mobile number.'), 'invalid'),
-    ],
-        error_messages={
+                                          ],
+                                          error_messages={
                                               'unique': ("A user with this mobile number already exists."),
-    }
-    )
+                                          }
+                                          )
     is_staff = models.BooleanField(('staff status'), default=False,
                                    help_text=('Designates whether the user can log into this admin site.'))
     is_active = models.BooleanField(('active'), default=True,
@@ -147,7 +146,7 @@ class MyUser(User):
         self.address_set.all()
 
 
-class Address (models.Model):
+class Address(models.Model):
     user = models.ForeignKey('account.MyUser', on_delete=models.CASCADE)
     title = models.CharField(max_length=80)
     post_code = models.CharField(max_length=10)
@@ -156,6 +155,5 @@ class Address (models.Model):
     vahed = models.IntegerField()
     lt = models.FloatField()
     lng = models.FloatField()
-
 
 # email !  fname  lname  code meli phone_meli  addrese (onvane neshani - code posti  -neshani kamel pelak vahed lt lng)

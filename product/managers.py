@@ -7,10 +7,7 @@ from django.db.models import Subquery
 
 class ProductVariantManager(models.Manager):
     def with_final_price(self):
-        return self.get_queryset().annotate(final_price=F('price')-(F('price')*F('discount')/100))
-
-
-
+        return self.get_queryset().annotate(final_price=F('price') - (F('price') * F('discount') / 100))
 
 
 class ProductManager(models.Manager):

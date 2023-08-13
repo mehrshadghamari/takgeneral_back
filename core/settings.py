@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -85,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -95,7 +93,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 REST_FRAMEWORK = {
 
@@ -152,7 +149,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -171,7 +167,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 AUTH_USER_MODEL = 'account.MyUser'
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -185,7 +180,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -205,7 +199,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-
 TINYMCE_DEFAULT_CONFIG = {
     'selector': 'textarea',
     # 'plugins': 'code', # along with other plugins, e.g. 'link lists code'
@@ -216,28 +209,27 @@ TINYMCE_DEFAULT_CONFIG = {
    visualchars code fullscreen autolink lists charmap print hr
    anchor pagebreak
    ''',
-    'toolbar': 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code', # along with other buttons, e.g. 'bold italic | code'
+    'toolbar': 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code',
+    # along with other buttons, e.g. 'bold italic | code'
     'height': 660,
-   'width': 1500,
-   'cleanup_on_startup': True,
-   'custom_undo_redo_levels': 20,
-   'toolbar1': '''
+    'width': 1500,
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'toolbar1': '''
    fullscreen preview bold italic underline | fontselect,
    fontsizeselect | forecolor backcolor | alignleft alignright |
    aligncenter alignjustify | indent outdent | bullist numlist table |
    | link image media | codesample |
    ''',
-   'toolbar2': '''
+    'toolbar2': '''
    visualblocks visualchars |
    charmap hr pagebreak nonbreaking anchor | code |
    ''',
-   'contextmenu': 'formats | link image',
-   'menubar': True,
-   'statusbar': True,
+    'contextmenu': 'formats | link image',
+    'menubar': True,
+    'statusbar': True,
 
 }
-
-
 
 # # AWS S3 settings
 # AWS_ACCESS_KEY_ID = "c687e10c-cee2-4c03-be8f-5655ca7ba04a"

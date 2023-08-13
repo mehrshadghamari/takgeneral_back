@@ -1,12 +1,12 @@
-from account.models import MyUser
 from django.db.models import F
 from django.db.models import IntegerField
 from django.db.models import Value
-from product.models import Product
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from account.models import MyUser
+from product.models import Product
 from .models import Order
 from .models import OrderItem
 from .serializers import CartSerializer
@@ -22,7 +22,7 @@ class CartDetailsPreview(APIView):
         # elif not cart_data:
         #     return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
 
-         # Filter out objects with count = 0 from the cart_data list
+        # Filter out objects with count = 0 from the cart_data list
         # filtered_cart_data = [item for item in cart_data if item['count'] != 0]
 
         print('tttttttttttttttttttttttttttt')
@@ -80,7 +80,8 @@ class CartDetailsPreview(APIView):
         # user not authentiicated
         else:
             if not cart_data:
-                return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0, 'total_count': 0})
+                return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0,
+                                 'total_count': 0})
 
             #  Filter out objects with count = 0 from the cart_data list
             filtered_cart_data = [item for item in cart_data if item['count'] != 0]
@@ -94,7 +95,7 @@ class CartDetailsPreview(APIView):
             products = [Product.objects.with_final_price().filter(id=item['id']).annotate(
                 quantity=Value(item['count'], IntegerField()),
                 sum_final_price=F('final_price_Manager') *
-                Value(item['count'], IntegerField()),
+                                Value(item['count'], IntegerField()),
                 sum_price=F('price') * Value(item['count'], IntegerField()),
                 sum_discount_price=F('sum_price') - F('sum_final_price')
             ).first() for item in cart_items]

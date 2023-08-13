@@ -10,7 +10,8 @@ class CreateCommentSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Comment
@@ -25,11 +26,13 @@ class CreateCommentSerializer(serializers.ModelSerializer):
                 message="Some custom message."
             )]
 
+
 class CreateQuestionSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Question
@@ -41,7 +44,8 @@ class CreateReplySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Reply
@@ -55,7 +59,8 @@ class CommentLikeSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = CommentLike

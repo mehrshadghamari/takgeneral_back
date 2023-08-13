@@ -13,24 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from account.views import MyTokenObtainPairView
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from account.views import MyTokenObtainPairView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tynymce/', include('tinymce.urls')),
-    path('',include('account.urls')),
-    path('',include('extention.urls')),
-    path('',include('product.urls')),
-    path('',include('order.urls')),
-    path('',include('product_action.urls')),
+    path('', include('account.urls')),
+    path('', include('extention.urls')),
+    path('', include('product.urls')),
+    path('', include('order.urls')),
+    path('', include('product_action.urls')),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 # if settings.DEBUG:
-    # urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

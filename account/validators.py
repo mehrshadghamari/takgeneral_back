@@ -1,5 +1,3 @@
-from unittest import result
-
 from django.core.exceptions import ValidationError
 from py_code_meli import is_valid
 

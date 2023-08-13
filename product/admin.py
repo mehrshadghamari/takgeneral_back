@@ -1,18 +1,13 @@
 from django import forms
 from django.contrib import admin
-from django.forms import BaseInlineFormSet
-from django.utils.translation import get_language_bidi
-from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy
-from extention.admin import BannerInline
-from extention.admin import ContentImageInline
-from extention.admin import ContentInline
-from extention.admin import MainBannerInline
-from extention.admin import MetaTagInline
 from mptt.admin import MPTTModelAdmin
 from nested_inline.admin import NestedModelAdmin
 from nested_inline.admin import NestedTabularInline
 
+from extention.admin import BannerInline
+from extention.admin import ContentInline
+from extention.admin import MainBannerInline
+from extention.admin import MetaTagInline
 from .models import Category
 from .models import Product
 from .models import ProductBrand
@@ -23,8 +18,8 @@ from .models import ProductSpecificationValue
 from .models import ProductType
 from .models import ProductVariant
 
-# Register your models here.
 
+# Register your models here.
 
 
 # form
@@ -46,36 +41,28 @@ class ProductForm(forms.ModelForm):
 
 
 class ProductSpecificationInline(admin.TabularInline):
-    search_fields = ['name',]
-    model= ProductSpecification
-
-
+    search_fields = ['name', ]
+    model = ProductSpecification
 
 
 class ProductImageInline(admin.TabularInline):
-    model=ProductImage
+    model = ProductImage
 
 
-
-
-
-class ProductVariantInline (NestedTabularInline):
-    model =ProductVariant
+class ProductVariantInline(NestedTabularInline):
+    model = ProductVariant
     extra = 2
 
 
-
 class productProductOptionTypeInline(NestedTabularInline):
-    model=ProductOptionType
+    model = ProductOptionType
     inlines = [ProductVariantInline]
     extra = 1
-
 
 
 # class FilterOptionTypeInline(NestedTabularInline):
 #     model=FilterOptionType
 #     extra=1
-
 
 
 # class FilterOptionInline(NestedTabularInline):
@@ -84,8 +71,6 @@ class productProductOptionTypeInline(NestedTabularInline):
 
 
 # admin.site.register(FilterOptionType)
-
-
 
 
 class ProductSpecificationValueInline(admin.TabularInline):
@@ -102,38 +87,30 @@ class ProductSpecificationValueInline(admin.TabularInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-
-
 # admin
 
 @admin.register(ProductBrand)
 class ProductBrandAdmin(NestedModelAdmin):
-    search_fields = ['name',]
-    inlines=[ContentInline,MainBannerInline,BannerInline,MetaTagInline]
-
+    search_fields = ['name', ]
+    inlines = [ContentInline, MainBannerInline, BannerInline, MetaTagInline]
 
 
 @admin.register(Category)
-class CategotyAdmin(NestedModelAdmin,MPTTModelAdmin):
-    search_fields = ['name',]
-    inlines=[ContentInline,MainBannerInline,BannerInline,MetaTagInline,]
-
-
+class CategotyAdmin(NestedModelAdmin, MPTTModelAdmin):
+    search_fields = ['name', ]
+    inlines = [ContentInline, MainBannerInline, BannerInline, MetaTagInline, ]
 
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
-    search_fields = ['name',]
-    inlines=[ProductSpecificationInline,]
-
-
-
+    search_fields = ['name', ]
+    inlines = [ProductSpecificationInline, ]
 
 
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
     form = ProductForm
-    autocomplete_fields = ("brand","product_type",)
+    autocomplete_fields = ("brand", "product_type",)
     # filter_horizontal = [""]
     inlines = [
         productProductOptionTypeInline,
@@ -147,7 +124,6 @@ class ProductAdmin(NestedModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['product_type'].widget.can_add_related = False
         return form
-
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "category":

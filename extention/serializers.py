@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from extention.models import Banner
 from extention.models import Blog
 from extention.models import BlogImage
@@ -5,19 +7,18 @@ from extention.models import BlogTag
 from extention.models import Content
 from extention.models import MainBanner
 from extention.models import MetaTag
-from rest_framework import serializers
 
 
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
-        model= Content
+        model = Content
         fields = ("desc",)
 
 
 class MetaTagSerializer(serializers.ModelSerializer):
     class Meta:
-        model= MetaTag
-        exclude = ("product","category","brand")
+        model = MetaTag
+        exclude = ("product", "category", "brand")
 
 
 class MainBannerSAerializer(serializers.ModelSerializer):
@@ -26,7 +27,7 @@ class MainBannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainBanner
-        exclude = ("category","brand")
+        exclude = ("category", "brand")
 
     def get_mobile_image_url(self, obj):
         request = self.context.get('request')
@@ -44,7 +45,7 @@ class BannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        exclude = ("category","brand")
+        exclude = ("category", "brand")
 
     def get_image_url(self, obj):
         request = self.context.get('request')
@@ -55,7 +56,7 @@ class BannerSAerializer(serializers.ModelSerializer):
 class BlogTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogTag
-        fields="__all__"
+        fields = "__all__"
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
@@ -68,15 +69,16 @@ class BlogImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogImage
-        fields="__all__"
+        fields = "__all__"
+
 
 class BlogSerializer(serializers.ModelSerializer):
     blog_images = BlogImageSerializer(many=True)
     tag = BlogTagSerializer(many=True)
 
     class Meta:
-        model= Blog
-        fields="__all__"
+        model = Blog
+        fields = "__all__"
 
 
 class AllBlogSerializer(serializers.ModelSerializer):
@@ -84,5 +86,5 @@ class AllBlogSerializer(serializers.ModelSerializer):
     tag = BlogTagSerializer(many=True)
 
     class Meta:
-        model= Blog
-        fields=("id","title","main_image","tag","create_time")
+        model = Blog
+        fields = ("id", "title", "main_image", "tag", "create_time")

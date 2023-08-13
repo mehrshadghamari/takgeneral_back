@@ -1,10 +1,8 @@
-from datetime import datetime
+from rest_framework import serializers
 
 from product_action.models import Comment
 from product_action.models import Question
 from product_action.models import Reply
-from rest_framework import serializers
-
 from .models import Category
 from .models import Product
 from .models import ProductBrand
@@ -17,18 +15,18 @@ from .models import ProductVariant
 class AttributeSerilizer(serializers.ModelSerializer):
     specification = serializers.SerializerMethodField("get_specification")
 
-    def get_specification(self,obj):
+    def get_specification(self, obj):
         return obj.specification.name
 
     class Meta:
         model = ProductSpecificationValue
-        fields=("specification","value")
+        fields = ("specification", "value")
 
 
 class productImaagesSerilizer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        exclude= ("created_at","upload_at","product")
+        exclude = ("created_at", "upload_at", "product")
 
 
 class CommentsSerializer(serializers.ModelSerializer):
@@ -37,7 +35,8 @@ class CommentsSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Comment
@@ -49,7 +48,8 @@ class ReplySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Reply
@@ -61,7 +61,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'), 'timestamp': int(obj.created_at.timestamp())}
+        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_at.timestamp())}
 
     class Meta:
         model = Question
@@ -74,31 +75,28 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     warranty = serializers.CharField()
 
     class Meta:
-        model =ProductVariant
-        exclude = ('option','Inventory_number', 'waranty_tamir',
+        model = ProductVariant
+        exclude = ('option', 'Inventory_number', 'waranty_tamir',
                    'waranty_taviz', 'month_of_waranty',)
 
 
 class ProductOptionTypeSerializer(serializers.ModelSerializer):
     product_variant = ProductVariantSerializer(many=True)
+
     class Meta:
-        model =ProductOptionType
-        fields = ("id","name","product_variant")
-
-
+        model = ProductOptionType
+        fields = ("id", "name", "product_variant")
 
 
 class productDetailSerializer(serializers.ModelSerializer):
-
     attributes = AttributeSerilizer(many=True)
     all_images = productImaagesSerilizer(many=True)
     brand = serializers.SerializerMethodField('get_brand')
     options = ProductOptionTypeSerializer(many=True)
 
-
     class Meta:
         model = Product
-        fields='__all__'
+        fields = '__all__'
 
     def get_brand(self, obj):
         return obj.brand.name
@@ -107,7 +105,7 @@ class productDetailSerializer(serializers.ModelSerializer):
 class ProductVariantPriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
-        fields= ("price", "final_price", "discount")
+        fields = ("price", "final_price", "discount")
 
 
 class AllProductSerializer(serializers.ModelSerializer):
@@ -115,15 +113,12 @@ class AllProductSerializer(serializers.ModelSerializer):
     main_image = productImaagesSerilizer()
     min_price = ProductVariantPriceSerializer()
 
-
     def get_brand(self, obj):
         return obj.brand.name
 
     class Meta:
         model = Product
-        fields = ('id','url','main_image', 'name','min_price' ,'brand',)
-
-
+        fields = ('id', 'url', 'main_image', 'name', 'min_price', 'brand',)
 
 
 class productCountFromSpecificBrand(serializers.ModelSerializer):
@@ -132,7 +127,6 @@ class productCountFromSpecificBrand(serializers.ModelSerializer):
     class Meta:
         model = ProductBrand
         fields = ('id', 'name', 'product_count',)
-
 
 
 class AllCategorySerializer(serializers.ModelSerializer):
@@ -149,11 +143,9 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
-        fields = ['id', 'name', 'url', 'parent', 'is_active',]
-
+        fields = ['id', 'name', 'url', 'parent', 'is_active', ]
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -168,9 +160,7 @@ class BrandSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductBrand
-        fields = ['id', 'name', 'logo', 'url',]
-
-
+        fields = ['id', 'name', 'logo', 'url', ]
 
 # class FilterOptionSerializer(serializers.ModelSerializer):
 #     filter_option_type = serializers.SerializerMethodField("get_filter_option_type")

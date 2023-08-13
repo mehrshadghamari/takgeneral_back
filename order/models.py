@@ -1,6 +1,4 @@
-from account.models import MyUser
 from django.db import models
-from product.models import Product
 
 
 class Order(models.Model):
@@ -39,7 +37,7 @@ class OrderItem(models.Model):
 
     @property
     def sum_final_price(self):
-        return (self.product.price * (1-(self.product.discount / 100))) * self.quantity
+        return (self.product.price * (1 - (self.product.discount / 100))) * self.quantity
 
     @property
     def sum_price(self):

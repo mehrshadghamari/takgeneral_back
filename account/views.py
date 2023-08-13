@@ -3,12 +3,6 @@ from datetime import timedelta
 
 import redis
 import requests
-from account.models import Address
-from account.models import MyUser
-from account.serializers import LogOutSerializer
-from account.serializers import UserAddressSerializer
-from account.serializers import UserInfoSerialozer
-from account.serializers import UserRegisterOrLoginSendOTpSerializr
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -17,8 +11,14 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-r = redis.Redis(host='localhost', port=6379, db=0)
+from account.models import Address
+from account.models import MyUser
+from account.serializers import LogOutSerializer
+from account.serializers import UserAddressSerializer
+from account.serializers import UserInfoSerialozer
+from account.serializers import UserRegisterOrLoginSendOTpSerializr
 
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -73,7 +73,7 @@ class LogoutView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserRegisterOrLoginSendOTp (APIView):
+class UserRegisterOrLoginSendOTp(APIView):
     """
     api for patient register
     """
@@ -94,7 +94,7 @@ class UserRegisterOrLoginSendOTp (APIView):
             except MyUser.DoesNotExist:
                 registered = False
                 MyUser.objects.create(
-                    phone_number=phone_number,)
+                    phone_number=phone_number, )
 
             code = random.randint(10000, 99999)
             r.setex(str(phone_number), timedelta(minutes=2), value=code)
@@ -102,7 +102,8 @@ class UserRegisterOrLoginSendOTp (APIView):
             # code=cache.set(str(phone_number), code,2*60)
             # code=cache.get(str(phone_number))
 
-            return Response({"msg": "code sent successfully", "code": code, "registered": registered}, status=status.HTTP_200_OK)
+            return Response({"msg": "code sent successfully", "code": code, "registered": registered},
+                            status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -168,8 +169,8 @@ class UserAdress(APIView):
 class UpdateAddress(APIView):
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request,id):
-        address_instance= Address.objects.get(id=id)
+    def patch(self, request, id):
+        address_instance = Address.objects.get(id=id)
         serializer = UserAddressSerializer(instance=address_instance, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -185,7 +186,7 @@ class UserStatus(APIView):
         print(type(request.user.phone_number))
         p = str(request.user.phone_number)
         print(p[2:])
-        phone_number = '0'+p[2:]
+        phone_number = '0' + p[2:]
         if request.user.full_name == ' ':
             full_name = None
         else:

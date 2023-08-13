@@ -1,14 +1,14 @@
 import math
 
 from django.core.paginator import Paginator
-from django.db import connection
-from django.db import reset_queries
 from django.db.models import Avg
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
-from extention.models import Banner
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from extention.models import Content
-from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.serializers import BannerSAerializer
 from extention.serializers import ContentSerializer
@@ -17,10 +17,6 @@ from extention.serializers import MetaTagSerializer
 from product.models import ProductBrand
 from product_action.models import Comment
 from product_action.models import Question
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from .models import Category
 from .models import Product
 from .serializers import AllCategorySerializer

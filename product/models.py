@@ -1,21 +1,13 @@
-import json
-
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import DecimalField
-from django.db.models import ExpressionWrapper
-from django.db.models import F
 from django.db.models import Min
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
-from django.db.models import Value
-from django.db.models.functions import Coalesce
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
-from PIL import Image as PilImage
+
 from product.managers import ProductManager
 from product.managers import ProductVariantManager
 
@@ -24,69 +16,63 @@ class ProductImage(models.Model):
     image = models.ImageField()
     product = models.ForeignKey(
         'product.Product', on_delete=models.CASCADE, related_name='images')
-    alt_text = models.CharField(max_length=255,null=True)
-    is_main = models.BooleanField(default=False,)
-    created_at = models.DateTimeField(auto_now_add=True,editable=False,null=True)
-    upload_at = models.DateTimeField(auto_now=True,null=True)
-
+    alt_text = models.CharField(max_length=255, null=True)
+    is_main = models.BooleanField(default=False, )
+    created_at = models.DateTimeField(auto_now_add=True, editable=False, null=True)
+    upload_at = models.DateTimeField(auto_now=True, null=True)
 
     # def save(self, *args, **kwargs):
 
-        # super().save()
-        # img = PilImage.open(self.original_image)
+    # super().save()
+    # img = PilImage.open(self.original_image)
 
-        # # Resize image for small size
-        # small_size = IMAGE_SIZE.get("small", (100, 100))
-        # small_img = img.copy()
-        # small_img.thumbnail(small_size)
-        # small_img_io = BytesIO()
-        # small_img.save(small_img_io, format="PNG")
-        # small_img_file = InMemoryUploadedFile(small_img_io, None, f"{self.original_image.name.split('.')[:-1]}_small.png", "image/png", small_img_io.tell(), None)
-        # self.small_image = small_img_file
+    # # Resize image for small size
+    # small_size = IMAGE_SIZE.get("small", (100, 100))
+    # small_img = img.copy()
+    # small_img.thumbnail(small_size)
+    # small_img_io = BytesIO()
+    # small_img.save(small_img_io, format="PNG")
+    # small_img_file = InMemoryUploadedFile(small_img_io, None, f"{self.original_image.name.split('.')[:-1]}_small.png", "image/png", small_img_io.tell(), None)
+    # self.small_image = small_img_file
 
-        # # Resize image for medium size
-        # medium_size = IMAGE_SIZE.get("medium", (300, 300))
-        # medium_img = img.copy()
-        # medium_img.thumbnail(medium_size)
-        # medium_img_io = BytesIO()
-        # medium_img.save(medium_img_io, format="PNG")
-        # medium_img_file = InMemoryUploadedFile(medium_img_io, None, f"{self.original_image.name.split('.')[:-1]}_medium.png", "image/png", medium_img_io.tell(), None)
-        # self.medium_image = medium_img_file
+    # # Resize image for medium size
+    # medium_size = IMAGE_SIZE.get("medium", (300, 300))
+    # medium_img = img.copy()
+    # medium_img.thumbnail(medium_size)
+    # medium_img_io = BytesIO()
+    # medium_img.save(medium_img_io, format="PNG")
+    # medium_img_file = InMemoryUploadedFile(medium_img_io, None, f"{self.original_image.name.split('.')[:-1]}_medium.png", "image/png", medium_img_io.tell(), None)
+    # self.medium_image = medium_img_file
 
-        # # Resize image for large size
-        # large_size = IMAGE_SIZE.get("large", (800, 800))
-        # large_img = img.copy()
-        # large_img.thumbnail(large_size)
-        # large_img_io = BytesIO()
-        # large_img.save(large_img_io, format="PNG")
-        # large_img_file = InMemoryUploadedFile(large_img_io, None, f"{self.original_image.name.split('.')[:-1]}_large.png", "image/png", large_img_io.tell(), None)
-        # self.large_image = large_img_file
+    # # Resize image for large size
+    # large_size = IMAGE_SIZE.get("large", (800, 800))
+    # large_img = img.copy()
+    # large_img.thumbnail(large_size)
+    # large_img_io = BytesIO()
+    # large_img.save(large_img_io, format="PNG")
+    # large_img_file = InMemoryUploadedFile(large_img_io, None, f"{self.original_image.name.split('.')[:-1]}_large.png", "image/png", large_img_io.tell(), None)
+    # self.large_image = large_img_file
 
-        # super().save(*args, **kwargs)
+    # super().save(*args, **kwargs)
 
 
 class ProductBrand(models.Model):
     name = models.CharField(max_length=64)
-    logo = models.ImageField(null=True) #new
-    url = models.CharField(max_length=64,null=True,unique=True,db_index=True)
-
+    logo = models.ImageField(null=True)  # new
+    url = models.CharField(max_length=64, null=True, unique=True, db_index=True)
 
     def __str__(self):
         return self.name
 
 
-
-
-
 class Product(models.Model):
-    product_type = models.ForeignKey("product.ProductType",null=True, on_delete=models.RESTRICT)
-    category= models.ForeignKey("product.Category",on_delete=models.RESTRICT,null=True,db_index=True)
-    url=models.SlugField(max_length=255,unique=True,null=True,db_index=True)
+    product_type = models.ForeignKey("product.ProductType", null=True, on_delete=models.RESTRICT)
+    category = models.ForeignKey("product.Category", on_delete=models.RESTRICT, null=True, db_index=True)
+    url = models.SlugField(max_length=255, unique=True, null=True, db_index=True)
     name = models.CharField(max_length=64)
-    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE,db_index=True)
+    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE, db_index=True)
     special_offer = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True, null=True)
-
 
     objects = ProductManager()
 
@@ -95,7 +81,7 @@ class Product(models.Model):
         return self.productspecificationvalue_set.all()
 
     @property
-    def main_image (self):
+    def main_image(self):
         return self.images.filter(is_main=True).first()
 
     @property
@@ -105,7 +91,6 @@ class Product(models.Model):
     @property
     def options(self):
         return self.options.all()
-
 
     @property
     def prices(self):
@@ -119,7 +104,6 @@ class Product(models.Model):
             for variant in product_variants
         ]
         return prices
-
 
     @property
     def min_price(self):
@@ -140,14 +124,12 @@ class Product(models.Model):
 
         return min_price_info
 
-
     @property
     def lowest_price(self):
         variants = ProductVariant.objects.filter(option__product=self)
         if variants.exists():
             return min(variant.final_price for variant in variants)
         return 0  # Default value if no variants exist
-
 
     @property
     def similar_product_ids(self):
@@ -170,7 +152,6 @@ class Product(models.Model):
 
         return unique_similar_product_ids
 
-
     def get_variant_with_min_final_price(self, variants):
         min_final_price = float("inf")
         selected_variant = None
@@ -182,7 +163,6 @@ class Product(models.Model):
 
         return selected_variant
 
-
     def get_variant_with_max_discount(self, variants):
         max_discount = float("-inf")
         selected_variant = None
@@ -193,7 +173,6 @@ class Product(models.Model):
                 selected_variant = variant
 
         return selected_variant
-
 
     @property
     def best_price(self):
@@ -222,24 +201,21 @@ class Product(models.Model):
             "discount": variant_with_max_discount.discount,
         }
 
-
-
     def __str__(self):
         return f'id : {self.id} -- name : {self.name} '
 
 
 class ProductOptionType(models.Model):
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,related_name='options')
-    name = models.CharField(max_length=127,null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='options')
+    name = models.CharField(max_length=127, null=True)
 
     @property
     def product_variant(self):
         return self.values.all()
 
 
-
 class ProductVariant(models.Model):
-    option = models.ForeignKey(ProductOptionType,on_delete=models.CASCADE,related_name='values')
+    option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
     option_value = models.CharField(max_length=127)
     price = models.FloatField()
     discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
@@ -250,28 +226,24 @@ class ProductVariant(models.Model):
     waranty_taviz = models.BooleanField()
     month_of_waranty = models.PositiveSmallIntegerField()
 
-
     objects = ProductVariantManager()
 
     @property
     def final_price(self):
         if self.discount == 0:
-            final_price= self.price
+            final_price = self.price
         else:
-            final_price= self.price - (self.price * (self.discount) / 100)
+            final_price = self.price - (self.price * (self.discount) / 100)
         return final_price
-
 
     @property
     def product_available(self):
         if self.Inventory_number > 0:
             available = True
         else:
-            available=False
+            available = False
 
         return available
-
-
 
     @property
     def warranty(self):
@@ -290,33 +262,27 @@ class ProductVariant(models.Model):
         return warranty
 
 
-
 # for release 2
 
 class Category(MPTTModel):
-    name= models.CharField(max_length=255,unique=True)
-    url=models.SlugField(max_length=255,unique=True,db_index=True)
-    image=models.ImageField(null=True,blank=True)
-    alt_text= models.CharField(max_length=64,null=True,blank=True)
-    description = models.CharField(max_length=127,null=True,blank=True)
-    parent= TreeForeignKey("self",on_delete=models.CASCADE,null=True,blank=True,related_name='children')
+    name = models.CharField(max_length=255, unique=True)
+    url = models.SlugField(max_length=255, unique=True, db_index=True)
+    image = models.ImageField(null=True, blank=True)
+    alt_text = models.CharField(max_length=64, null=True, blank=True)
+    description = models.CharField(max_length=127, null=True, blank=True)
+    parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     is_active = models.BooleanField(default=False)
-
 
     class MPTTMeta:
         order_insertion_by = ['name']
-
 
     def __str__(self):
         return self.name
 
 
-
-
-class ProductType (models.Model):
-    name= models.CharField(max_length=255,unique=True)
+class ProductType(models.Model):
+    name = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
-
 
     def __str__(self):
         return self.name
@@ -331,14 +297,13 @@ class ProductSpecification(models.Model):
 
 
 class ProductSpecificationValue(models.Model):
-    product= models.ForeignKey("product.Product", on_delete=models.CASCADE)
-    specification= models.ForeignKey("product.ProductSpecification",on_delete=models.RESTRICT)
-    value= models.CharField(max_length=255,)
-    search_value= models.CharField(max_length=255,null=True,blank=True)
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
+    specification = models.ForeignKey("product.ProductSpecification", on_delete=models.RESTRICT)
+    value = models.CharField(max_length=255, )
+    search_value = models.CharField(max_length=255, null=True, blank=True)
 
-    def __str__(self) :
+    def __str__(self):
         return self.value
-
 
 
 # class FilterOptionType(models.Model):
@@ -376,4 +341,4 @@ class ProductManager(models.Manager):
 
         return self.get_queryset().annotate(
             lowest_price=Subquery(lowest_prices_subquery)
-            )
+        )

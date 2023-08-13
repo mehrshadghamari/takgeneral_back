@@ -1,10 +1,10 @@
-from account.models import Address
-from account.models import MyUser
 from django.core import validators
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import TokenError
+
+from account.models import Address
+from account.models import MyUser
 
 
 class UserRegisterOrLoginSendOTpSerializr(serializers.Serializer):
@@ -38,7 +38,6 @@ class UserInfoSerialozer(serializers.ModelSerializer):
                   'phone_number', 'email', 'national_code',)
         read_only_fields = ('phone_number',)
 
-
     def validate_national_code(self, value):
         """
         Validate that the national_code is unique.
@@ -52,5 +51,5 @@ class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         # fields='__all__'
-        fields = ('id','title', 'post_code', 'full_address',
+        fields = ('id', 'title', 'post_code', 'full_address',
                   'pelak', 'vahed', 'lt', 'lng')
