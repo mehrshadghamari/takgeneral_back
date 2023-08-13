@@ -233,8 +233,22 @@ class ProductVariant(models.Model):
         if self.discount == 0:
             final_price = self.price
         else:
-            final_price = self.price - (self.price * (self.discount) / 100)
+            final_price = self.price - (self.price * self.discount / 100)
         return final_price
+
+    @property
+    def product_id(self):
+        return self.option.product.id
+
+
+    @property
+    def product_name(self):
+        return self.option.product.name
+
+    @property
+    def product_main_image(self):
+        return self.option.product.main_image
+
 
     @property
     def product_available(self):
@@ -331,14 +345,3 @@ class ProductSpecificationValue(models.Model):
 #         return self.specification_name if self.specification_name else ""
 
 
-class ProductManager(models.Manager):
-    def with_lowest_price(self):
-        lowest_prices_subquery = (
-            ProductVariant.objects.filter(option__product=OuterRef('pk'))
-            .annotate(lowest_price=Min('final_price'))
-            .values('lowest_price')
-        )
-
-        return self.get_queryset().annotate(
-            lowest_price=Subquery(lowest_prices_subquery)
-        )

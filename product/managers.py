@@ -7,7 +7,7 @@ from django.db.models import Subquery
 
 class ProductVariantManager(models.Manager):
     def with_final_price(self):
-        return self.get_queryset().annotate(final_price=F('price') - (F('price') * F('discount') / 100))
+        return self.get_queryset().annotate(final_price_manager=F('price') - (F('price') * F('discount') / 100))
 
 
 class ProductManager(models.Manager):
@@ -16,7 +16,7 @@ class ProductManager(models.Manager):
         lowest_prices_subquery = (
             ProductVariant.objects.with_final_price().filter(option__product=OuterRef('pk'))
             .values('option__product')
-            .annotate(lowest_price=Min('final_price'))
+            .annotate(lowest_price=Min('final_price_manager'))
             .values('lowest_price')
         )
 
