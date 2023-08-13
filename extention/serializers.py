@@ -8,8 +8,6 @@ from extention.models import MetaTag
 from rest_framework import serializers
 
 
-
-
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model= Content

@@ -32,57 +32,53 @@ from .serializers import QuestionSerializer
 from .serializers import productDetailSerializer
 
 
-class  AllCategoryList(APIView):
-    def get(self,request):
+class AllCategoryList(APIView):
+    def get(self, request):
         queryset = Category.objects.filter(parent=None)
-        serializer = AllCategorySerializer(queryset,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
-
+        serializer = AllCategorySerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class products(APIView):
-    def get(self, request,cat_id):
-        category_obj=get_object_or_404(Category,id=cat_id)
-        if category_obj.parent ==None:
-            main_category_serilizer = CategorySerializer(category_obj)
+    def get(self, request, cat_id):
+        category_obj = get_object_or_404(Category, id=cat_id)
+        if category_obj.parent is None:
+            main_category_serializer = CategorySerializer(category_obj)
             categories = category_obj.get_children()
-            sub_categories_serilizer = CategorySerializer(categories,many=True)
-            brands= Product.objects.values('brand__id').annotate(
-                product_count=Count('brand')).values('brand__id', 'brand__name','brand__logo', 'product_count')
+            sub_categories_serializer = CategorySerializer(categories, many=True)
+            brands = Product.objects.values('brand__id').annotate(
+                product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
             main_banner = category_obj.mainbanner_set.all()
-            main_banner_serializer = MainBannerSAerializer(main_banner,many=True,context={"request": request})
+            main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
             other_banner = category_obj.banner_set.all()
-            other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
-            page_content= Content.objects.filter(category=category_obj).first()
+            other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
+            page_content = Content.objects.filter(category=category_obj).first()
             page_content_serializer = ContentSerializer(page_content)
-            meta_tag= MetaTag.objects.filter(category=category_obj).first()
+            meta_tag = MetaTag.objects.filter(category=category_obj).first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
-            respone=Response({
-                            'page_content':page_content_serializer.data,
-                            'meta_tag':meta_tag_serializer.data,
-                            'main_banner':main_banner_serializer.data,
-                            'other_banner':other_banner_serializer.data,
-                            'brands':brands,
-                            "main_category":main_category_serilizer.data,
-                            "sub_category":sub_categories_serilizer.data},
-                            status=status.HTTP_200_OK)
+            response = Response({
+                'page_content': page_content_serializer.data,
+                'meta_tag': meta_tag_serializer.data,
+                'main_banner': main_banner_serializer.data,
+                'other_banner': other_banner_serializer.data,
+                'brands': brands,
+                "main_category": main_category_serializer.data,
+                "sub_category": sub_categories_serializer.data},
+                status=status.HTTP_200_OK)
 
-        else :
+        else:
             if category_obj.is_leaf_node():
-                main_category_serilizer= CategorySerializer(category_obj)
-                sub_categories_serilizer = CategorySerializer(category_obj.parent.get_children(),many=True)
-                product_query = Product.objects.select_related("brand","category",).filter(
-                category=category_obj).order_by('-created_at')
+                main_category_serializer = CategorySerializer(category_obj)
+                sub_categories_serializer = CategorySerializer(category_obj.parent.get_children(), many=True)
+                product_query = Product.objects.select_related("brand", "category", ).filter(
+                    category=category_obj).order_by('-created_at')
 
             else:
-                main_category_serilizer= CategorySerializer(category_obj)
-                sub_categories_serilizer = CategorySerializer(category_obj.get_children(),many=True)
-                product_query = Product.objects.select_related("brand","category").filter(
-                category__in=category_obj.get_children()).order_by('-created_at')
-
-
-
+                main_category_serializer = CategorySerializer(category_obj)
+                sub_categories_serializer = CategorySerializer(category_obj.get_children(), many=True)
+                product_query = Product.objects.select_related("brand", "category").filter(
+                    category__in=category_obj.get_children()).order_by('-created_at')
 
             brand_query_before = product_query.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
@@ -120,56 +116,51 @@ class products(APIView):
             product_serializer = AllProductSerializer(paginator.page(
                 page_number), many=True, context={"request": request})
 
-
-            page_count = math.ceil(product_query.count()/int(page_size))
-
-
+            page_count = math.ceil(product_query.count() / int(page_size))
 
             main_banner = category_obj.mainbanner_set.all()
-            main_banner_serializer = MainBannerSAerializer(main_banner,many=True,context={"request": request})
+            main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
             other_banner = category_obj.banner_set.all()
-            other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
-            page_content= Content.objects.filter(category=category_obj).first()
+            other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
+            page_content = Content.objects.filter(category=category_obj).first()
             page_content_serializer = ContentSerializer(page_content)
-            meta_tag= MetaTag.objects.filter(category=category_obj).first()
+            meta_tag = MetaTag.objects.filter(category=category_obj).first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
+            response = Response({
+                'breadcrumb': '',
+                'page_content': page_content_serializer.data,
+                'meta_tag': meta_tag_serializer.data,
+                'main_banner': main_banner_serializer.data,
+                'other_banner': other_banner_serializer.data,
+                'current_page': int(page_number),
+                'page_count': page_count,
+                "main_category": main_category_serializer.data,
+                "sub_category": sub_categories_serializer.data,
+                'product': product_serializer.data,
+                'brands': brand_query},
+                status=status.HTTP_200_OK)
 
-            respone= Response({
-                            'breadcrumb':'',
-                            'page_content':page_content_serializer.data,
-                            'meta_tag':meta_tag_serializer.data,
-                            'main_banner':main_banner_serializer.data,
-                            'other_banner':other_banner_serializer.data,
-                            'current_page': int(page_number),
-                            'page_count': page_count,
-                            "main_category":main_category_serilizer.data,
-                            "sub_category":sub_categories_serilizer.data,
-                            'product': product_serializer.data,
-                            'brands': brand_query},
-                            status=status.HTTP_200_OK)
-
-        return respone
-
-
+        return response
 
 
 class Brands(APIView):
-    def get(self,request,brand_id):
-        brand_obj= ProductBrand.objects.filter(id=brand_id).first()
-        brand_serializer = BrandSerializer(brand_obj,context={"request": request})
+    def get(self, request, brand_id):
+        brand_obj = ProductBrand.objects.filter(id=brand_id).first()
+        brand_serializer = BrandSerializer(brand_obj, context={"request": request})
         main_banner = brand_obj.mainbanner_set.all()
-        main_banner_serializer = MainBannerSAerializer(main_banner,many=True,context={"request": request})
+        main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
         other_banner = brand_obj.banner_set.all()
-        other_banner_serializer = BannerSAerializer(other_banner,many=True,context={"request": request})
-        page_content= Content.objects.filter(brand=brand_obj).first()
+        other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
+        page_content = Content.objects.filter(brand=brand_obj).first()
         page_content_serializer = ContentSerializer(page_content)
-        product_query = Product.objects.with_final_price().select_related("brand","category").filter(brand=brand_obj).order_by('-created_at')
-        meta_tag= MetaTag.objects.filter(brand=brand_obj).first()
+        product_query = Product.objects.with_final_price().select_related("brand", "category").filter(
+            brand=brand_obj).order_by('-created_at')
+        meta_tag = MetaTag.objects.filter(brand=brand_obj).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
-        #default page number = 1
+        # default page number = 1
         page_number = self.request.query_params.get('page', 1)
-        #default page_size = 20
+        # default page_size = 20
         page_size = self.request.query_params.get('page_size', 20)
 
         ordering = self.request.query_params.get('ordering', None)
@@ -182,25 +173,26 @@ class Brands(APIView):
         paginator = Paginator(product_query, page_size)
 
         product_serializer = AllProductSerializer(paginator.page(
-                page_number), many=True, context={"request": request})
+            page_number), many=True, context={"request": request})
 
-        page_count = math.ceil(product_query.count()/int(page_size))
+        page_count = math.ceil(product_query.count() / int(page_size))
 
         return Response({
-                            'page_content':page_content_serializer.data,
-                            'meta_tag':meta_tag_serializer.data,
-                            'main_banner':main_banner_serializer.data,
-                            'other_banner':other_banner_serializer.data,
-                            'current_page': int(page_number),
-                            'page_count': page_count,
-                            'brand':brand_serializer.data,
-                            'products':product_serializer.data,},
-                            status=status.HTTP_200_OK)
+            'page_content': page_content_serializer.data,
+            'meta_tag': meta_tag_serializer.data,
+            'main_banner': main_banner_serializer.data,
+            'other_banner': other_banner_serializer.data,
+            'current_page': int(page_number),
+            'page_count': page_count,
+            'brand': brand_serializer.data,
+            'products': product_serializer.data, },
+            status=status.HTTP_200_OK)
+
 
 class ProductDetail(APIView):
     def get(self, request, id):
         product_instance = get_object_or_404(Product, id=id)
-        product_serilizer = productDetailSerializer(
+        product_serializer = productDetailSerializer(
             product_instance, context={"request": request})
         comments = Comment.objects.filter(product__id=id).order_by('-created_at')
         comments_serializer = CommentsSerializer(comments, many=True)
@@ -208,8 +200,8 @@ class ProductDetail(APIView):
         questions_serializer = QuestionSerializer(questions, many=True)
 
         # Retrieve similar products based on price and category
-        similar_product = Product.objects.filter (id__in= product_instance.similar_product_ids,category=product_instance.category)
-
+        similar_product = Product.objects.filter(id__in=product_instance.similar_product_ids,
+                                                 category=product_instance.category)
 
         similar_product_serializer = AllProductSerializer(
             similar_product, context={"request": request}, many=True)
@@ -220,20 +212,18 @@ class ProductDetail(APIView):
             avg_user_rate=(Avg('kefiyat_rate') + Avg('arzesh_rate')) / 2
         )
 
-        page_content= Content.objects.filter(product=product_instance).first()
+        page_content = Content.objects.filter(product=product_instance).first()
         page_content_serializer = ContentSerializer(page_content)
-        meta_tag= MetaTag.objects.filter(product=product_instance).first()
+        meta_tag = MetaTag.objects.filter(product=product_instance).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
 
-
-
         return Response({
-            'breadcrumb':'',
-            'product': product_serilizer.data,
+            'breadcrumb': '',
+            'product': product_serializer.data,
             'comments': comments_serializer.data,
             'questions': questions_serializer.data,
             'avg_rate': avg,
             'similar_product': similar_product_serializer.data,
-            'page_content':page_content_serializer.data,
-            'meta_tag':meta_tag_serializer.data,
+            'page_content': page_content_serializer.data,
+            'meta_tag': meta_tag_serializer.data,
         }, status=status.HTTP_200_OK)

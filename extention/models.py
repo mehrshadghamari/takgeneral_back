@@ -3,7 +3,6 @@ from django_jalali.db import models as jmodels
 from tinymce import models as tinymce_model
 
 
-
 class MainBanner(models.Model):
     category= models.ForeignKey("product.Category",on_delete=models.CASCADE,null=True,blank=True)
     brand = models.ForeignKey("product.ProductBrand",on_delete=models.CASCADE,null=True,blank=True)

@@ -1,10 +1,8 @@
 from django.db.models import F
 from django.db.models import Q
 from django.shortcuts import render
-
 from extention.models import Blog
 from extention.models import Content
-
 from extention.serializers import AllBlogSerializer
 from extention.serializers import BlogSerializer
 from extention.serializers import ContentSerializer
@@ -13,8 +11,6 @@ from product.serializers import AllProductSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-
 
 
 class HomeApi(APIView):

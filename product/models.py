@@ -1,6 +1,5 @@
 import json
 
-
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
@@ -170,7 +169,7 @@ class Product(models.Model):
         unique_similar_product_ids = list(set(similar_product_ids))
 
         return unique_similar_product_ids
-    
+
 
     def get_variant_with_min_final_price(self, variants):
         min_final_price = float("inf")
@@ -194,8 +193,8 @@ class Product(models.Model):
                 selected_variant = variant
 
         return selected_variant
-    
-    
+
+
     @property
     def best_price(self):
         product_variants = ProductVariant.objects.filter(option__product_id=self.id)

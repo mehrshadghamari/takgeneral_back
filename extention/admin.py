@@ -7,12 +7,9 @@ from extention.models import Content
 from extention.models import ContentImage
 from extention.models import MainBanner
 from extention.models import MetaTag
-
 from nested_inline.admin import NestedModelAdmin
 from nested_inline.admin import NestedStackedInline
 from nested_inline.admin import NestedTabularInline
-
-
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)
