@@ -118,7 +118,7 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'url', 'main_image', 'name', 'min_price', 'brand',)
+        fields = ('id', 'url', 'main_image', 'name', 'min_price', 'brand', 'special_offer')
 
 
 class productCountFromSpecificBrand(serializers.ModelSerializer):

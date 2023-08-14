@@ -42,6 +42,8 @@ class products(APIView):
             main_category_serializer = CategorySerializer(category_obj)
             categories = category_obj.get_children()
             sub_categories_serializer = CategorySerializer(categories, many=True)
+            breadcrumb = category_obj.get_ancestors(include_self=True)
+            breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
             brands = Product.objects.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
             main_banner = category_obj.mainbanner_set.all()
@@ -54,6 +56,7 @@ class products(APIView):
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
             response = Response({
+                'breadcrumb': breadcrumb_serializer.data,
                 'page_content': page_content_serializer.data,
                 'meta_tag': meta_tag_serializer.data,
                 'main_banner': main_banner_serializer.data,
@@ -67,14 +70,18 @@ class products(APIView):
             if category_obj.is_leaf_node():
                 main_category_serializer = CategorySerializer(category_obj)
                 sub_categories_serializer = CategorySerializer(category_obj.parent.get_children(), many=True)
+                breadcrumb = category_obj.get_ancestors(include_self=True)
+                breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
                 product_query = Product.objects.select_related("brand", "category", ).filter(
-                    category=category_obj).order_by('-created_at')
+                    category=category_obj).order_by('-special_offer', '-created_at')
 
             else:
                 main_category_serializer = CategorySerializer(category_obj)
                 sub_categories_serializer = CategorySerializer(category_obj.get_children(), many=True)
+                breadcrumb = category_obj.get_ancestors(include_self=True)
+                breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
                 product_query = Product.objects.select_related("brand", "category").filter(
-                    category__in=category_obj.get_children()).order_by('-created_at')
+                    category__in=category_obj.get_children()).order_by('-special_offer', '-created_at')
 
             brand_query_before = product_query.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
@@ -124,7 +131,7 @@ class products(APIView):
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
             response = Response({
-                'breadcrumb': '',
+                'breadcrumb': breadcrumb_serializer.data,
                 'page_content': page_content_serializer.data,
                 'meta_tag': meta_tag_serializer.data,
                 'main_banner': main_banner_serializer.data,
@@ -151,7 +158,7 @@ class Brands(APIView):
         page_content = Content.objects.filter(brand=brand_obj).first()
         page_content_serializer = ContentSerializer(page_content)
         product_query = Product.objects.with_final_price().select_related("brand", "category").filter(
-            brand=brand_obj).order_by('-created_at')
+            brand=brand_obj).order_by('-special_offer', '-created_at')
         meta_tag = MetaTag.objects.filter(brand=brand_obj).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
         # default page number = 1
@@ -190,6 +197,8 @@ class ProductDetail(APIView):
         product_instance = get_object_or_404(Product, id=id)
         product_serializer = productDetailSerializer(
             product_instance, context={"request": request})
+        breadcrumb = product_instance.category.get_ancestors(include_self=True)
+        breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
         comments = Comment.objects.filter(product__id=id).order_by('-created_at')
         comments_serializer = CommentsSerializer(comments, many=True)
         questions = Question.objects.filter(product__id=id).order_by('-created_at')
@@ -214,7 +223,7 @@ class ProductDetail(APIView):
         meta_tag_serializer = MetaTagSerializer(meta_tag)
 
         return Response({
-            'breadcrumb': '',
+            'breadcrumb': breadcrumb_serializer.data,
             'product': product_serializer.data,
             'comments': comments_serializer.data,
             'questions': questions_serializer.data,

@@ -133,9 +133,8 @@ class Product(models.Model):
 
     @property
     def similar_product_ids(self):
-        first_option_price = float(self.options.first().values.first().price)
-        max_price = first_option_price + 1000000
-        min_price = first_option_price - 1000000
+        max_price = self.lowest_price + 1000000
+        min_price = self.lowest_price - 1000000
 
         similar_product_ids = (
             ProductVariant.objects
@@ -208,6 +207,7 @@ class Product(models.Model):
 class ProductOptionType(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='options')
     name = models.CharField(max_length=127, null=True)
+    no_option = models.BooleanField(default=False)
 
     @property
     def product_variant(self):
