@@ -42,7 +42,7 @@ class Blog(models.Model):
     desc = tinymce_model.HTMLField()
     tag = models.ManyToManyField("extention.BlogTag")
     slug = models.CharField(max_length=127, null=True)
-    create_time = jmodels.jDateTimeField(auto_now_add=True)
+    created_time = jmodels.jDateTimeField(auto_now_add=True)
 
     @property
     def blog_images(self):
