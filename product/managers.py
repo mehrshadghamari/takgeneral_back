@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import F
+from django.db.models import Max
 from django.db.models import Min
 from django.db.models import OuterRef
 from django.db.models import Subquery
@@ -11,15 +12,20 @@ class ProductVariantManager(models.Manager):
 
 
 class ProductManager(models.Manager):
-    def with_lowest_price(self):
+    def with_price(self):
         from .models import ProductVariant
-        lowest_prices_subquery = (
+        prices_subquery = (
             ProductVariant.objects.with_final_price().filter(option__product=OuterRef('pk'))
             .values('option__product')
-            .annotate(lowest_price=Min('final_price_manager'))
-            .values('lowest_price')
+            .annotate(
+                lowest_price=Min('price'),
+                lowest_final_price=Min('final_price_manager'),
+                highest_discount=Max('discount'))
+            # .values('lowest_price')
         )
 
         return self.get_queryset().annotate(
-            lowest_price=Subquery(lowest_prices_subquery, output_field=models.FloatField())
+            lowest_price=Subquery(prices_subquery.values('lowest_price'), output_field=models.FloatField()),
+            lowest_final_price=Subquery(prices_subquery.values('lowest_final_price'), output_field=models.FloatField()),
+            highest_discount=Subquery(prices_subquery.values("highest_discount"), output_field=models.IntegerField())
         )

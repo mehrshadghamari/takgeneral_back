@@ -5,6 +5,8 @@ from extention.models import Blog
 from extention.models import BlogImage
 from extention.models import BlogTag
 from extention.models import Content
+from extention.models import HomeBanner
+from extention.models import HomeMainBanner
 from extention.models import MainBanner
 from extention.models import MetaTag
 
@@ -46,6 +48,36 @@ class BannerSAerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
         exclude = ("category", "brand")
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
+
+class HomeMainBannerSerializer(serializers.ModelSerializer):
+    mobile_image = serializers.SerializerMethodField('get_mobile_image_url')
+    image = serializers.SerializerMethodField('get_image_url')
+
+    class Meta:
+        model = HomeMainBanner
+
+    def get_mobile_image_url(self, obj):
+        request = self.context.get('request')
+        mobile_image_url = obj.mobile_image.url
+        return request.build_absolute_uri(mobile_image_url)
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
+
+class HomeBannerSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_image_url')
+
+    class Meta:
+        model = HomeBanner
 
     def get_image_url(self, obj):
         request = self.context.get('request')

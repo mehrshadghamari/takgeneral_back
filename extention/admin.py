@@ -9,11 +9,15 @@ from extention.models import BlogImage
 from extention.models import BlogTag
 from extention.models import Content
 from extention.models import ContentImage
+from extention.models import HomeBanner
+from extention.models import HomeMainBanner
 from extention.models import MainBanner
 from extention.models import MetaTag
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)
+admin.site.register(HomeMainBanner)
+admin.site.register(HomeBanner)
 admin.site.register(BlogTag)
 
 

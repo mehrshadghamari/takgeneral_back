@@ -22,6 +22,27 @@ class Banner(models.Model):
     link_url = models.CharField(max_length=257)
 
 
+class HomeMainBanner(models.Model):
+    image = models.ImageField()
+    mobile_image = models.ImageField()
+    alt = models.CharField(max_length=127)
+    url = models.CharField(max_length=64)
+    link_url = models.CharField(max_length=257)
+
+
+class HomeBanner(models.Model):
+    banner_place = (
+        ("mid", "mid"),
+        ("end", "end")
+    )
+
+    image = models.ImageField()
+    alt = models.CharField(max_length=127)
+    url = models.CharField(max_length=64)
+    link_url = models.CharField(max_length=257)
+    place = models.CharField(max_length=5, choices=banner_place, null=True)
+
+
 class Content(models.Model):
     product = models.OneToOneField("product.Product", on_delete=models.CASCADE, null=True, blank=True)
     category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
