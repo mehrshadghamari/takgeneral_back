@@ -16,7 +16,7 @@ class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'user_alias_name', 'product', 'user', 'title',
-                  'content', 'suggest_me', 'kefiyat_rate', 'arzesh_rate', 'created_at')
+                  'content', 'suggest_me', 'rate', 'created_at')
         read_only_fields = ('id', 'created_at',)
 
         validators = [

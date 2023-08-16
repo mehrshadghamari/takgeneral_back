@@ -20,10 +20,7 @@ class Comment(models.Model):
     title = models.CharField(max_length=128, default=None, null=True)
     content = models.TextField()
     suggest_me = models.BooleanField(null=True, default=None)
-    kefiyat_rate = models.FloatField(
-        validators=[MaxValueValidator(5.0), MinValueValidator(1.0)], default=0
-    )
-    arzesh_rate = models.FloatField(
+    rate = models.FloatField(
         validators=[MaxValueValidator(5.0), MinValueValidator(1.0)], default=0
     )
     created_at = jmodels.jDateTimeField(auto_now_add=True)

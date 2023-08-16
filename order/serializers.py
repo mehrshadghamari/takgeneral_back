@@ -41,11 +41,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
         source='product.seven_days_back')
     free_send = serializers.BooleanField(source='product.free_send')
     warranty = serializers.CharField(source='product.warranty')
-    price = serializers.FloatField(source='product.price')
+    price = serializers.IntegerField(source='product.price')
     final_price = serializers.SerializerMethodField()
-    sum_price = serializers.ReadOnlyField()
-    sum_final_price = serializers.ReadOnlyField()
-    sum_discount_price = serializers.ReadOnlyField()
+    sum_price = serializers.IntegerField()
+    sum_final_price = serializers.IntegerField()
+    sum_discount_price = serializers.IntegerField()
     product_variant_id = serializers.IntegerField(source='product.id')
     product_variant_key = serializers.SerializerMethodField("get_product_variant_key")
     product_variant_value = serializers.CharField(source='product.option_value')
@@ -54,7 +54,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
         return obj.product.option.name
 
     def get_final_price(self, obj):
-        return obj.product.final_price
+        return int(obj.product.final_price)
 
     class Meta:
         model = OrderItem

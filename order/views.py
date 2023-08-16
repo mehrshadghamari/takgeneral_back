@@ -23,7 +23,6 @@ class CartDetailsPreview(APIView):
         user_id = request.user.id
         # user is authentiicated
         if user_id is not None:
-            print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
             user = MyUser.objects.get(id=user_id)
             # Get the user's unpaid order, if any
             order = Order.objects.filter(user=user, paid=False).first()
@@ -77,7 +76,6 @@ class CartDetailsPreview(APIView):
             #  Filter out objects with count = 0 from the cart_data list
             filtered_cart_data = [item for item in cart_data if item['count'] != 0]
 
-            print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
             serializer = CartSerializer(data=filtered_cart_data, many=True)
             serializer.is_valid(raise_exception=True)
             cart_items = serializer.validated_data
@@ -90,11 +88,10 @@ class CartDetailsPreview(APIView):
                 sum_discount_price=F('sum_price') - F('sum_final_price')
             ).first() for item in cart_items]
 
-            total_price = sum([p.sum_price for p in products])
-            total_final_price = sum([p.sum_final_price for p in products])
-            total_discount_price = sum(
-                [p.sum_discount_price for p in products])
-            total_count = sum([p.quantity for p in products])
+            total_price = int(sum([p.sum_price for p in products]))
+            total_final_price = int(sum([p.sum_final_price for p in products]))
+            total_discount_price = int(sum([p.sum_discount_price for p in products]))
+            total_count = int(sum([p.quantity for p in products]))
 
             # Serialize response data
             product_serializer = OrderlistSerializer(products, many=True)

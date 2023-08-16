@@ -211,11 +211,7 @@ class ProductDetail(APIView):
         similar_product_serializer = AllProductSerializer(
             similar_product, context={"request": request}, many=True)
 
-        avg = comments.aggregate(
-            avg_keyfiyat_rate=Avg('kefiyat_rate'),
-            avg_arzesh_rate=Avg('arzesh_rate'),
-            avg_user_rate=(Avg('kefiyat_rate') + Avg('arzesh_rate')) / 2
-        )
+        avg = comments.aggregate(avg_rate=Avg('rate'))
 
         page_content = Content.objects.filter(product=product_instance).first()
         page_content_serializer = ContentSerializer(page_content)

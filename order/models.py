@@ -13,19 +13,19 @@ class Order(models.Model):
 
     @property
     def total_price(self):
-        return sum(item.sum_price for item in self.items.all())
+        return int(sum(item.sum_price for item in self.items.all()))
 
     @property
     def total_final_price(self):
-        return sum(item.sum_final_price for item in self.items.all())
+        return int(sum(item.sum_final_price for item in self.items.all()))
 
     @property
     def total_discount_price(self):
-        return sum(item.sum_discount_price for item in self.items.all())
+        return int(sum(item.sum_discount_price for item in self.items.all()))
 
     @property
     def total_count(self):
-        return sum(item.quantity for item in self.items.all())
+        return int(sum(item.quantity for item in self.items.all()))
 
 
 class OrderItem(models.Model):
