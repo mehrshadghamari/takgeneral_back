@@ -51,7 +51,7 @@ class ProductImageInline(admin.TabularInline):
 
 class ProductVariantInline(NestedTabularInline):
     model = ProductVariant
-    extra = 2
+    extra = 1
 
 
 class productProductOptionTypeInline(NestedTabularInline):

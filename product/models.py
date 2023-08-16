@@ -1,10 +1,7 @@
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Min
-from django.db.models import OuterRef
 from django.db.models import Q
-from django.db.models import Subquery
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 
@@ -72,6 +69,7 @@ class Product(models.Model):
     name = models.CharField(max_length=64)
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE, db_index=True)
     special_offer = models.BooleanField(default=False)
+    pdf = models.FileField(null=True)
     created_at = models.DateField(auto_now_add=True, null=True)
 
     objects = ProductManager()
@@ -205,8 +203,8 @@ class Product(models.Model):
 
 
 class ProductOptionType(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='options')
-    name = models.CharField(max_length=127, null=True)
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True, related_name='options')
+    name = models.CharField(max_length=127, null=True, blank=True)
     no_option = models.BooleanField(default=False)
 
     @property
@@ -216,7 +214,7 @@ class ProductOptionType(models.Model):
 
 class ProductVariant(models.Model):
     option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
-    option_value = models.CharField(max_length=127)
+    option_value = models.CharField(max_length=127, null=True, blank=True)
     price = models.FloatField()
     discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField(default=1)
@@ -240,7 +238,6 @@ class ProductVariant(models.Model):
     def product_id(self):
         return self.option.product.id
 
-
     @property
     def product_name(self):
         return self.option.product.name
@@ -248,7 +245,6 @@ class ProductVariant(models.Model):
     @property
     def product_main_image(self):
         return self.option.product.main_image
-
 
     @property
     def product_available(self):
@@ -319,7 +315,6 @@ class ProductSpecificationValue(models.Model):
     def __str__(self):
         return self.value
 
-
 # class FilterOptionType(models.Model):
 #     name = models.CharField(max_length=50, unique=True)
 #     options = models.CharField(max_length=500, blank=True)  # Store options as a comma-separated string for enum
@@ -343,5 +338,3 @@ class ProductSpecificationValue(models.Model):
 
 #     def __str__(self):
 #         return self.specification_name if self.specification_name else ""
-
-

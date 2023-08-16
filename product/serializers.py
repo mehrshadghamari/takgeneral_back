@@ -12,7 +12,7 @@ from .models import ProductSpecificationValue
 from .models import ProductVariant
 
 
-class AttributeSerilizer(serializers.ModelSerializer):
+class AttributeSerializer(serializers.ModelSerializer):
     specification = serializers.SerializerMethodField("get_specification")
 
     def get_specification(self, obj):
@@ -23,7 +23,14 @@ class AttributeSerilizer(serializers.ModelSerializer):
         fields = ("specification", "value")
 
 
-class productImaagesSerilizer(serializers.ModelSerializer):
+class productImagesSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_image_url')
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
     class Meta:
         model = ProductImage
         exclude = ("created_at", "upload_at", "product")
@@ -85,21 +92,27 @@ class ProductOptionTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductOptionType
-        fields = ("id", "name", "product_variant")
+        fields = ("id", "no_option", "name", "product_variant")
 
 
 class productDetailSerializer(serializers.ModelSerializer):
-    attributes = AttributeSerilizer(many=True)
-    all_images = productImaagesSerilizer(many=True)
+    attributes = AttributeSerializer(many=True)
+    all_images = productImagesSerializer(many=True)
     brand = serializers.SerializerMethodField('get_brand')
-    options = ProductOptionTypeSerializer(many=True)
+    options = ProductOptionTypeSerializer()
+    pdf = serializers.SerializerMethodField("get_pdf_url")
+
+    def get_pdf_url(self, obj):
+        request = self.context.get('request')
+        pdf_url = obj.pdf.url
+        return request.build_absolute_uri(pdf_url)
+
+    def get_brand(self, obj):
+        return obj.brand.name
 
     class Meta:
         model = Product
         fields = '__all__'
-
-    def get_brand(self, obj):
-        return obj.brand.name
 
 
 class ProductVariantPriceSerializer(serializers.ModelSerializer):
@@ -110,7 +123,7 @@ class ProductVariantPriceSerializer(serializers.ModelSerializer):
 
 class AllProductSerializer(serializers.ModelSerializer):
     brand = serializers.SerializerMethodField('get_brand')
-    main_image = productImaagesSerilizer()
+    main_image = productImagesSerializer()
     min_price = ProductVariantPriceSerializer()
 
     def get_brand(self, obj):

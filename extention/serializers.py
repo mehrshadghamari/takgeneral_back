@@ -88,7 +88,7 @@ class HomeBannerSerializer(serializers.ModelSerializer):
 class BlogTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogTag
-        fields="__all__"
+        fields = "__all__"
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
@@ -101,7 +101,8 @@ class BlogImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogImage
-        fields="__all__"
+        fields = "__all__"
+
 
 class BlogSerializer(serializers.ModelSerializer):
     blog_images = BlogImageSerializer(many=True)
@@ -109,11 +110,12 @@ class BlogSerializer(serializers.ModelSerializer):
     created_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
-        return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'), 'timestamp': int(obj.created_time.timestamp())}
+        return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_time.timestamp())}
 
     class Meta:
-        model= Blog
-        fields="__all__"
+        model = Blog
+        fields = "__all__"
 
 
 class AllBlogSerializer(serializers.ModelSerializer):
@@ -122,8 +124,9 @@ class AllBlogSerializer(serializers.ModelSerializer):
     created_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
-        return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'), 'timestamp': int(obj.created_time.timestamp())}
+        return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
+                'timestamp': int(obj.created_time.timestamp())}
 
     class Meta:
-        model= Blog
-        fields=("id","title","main_image","tag","desc","created_time")
+        model = Blog
+        fields = ("id", "title", "main_image", "tag", "desc", "created_time")

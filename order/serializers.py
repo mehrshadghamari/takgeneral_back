@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from order.models import OrderItem
 from product.models import ProductVariant
-from product.serializers import productImaagesSerilizer
+from product.serializers import productImagesSerializer
 
 
 class OrderlistSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class OrderlistSerializer(serializers.ModelSerializer):
     warranty = serializers.CharField()
     product_id = serializers.IntegerField()
     name = serializers.CharField(source='product_name')
-    main_image = productImaagesSerilizer(source='product_main_image', allow_null=True)
+    main_image = productImagesSerializer(source='product_main_image', allow_null=True)
     product_variant_id = serializers.IntegerField(source='id')
     product_variant_key = serializers.SerializerMethodField("get_product_variant_key")
     product_variant_value = serializers.CharField(source='option_value')
@@ -34,7 +34,7 @@ class OrderlistSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source='product.product_id')
     name = serializers.CharField(source='product.product_name')
-    main_image = productImaagesSerilizer(
+    main_image = productImagesSerializer(
         source='product.product_main_image', allow_null=True)
     discount = serializers.IntegerField(source='product.discount')
     seven_days_back = serializers.BooleanField(

@@ -8,6 +8,8 @@ from django.utils.text import slugify
 from product.models import Category
 from product.models import Product
 from product.models import ProductBrand
+from product.models import ProductOptionType
+from product.models import ProductVariant
 
 all_brand = ['پمپ پنتاکس pentax', 'ابارا Ebara', 'پمپ دیزل ساز Dieselsaz', 'پمپ ورتکس wortex', 'پمپ لئو Leo',
              'پمپ الکتروژن Electrogen', 'پمپ گراندفوس Grundfos']
@@ -55,21 +57,21 @@ class Command(BaseCommand):
             for main_category_name in main_categories:
 
                 main_category_slug = slugify(str(uuid.uuid4()))
-                main_category = Category.objects.create(name=main_category_name, slug=main_category_slug,
+                main_category = Category.objects.create(name=main_category_name, url=main_category_slug,
                                                         is_active=True)
 
                 # Create subcategories
                 for subcategory_name, main_category_index in subcategories:
                     if main_category_index == main_categories.index(main_category_name):
                         subcategory_slug = slugify(str(uuid.uuid4()))
-                        subcategory = Category.objects.create(name=subcategory_name, slug=subcategory_slug,
+                        subcategory = Category.objects.create(name=subcategory_name, url=subcategory_slug,
                                                               parent=main_category, is_active=True)
 
                         # Create sub-subcategories
                         for sub_subcategory_name, subcategory_index in sub_subcategories:
                             if subcategory_index == subcategories.index((subcategory_name, main_category_index)):
                                 sub_subcategory_slug = slugify(str(uuid.uuid4()))
-                                Category.objects.create(name=sub_subcategory_name, slug=sub_subcategory_slug,
+                                Category.objects.create(name=sub_subcategory_name, url=sub_subcategory_slug,
                                                         parent=subcategory, is_active=True)
 
             # create brands
@@ -82,33 +84,65 @@ class Command(BaseCommand):
                 category_instance = Category.objects.filter(children__isnull=True).order_by('?')[0]
 
                 name = f"محصول - {i + 1} <{category_instance.name}> "
-                slug = slugify(name + category_instance.name + brand_instance.name)
-                count_of_product = random.randint(1, 100)
-                discount = random.randint(0, 50)
-                price = round(random.randint(1000000, 10000000))
-                special_offer = random.choice([True, False])
-                seven_days_back = random.choice([True, False])
-                free_send = random.choice([True, False])
-                waranty_tamir = random.choice([True, False])
-                waranty_taviz = random.choice([True, False])
-                month_of_waranty = random.choice([6, 12, 24])
+                url = slugify(name + category_instance.name + brand_instance.name)
 
                 # Create the product object
                 product_instance = Product.objects.create(
                     name=name,
-                    slug=slug,
+                    url=url,
                     brand=brand_instance,
                     category=category_instance,
-                    count_of_product=count_of_product,
-                    discount=discount,
-                    price=price,
-                    special_offer=special_offer,
-                    seven_days_back=seven_days_back,
-                    free_send=free_send,
-                    waranty_tamir=waranty_tamir,
-                    waranty_taviz=waranty_taviz,
-                    month_of_waranty=month_of_waranty,
+                    special_offer=random.choice([True, False])
                 )
+                no_option = random.choice([True, False])
+                if not no_option:
+                    option_instance = ProductOptionType.objects.create(product=product_instance,
+                                                                       name=random.choice(['مایع', 'گاز']))
+                    for i in range(1, 4):
+                        Inventory_number = random.randint(1, 100)
+                        discount = random.randint(0, 50)
+                        price = round(random.randint(1000000, 10000000))
+                        seven_days_back = random.choice([True, False])
+                        free_send = random.choice([True, False])
+                        waranty_tamir = random.choice([True, False])
+                        waranty_taviz = random.choice([True, False])
+                        month_of_waranty = random.choice([6, 12, 24])
+
+                        ProductVariant.objects.create(
+                            option=option_instance,
+                            option_value=f' لیتر{i}000',
+                            Inventory_number=Inventory_number,
+                            discount=discount,
+                            price=price,
+                            seven_days_back=seven_days_back,
+                            free_send=free_send,
+                            waranty_tamir=waranty_tamir,
+                            waranty_taviz=waranty_taviz,
+                            month_of_waranty=month_of_waranty,
+                        )
+                else:
+                    option_instance = ProductOptionType.objects.create(product=product_instance, no_option=True)
+                    Inventory_number = random.randint(1, 100)
+                    discount = random.randint(0, 50)
+                    price = round(random.randint(1000000, 10000000))
+                    seven_days_back = random.choice([True, False])
+                    free_send = random.choice([True, False])
+                    waranty_tamir = random.choice([True, False])
+                    waranty_taviz = random.choice([True, False])
+                    month_of_waranty = random.choice([6, 12, 24])
+
+                    ProductVariant.objects.create(
+                        option=option_instance,
+                        option_value=None,
+                        Inventory_number=Inventory_number,
+                        discount=discount,
+                        price=price,
+                        seven_days_back=seven_days_back,
+                        free_send=free_send,
+                        waranty_tamir=waranty_tamir,
+                        waranty_taviz=waranty_taviz,
+                        month_of_waranty=month_of_waranty,
+                    )
 
                 ######### image for product ##########
 

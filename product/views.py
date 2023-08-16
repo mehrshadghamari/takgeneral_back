@@ -106,9 +106,9 @@ class products(APIView):
             ordering = self.request.query_params.get('ordering', None)
             if ordering is not None:
                 if ordering == 'price':
-                    product_query = product_query.with_price().order_by('lowest_final_price')
+                    product_query = product_query.with_price().order_by('lowest_final_price_manager')
                 elif ordering == '-price':
-                    product_query = product_query.with_price().order_by('-lowest_final_price')
+                    product_query = product_query.with_price().order_by('-lowest_final_price_manager')
 
             page_number = self.request.query_params.get('page', 1)
             # page_size = 20
@@ -169,9 +169,9 @@ class Brands(APIView):
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
             if ordering == 'price':
-                product_query = product_query.with_price().order_by('lowest_final_price')
+                product_query = product_query.with_price().order_by('lowest_final_price_manager')
             elif ordering == '-price':
-                product_query = product_query.with_price().order_by('-lowest_final_price')
+                product_query = product_query.with_price().order_by('-lowest_final_price_manager')
 
         paginator = Paginator(product_query, page_size)
 

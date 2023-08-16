@@ -25,7 +25,9 @@ class ProductManager(models.Manager):
         )
 
         return self.get_queryset().annotate(
-            lowest_price=Subquery(prices_subquery.values('lowest_price'), output_field=models.FloatField()),
-            lowest_final_price=Subquery(prices_subquery.values('lowest_final_price'), output_field=models.FloatField()),
-            highest_discount=Subquery(prices_subquery.values("highest_discount"), output_field=models.IntegerField())
+            lowest_price_manager=Subquery(prices_subquery.values('lowest_price'), output_field=models.FloatField()),
+            lowest_final_price_manager=Subquery(prices_subquery.values('lowest_final_price'),
+                                                output_field=models.FloatField()),
+            highest_discount_manager=Subquery(prices_subquery.values("highest_discount"),
+                                              output_field=models.IntegerField())
         )
