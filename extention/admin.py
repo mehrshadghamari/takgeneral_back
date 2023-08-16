@@ -13,6 +13,7 @@ from extention.models import HomeBanner
 from extention.models import HomeMainBanner
 from extention.models import MainBanner
 from extention.models import MetaTag
+from extention.models import MetaTagSchema
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)
@@ -38,8 +39,14 @@ class BannerInline(NestedTabularInline):
     extra = 2
 
 
+class MetaTagSchemaInline(NestedTabularInline):
+    model = MetaTagSchema
+    extra = 1
+
+
 class MetaTagInline(NestedStackedInline):
     model = MetaTag
+    inlines = [MetaTagSchemaInline]
 
     fields = ("title",
               "desc",
@@ -49,8 +56,7 @@ class MetaTagInline(NestedStackedInline):
               "og_url",
               "og_site_name",
               "og_image",
-              "twiter_cart",
-              "script")
+              "twiter_cart",)
     extra = 1
 
 

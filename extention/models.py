@@ -103,4 +103,12 @@ class MetaTag(models.Model):
     og_site_name = models.CharField(max_length=257)
     og_image = models.CharField(max_length=257)
     twiter_cart = models.CharField(max_length=257)
-    script = models.TextField()
+
+    @property
+    def schemas(self):
+        return  self.schemas.all()
+
+
+class MetaTagSchema(models.Model):
+    meta_tag = models.ForeignKey("extention.MetaTag", related_name= 'schemas',on_delete=models.CASCADE, null=True, blank=True)
+    schema = models.TextField()

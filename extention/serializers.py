@@ -9,6 +9,7 @@ from extention.models import HomeBanner
 from extention.models import HomeMainBanner
 from extention.models import MainBanner
 from extention.models import MetaTag
+from extention.models import MetaTagSchema
 
 
 class ContentSerializer(serializers.ModelSerializer):
@@ -17,7 +18,15 @@ class ContentSerializer(serializers.ModelSerializer):
         fields = ("desc",)
 
 
+class MetaTagSchemaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MetaTagSchema
+        fields = ('schema')
+
+
 class MetaTagSerializer(serializers.ModelSerializer):
+    schemas = MetaTagSchemaSerializer(many=True)
+
     class Meta:
         model = MetaTag
         exclude = ("product", "category", "brand")
