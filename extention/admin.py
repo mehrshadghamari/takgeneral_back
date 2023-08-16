@@ -14,12 +14,18 @@ from extention.models import HomeMainBanner
 from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import MetaTagSchema
+from extention.models import PopularHomeCategory
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)
 admin.site.register(HomeMainBanner)
 admin.site.register(HomeBanner)
 admin.site.register(BlogTag)
+
+
+class PopularHomeCategoryInline(NestedTabularInline):
+    model = PopularHomeCategory
+    extra = 1
 
 
 class BlogInline(NestedTabularInline):

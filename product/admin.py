@@ -8,6 +8,7 @@ from extention.admin import BannerInline
 from extention.admin import ContentInline
 from extention.admin import MainBannerInline
 from extention.admin import MetaTagInline
+from extention.admin import PopularHomeCategoryInline
 from .models import Category
 from .models import Product
 from .models import ProductBrand
@@ -98,7 +99,7 @@ class ProductBrandAdmin(NestedModelAdmin):
 @admin.register(Category)
 class CategotyAdmin(NestedModelAdmin, MPTTModelAdmin):
     search_fields = ['name', ]
-    inlines = [ContentInline, MainBannerInline, BannerInline, MetaTagInline, ]
+    inlines = [PopularHomeCategoryInline, MainBannerInline, BannerInline, ContentInline, MetaTagInline, ]
 
 
 @admin.register(ProductType)

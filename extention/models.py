@@ -2,6 +2,8 @@ from django.db import models
 from django_jalali.db import models as jmodels
 from tinymce import models as tinymce_model
 
+from product.models import Product
+
 
 class MainBanner(models.Model):
     category = models.ForeignKey("product.Category", on_delete=models.CASCADE, null=True, blank=True)
@@ -41,6 +43,22 @@ class HomeBanner(models.Model):
     url = models.CharField(max_length=64)
     link_url = models.CharField(max_length=257)
     place = models.CharField(max_length=5, choices=banner_place, null=True)
+
+
+class PopularHomeCategory(models.Model):
+    category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
+    color = models.CharField(max_length=20, null=True, blank=True)
+    image = models.ImageField()
+
+    @property
+    def products(self):
+        if self.category.is_leaf_node():
+            product_query = Product.objects.select_related("category").filter(
+                category=self.category).order_by('-special_offer')[:20]
+        else:
+            product_query = Product.objects.select_related("category").filter(
+                category__in=self.category.get_children()).order_by('-special_offer')[:20]
+        return product_query
 
 
 class Content(models.Model):
@@ -106,9 +124,10 @@ class MetaTag(models.Model):
 
     @property
     def schemas(self):
-        return  self.schemas.all()
+        return self.schemas.all()
 
 
 class MetaTagSchema(models.Model):
-    meta_tag = models.ForeignKey("extention.MetaTag", related_name= 'schemas',on_delete=models.CASCADE, null=True, blank=True)
+    meta_tag = models.ForeignKey("extention.MetaTag", related_name='schemas', on_delete=models.CASCADE, null=True,
+                                 blank=True)
     schema = models.TextField()

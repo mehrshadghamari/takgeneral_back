@@ -10,6 +10,9 @@ from extention.models import HomeMainBanner
 from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import MetaTagSchema
+from extention.models import PopularHomeCategory
+from product.serializers import AllProductSerializer
+from product.serializers import CategorySerializer
 
 
 class ContentSerializer(serializers.ModelSerializer):
@@ -92,6 +95,22 @@ class HomeBannerSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
+
+
+class PopularHomeCategorySerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    products = AllProductSerializer(many=True)
+    image = serializers.SerializerMethodField('get_image_url')
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
+
+    class Meta:
+        model = PopularHomeCategory
+        fields = '__all__'
 
 
 class BlogTagSerializer(serializers.ModelSerializer):

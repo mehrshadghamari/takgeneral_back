@@ -8,31 +8,17 @@ from extention.models import Blog
 from extention.models import Content
 from extention.models import HomeBanner
 from extention.models import HomeMainBanner
+from extention.models import PopularHomeCategory
 from extention.serializers import AllBlogSerializer
 from extention.serializers import BlogSerializer
 from extention.serializers import ContentSerializer
 from extention.serializers import HomeBannerSerializer
 from extention.serializers import HomeMainBannerSerializer
+from extention.serializers import PopularHomeCategorySerializer
 from product.models import Category
 from product.models import Product
 from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
-
-
-# class HomeApi(APIView):
-#     def get(self, request):
-#         special_offer_products = Product.objects.filter(special_offer=True)
-#         special_offer_serializer = AllProductSerializer(
-#             special_offer_products, many=True, context={"request": request})
-#         # amazing_offer_product=Product.objects.filter(discount__gte=20)
-#         amazing_offer_product = Product.objects.with_final_price().annotate(ekhtelaf=F(
-#             'price') - F('final_price_Manager')).filter(Q(ekhtelaf__gte=1000000) | Q(discount__gte=20))
-#         # amazing_offer_product=Product.objects.annotate(final_price=F('price')-(F('price')*F('discount')/100)).annotate(ekhtelaf=F('price') - F('final_price')).filter(ekhtelaf__gte=1000000)
-#         # amazing_offer_product=Product.objects.annotate(ekhtelaf=F('price') - F('final_price')).filter(ekhtelaf__gte=1000000)
-#         amazing_offer_serializer = AllProductSerializer(
-#             amazing_offer_product, many=True, context={"request": request})
-#         return Response({'special_offer_products': special_offer_serializer.data,
-#                          'amazing_offer_product': amazing_offer_serializer.data}, status=status.HTTP_200_OK)
 
 
 class HomeApi(APIView):
@@ -46,15 +32,19 @@ class HomeApi(APIView):
         end_banners = HomeBanner.objects.filter(place="end")
         end_banners_serializer = HomeBannerSerializer(end_banners, many=True, context={"request": request})
 
-        mother_category = Category.objects.filter(parent=None)
-        mother_category_serializer = CategorySerializer(mother_category, many=True)
+        mother_categories = Category.objects.filter(parent=None)
+        mother_categories_serializer = CategorySerializer(mother_categories, many=True)
+
+        popular_categories = PopularHomeCategory.objects.all()
+        popular_categories_serializer = PopularHomeCategorySerializer(
+            popular_categories, many=True, context={"request": request})
 
         special_offer_products = Product.objects.filter(special_offer=True).order_by('?')[:20]
         special_offer_serializer = AllProductSerializer(
             special_offer_products, many=True, context={"request": request})
 
-        amazing_offer_product = Product.objects.with_price().annotate(ekhtelaf=F(
-            'lowest_price_manager') - F('lowest_final_price_manager')).filter(
+        amazing_offer_product = Product.objects.with_price().annotate(
+            ekhtelaf=F('lowest_price_manager') - F('lowest_final_price_manager')).filter(
             Q(ekhtelaf__gte=1000000) | Q(highest_discount_manager__gte=20)).order_by('?')[:20]
         amazing_offer_serializer = AllProductSerializer(
             amazing_offer_product, many=True, context={"request": request})
@@ -67,7 +57,8 @@ class HomeApi(APIView):
             'main_banner': main_banners_serializer.data,
             'mid_banner': mid_banners_serializer.data,
             'end_banner': end_banners_serializer.data,
-            'mother_category': mother_category_serializer.data,
+            'mother_categories': mother_categories_serializer.data,
+            'popular_categories': popular_categories_serializer.data,
             'special_offer_products': special_offer_serializer.data,
             'amazing_offer_product': amazing_offer_serializer.data,
             'new_blogs': new_blog_serializer.data},
