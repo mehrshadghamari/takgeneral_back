@@ -100,12 +100,12 @@ class productDetailSerializer(serializers.ModelSerializer):
     all_images = productImagesSerializer(many=True)
     brand = serializers.SerializerMethodField('get_brand')
     options = ProductOptionTypeSerializer()
-    pdf = serializers.SerializerMethodField("get_pdf_url")
+    # pdf = serializers.SerializerMethodField("get_pdf_url")
 
-    def get_pdf_url(self, obj):
-        request = self.context.get('request')
-        pdf_url = obj.pdf.url
-        return request.build_absolute_uri(pdf_url)
+    # def get_pdf_url(self, obj):
+    #     request = self.context.get('request')
+    #     pdf_url = obj.pdf.url
+    #     return request.build_absolute_uri(pdf_url)
 
     def get_brand(self, obj):
         return obj.brand.name
