@@ -1,5 +1,8 @@
+import math
+
 from django.db.models import F
 from django.db.models import Q
+from django.core.paginator import Paginator
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -75,10 +78,19 @@ class contentAPI(APIView):
 
 class BlogsApi(APIView):
     def get(self, request):
+        page_number = self.request.query_params.get('page', 1)
+        page_size = self.request.query_params.get('page_size', 20)
         blogs = Blog.objects.all()
-        blogs_serializer = AllBlogSerializer(
-            blogs, many=True, context={"request": request})
-        return Response(blogs_serializer.data, status=status.HTTP_200_OK)
+        paginator = Paginator(blogs, page_size)
+        blogs_serializer = AllBlogSerializer(paginator.page(
+                page_number), many=True, context={"request": request})
+        
+        page_count = math.ceil(blogs.count() / int(page_size))
+        
+        return Response({'current_page': int(page_number),
+                         'page_count': page_count,
+                         'blogs':blogs_serializer.data,}
+                         ,status=status.HTTP_200_OK)
 
 
 class BlogDetail(APIView):
