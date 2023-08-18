@@ -231,7 +231,7 @@ class ProductVariant(models.Model):
         if self.discount == 0:
             final_price = self.price
         else:
-            final_price = self.price - (self.price * self.discount / 100)
+            final_price = float(self.price - (self.price * self.discount / 100))
         return final_price
 
     @property
