@@ -100,6 +100,7 @@ class productDetailSerializer(serializers.ModelSerializer):
     all_images = productImagesSerializer(many=True)
     brand = serializers.SerializerMethodField('get_brand')
     options = ProductOptionTypeSerializer()
+
     # pdf = serializers.SerializerMethodField("get_pdf_url")
 
     # def get_pdf_url(self, obj):
