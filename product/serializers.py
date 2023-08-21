@@ -10,6 +10,10 @@ from .models import ProductImage
 from .models import ProductOptionType
 from .models import ProductSpecificationValue
 from .models import ProductVariant
+from extention.serializers import BannerSerializer
+from extention.serializers import ContentSerializer
+from extention.serializers import MainBannerSerializer
+from extention.serializers import MetaTagSerializer
 
 
 class AttributeSerializer(serializers.ModelSerializer):
@@ -185,3 +189,15 @@ class BrandSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = FilterOption
 #         fields = ['specification_name', 'filter_option_type', 'min_value', 'max_value',]
+
+
+
+class BrandPageSerializer(serializers.Serializer):
+    page_content = ContentSerializer()
+    meta_tag = MetaTagSerializer()
+    main_banner = MainBannerSerializer(many=True)
+    other_banner = BannerSerializer(many=True)
+    current_page = serializers.IntegerField()
+    page_count = serializers.IntegerField()
+    brand = BrandSerializer()
+    products = AllProductSerializer(many=True)

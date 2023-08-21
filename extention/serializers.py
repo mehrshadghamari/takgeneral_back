@@ -15,6 +15,7 @@ from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
 
 
+
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
@@ -35,7 +36,7 @@ class MetaTagSerializer(serializers.ModelSerializer):
         exclude = ("product", "category", "brand")
 
 
-class MainBannerSAerializer(serializers.ModelSerializer):
+class MainBannerSerializer(serializers.ModelSerializer):
     mobile_image = serializers.SerializerMethodField('get_mobile_image_url')
     image = serializers.SerializerMethodField('get_image_url')
 
@@ -54,7 +55,7 @@ class MainBannerSAerializer(serializers.ModelSerializer):
         return request.build_absolute_uri(image_url)
 
 
-class BannerSAerializer(serializers.ModelSerializer):
+class BannerSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField('get_image_url')
 
     class Meta:
