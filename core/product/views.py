@@ -72,7 +72,7 @@ class products(APIView):
                 sub_categories_serializer = CategorySerializer(category_obj.parent.get_children(), many=True)
                 breadcrumb = category_obj.get_ancestors(include_self=True)
                 breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
-                product_query = Product.objects.select_related("brand", "category", ).filter(
+                product_query = Product.objects.with_price_info().select_related("brand", "category", ).filter(
                     category=category_obj).order_by('-special_offer', '-created_at')
 
             else:
@@ -80,7 +80,7 @@ class products(APIView):
                 sub_categories_serializer = CategorySerializer(category_obj.get_children(), many=True)
                 breadcrumb = category_obj.get_ancestors(include_self=True)
                 breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
-                product_query = Product.objects.select_related("brand", "category").filter(
+                product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
                     category__in=category_obj.get_children()).order_by('-special_offer', '-created_at')
 
             brand_query_before = product_query.values('brand__id').annotate(
@@ -106,9 +106,9 @@ class products(APIView):
             ordering = self.request.query_params.get('ordering', None)
             if ordering is not None:
                 if ordering == 'price':
-                    product_query = product_query.with_price().order_by('lowest_final_price_manager')
+                    product_query = product_query.order_by('lowest_final_price_manager')
                 elif ordering == '-price':
-                    product_query = product_query.with_price().order_by('-lowest_final_price_manager')
+                    product_query = product_query.order_by('-lowest_final_price_manager')
 
             page_number = self.request.query_params.get('page', 1)
             # page_size = 20
@@ -157,7 +157,7 @@ class Brands(APIView):
         other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
         page_content = Content.objects.filter(brand=brand_obj).first()
         page_content_serializer = ContentSerializer(page_content)
-        product_query = Product.objects.with_final_price().select_related("brand", "category").filter(
+        product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
             brand=brand_obj).order_by('-special_offer', '-created_at')
         meta_tag = MetaTag.objects.filter(brand=brand_obj).first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
@@ -169,9 +169,9 @@ class Brands(APIView):
         ordering = self.request.query_params.get('ordering', None)
         if ordering is not None:
             if ordering == 'price':
-                product_query = product_query.with_price().order_by('lowest_final_price_manager')
+                product_query = product_query.order_by('lowest_final_price_manager')
             elif ordering == '-price':
-                product_query = product_query.with_price().order_by('-lowest_final_price_manager')
+                product_query = product_query.order_by('-lowest_final_price_manager')
 
         paginator = Paginator(product_query, page_size)
 
