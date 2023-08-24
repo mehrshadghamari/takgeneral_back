@@ -131,6 +131,18 @@ class products(APIView):
             meta_tag = MetaTag.objects.filter(category=category_obj).first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
+            included_brand_ids = set()
+            # ... (your existing code)
+            brands = []
+
+            # Loop through the brand data
+            for brand_data in brand_query:
+                brand_id = brand_data['brand__id']
+                # Check if the brand ID has already been included in the response
+                if brand_id not in included_brand_ids:
+                    included_brand_ids.add(brand_id)  # Add the brand ID to the set
+                    brands.append(brand_data)
+
             response = Response({
                 'breadcrumb': breadcrumb_serializer.data,
                 'page_content': page_content_serializer.data,
@@ -142,7 +154,7 @@ class products(APIView):
                 "main_category": main_category_serializer.data,
                 "sub_category": sub_categories_serializer.data,
                 'product': product_serializer.data,
-                'brands': brand_query},
+                'brands': brands},
                 status=status.HTTP_200_OK)
 
         return response
