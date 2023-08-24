@@ -36,6 +36,8 @@ class MetaTagSerializer(serializers.ModelSerializer):
         exclude = ("product", "category", "brand","index","follow")
 
 
+
+
 class MainBannerSAerializer(serializers.ModelSerializer):
     mobile_image = serializers.SerializerMethodField('get_mobile_image_url')
     image = serializers.SerializerMethodField('get_image_url')

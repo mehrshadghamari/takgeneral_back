@@ -127,6 +127,7 @@ class MetaTag(models.Model):
     index = models.BooleanField(default=True, null=True, blank=True)
 
 
+
     @property
     def google_index(self):
         
