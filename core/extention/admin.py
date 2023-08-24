@@ -60,7 +60,11 @@ class MetaTagInline(NestedStackedInline):
               "og_desc",
               "og_type",
               "og_url",
+              "og_locale",
               "og_site_name",
+              "canonical",
+              "follow",
+              "index",
               "og_image",
               "twiter_cart",)
     extra = 1

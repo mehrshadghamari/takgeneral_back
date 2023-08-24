@@ -29,10 +29,11 @@ class MetaTagSchemaSerializer(serializers.ModelSerializer):
 
 class MetaTagSerializer(serializers.ModelSerializer):
     schemas = MetaTagSchemaSerializer(many=True)
+    google_index = serializers.CharField()
 
     class Meta:
         model = MetaTag
-        exclude = ("product", "category", "brand")
+        exclude = ("product", "category", "brand","index","follow")
 
 
 class MainBannerSAerializer(serializers.ModelSerializer):

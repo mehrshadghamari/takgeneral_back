@@ -112,15 +112,35 @@ class MetaTag(models.Model):
     product = models.OneToOneField("product.Product", on_delete=models.CASCADE, null=True, blank=True)
     category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
     brand = models.OneToOneField("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(max_length=257)
-    desc = models.CharField(max_length=257)
-    og_title = models.CharField(max_length=257)
-    og_desc = models.CharField(max_length=257)
-    og_type = models.CharField(max_length=257)
-    og_url = models.CharField(max_length=257)
-    og_site_name = models.CharField(max_length=257)
-    og_image = models.CharField(max_length=257)
-    twiter_cart = models.CharField(max_length=257)
+    title = models.CharField(max_length=257, null=True, blank=True)
+    desc = models.CharField(max_length=257, null=True, blank=True)
+    og_title = models.CharField(max_length=257, null=True, blank=True)
+    og_desc = models.CharField(max_length=257, null=True, blank=True)
+    og_locale = models.CharField(max_length=257,default="fa_IR", null=True, blank=True)
+    og_type = models.CharField(max_length=257, null=True, blank=True)
+    og_url = models.CharField(max_length=257, null=True, blank=True)
+    og_site_name = models.CharField(max_length=257,default="tak general", null=True, blank=True)
+    og_image = models.CharField(max_length=257, null=True, blank=True)
+    twiter_cart = models.CharField(max_length=257, null=True, blank=True)
+    canonical = models.CharField(max_length=257, null=True, blank=True)
+    follow = models.BooleanField(default=True, null=True, blank=True) 
+    index = models.BooleanField(default=True, null=True, blank=True)
+
+
+    @property
+    def google_index(self):
+        
+        if self.index and self.follow==False:
+            return 'index,nofollow'
+        
+        if self.index and self.follow==True:
+            return 'index,follow'
+        
+        if self.index==False and self.follow==False:
+            return 'index,nofollow'
+        
+        if self.index==False and self.follow==True:
+            return 'noindex,follow'
 
     @property
     def schemas(self):
