@@ -88,6 +88,8 @@ class CartDetailsPreview(APIView):
                 sum_discount_price=F('sum_price') - F('sum_final_price')
             ).first() for item in cart_items]
 
+
+
             total_price = int(sum([p.sum_price for p in products]))
             total_final_price = int(sum([p.sum_final_price for p in products]))
             total_discount_price = int(sum([p.sum_discount_price for p in products]))

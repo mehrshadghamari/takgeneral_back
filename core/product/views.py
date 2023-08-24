@@ -85,6 +85,7 @@ class products(APIView):
 
             brand_query_before = product_query.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
+            
 
             min_price = self.request.query_params.get('min_price', None)
             max_price = self.request.query_params.get('max_price', None)
@@ -149,7 +150,7 @@ class products(APIView):
 
 class Brands(APIView):
     def get(self, request, brand_id):
-        brand_obj = ProductBrand.objects.filter(id=brand_id).first()
+        brand_obj = get_object_or_404(ProductBrand,id=brand_id)
         brand_serializer = BrandSerializer(brand_obj, context={"request": request})
         main_banner = brand_obj.mainbanner_set.all()
         main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
