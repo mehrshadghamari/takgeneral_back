@@ -69,7 +69,7 @@ class Product(models.Model):
     name = models.CharField(max_length=64)
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE, db_index=True)
     special_offer = models.BooleanField(default=False)
-    pdf = models.FileField(null=True)
+    pdf = models.FileField(null=True,blank=True)
     created_at = models.DateField(auto_now_add=True, null=True)
 
     objects = ProductManager()

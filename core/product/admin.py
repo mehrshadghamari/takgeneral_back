@@ -41,12 +41,12 @@ class ProductForm(forms.ModelForm):
 # inlines
 
 
-class ProductSpecificationInline(admin.TabularInline):
+class ProductSpecificationInline(NestedTabularInline):
     search_fields = ['name', ]
     model = ProductSpecification
 
 
-class ProductImageInline(admin.TabularInline):
+class ProductImageInline(NestedTabularInline):
     model = ProductImage
 
 
@@ -74,7 +74,7 @@ class productProductOptionTypeInline(NestedTabularInline):
 # admin.site.register(FilterOptionType)
 
 
-class ProductSpecificationValueInline(admin.TabularInline):
+class ProductSpecificationValueInline(NestedTabularInline):
     model = ProductSpecificationValue
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
