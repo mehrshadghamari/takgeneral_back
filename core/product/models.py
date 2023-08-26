@@ -63,7 +63,7 @@ class ProductBrand(models.Model):
 
 
 class Product(models.Model):
-    product_type = models.ForeignKey("product.ProductType", null=True, on_delete=models.RESTRICT)
+    product_type = models.ForeignKey("product.ProductType", null=True,blank=True ,on_delete=models.RESTRICT)
     category = models.ForeignKey("product.Category", on_delete=models.RESTRICT, null=True, db_index=True)
     url = models.SlugField(max_length=255, unique=True, null=True, db_index=True)
     name = models.CharField(max_length=64)
