@@ -216,13 +216,13 @@ class ProductVariant(models.Model):
     option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
     option_value = models.CharField(max_length=127, null=True, blank=True)
     price = models.FloatField()
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
-    Inventory_number = models.IntegerField(default=1)
-    seven_days_back = models.BooleanField(default=False)
-    free_send = models.BooleanField(default=True)
+    discount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(99), MinValueValidator(0)])
+    Inventory_number = models.IntegerField()
+    seven_days_back = models.BooleanField()
+    free_send = models.BooleanField()
     waranty_tamir = models.BooleanField()
     waranty_taviz = models.BooleanField()
-    month_of_waranty = models.PositiveSmallIntegerField()
+    month_of_waranty = models.PositiveSmallIntegerField(null=True,blank=True)
 
     objects = ProductVariantManager()
 
