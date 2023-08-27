@@ -224,7 +224,7 @@ class ProductVariant(models.Model):
     price = models.FloatField()
     discount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField()
-    made_in = models.CharField(max_length=25,choices=made_in_chiose)
+    made_in = models.CharField(max_length=25,choices=made_in_chiose,null=True)
     min_price= models.BooleanField()
     free_send = models.BooleanField()
     waranty_tamir = models.BooleanField()

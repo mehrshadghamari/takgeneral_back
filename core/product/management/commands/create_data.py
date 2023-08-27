@@ -102,7 +102,7 @@ class Command(BaseCommand):
                         Inventory_number = random.randint(1, 100)
                         discount = random.randint(0, 50)
                         price = round(random.randint(1000000, 10000000))
-                        seven_days_back = random.choice([True, False])
+                        min_price = random.choice([True, False])
                         free_send = random.choice([True, False])
                         waranty_tamir = random.choice([True, False])
                         waranty_taviz = random.choice([True, False])
@@ -114,7 +114,7 @@ class Command(BaseCommand):
                             Inventory_number=Inventory_number,
                             discount=discount,
                             price=price,
-                            seven_days_back=seven_days_back,
+                            min_price=min_price,
                             free_send=free_send,
                             waranty_tamir=waranty_tamir,
                             waranty_taviz=waranty_taviz,
@@ -125,11 +125,12 @@ class Command(BaseCommand):
                     Inventory_number = random.randint(1, 100)
                     discount = random.randint(0, 50)
                     price = round(random.randint(1000000, 10000000))
-                    seven_days_back = random.choice([True, False])
+                    min_price = random.choice([True, False])
                     free_send = random.choice([True, False])
                     waranty_tamir = random.choice([True, False])
                     waranty_taviz = random.choice([True, False])
                     month_of_waranty = random.choice([6, 12, 24])
+                    made_in = random.choice(['کالای ایرانی','کالای اورجینال'])
 
                     ProductVariant.objects.create(
                         option=option_instance,
@@ -137,7 +138,8 @@ class Command(BaseCommand):
                         Inventory_number=Inventory_number,
                         discount=discount,
                         price=price,
-                        seven_days_back=seven_days_back,
+                        made_in = made_in,
+                        min_price=min_price,
                         free_send=free_send,
                         waranty_tamir=waranty_tamir,
                         waranty_taviz=waranty_taviz,
