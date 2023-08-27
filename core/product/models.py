@@ -213,12 +213,19 @@ class ProductOptionType(models.Model):
 
 
 class ProductVariant(models.Model):
+
+    made_in_chiose =(
+        ("کالای اورجینال","کالای اورجینال"),
+        ("کالای ایرانی","کالای ایرانی")
+    )
+
     option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
     option_value = models.CharField(max_length=127, null=True, blank=True)
     price = models.FloatField()
     discount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField()
-    seven_days_back = models.BooleanField()
+    made_in = models.CharField(max_length=25,choices=made_in_chiose)
+    min_price= models.BooleanField()
     free_send = models.BooleanField()
     waranty_tamir = models.BooleanField()
     waranty_taviz = models.BooleanField()

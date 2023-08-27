@@ -2,8 +2,7 @@ from django import forms
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 from nested_inline.admin import NestedModelAdmin
-from nested_inline.admin import NestedTabularInline
-
+from nested_inline.admin import NestedTabularInline,NestedStackedInline
 from extention.admin import BannerInline
 from extention.admin import ContentInline
 from extention.admin import MainBannerInline
@@ -50,7 +49,7 @@ class ProductImageInline(NestedTabularInline):
     model = ProductImage
 
 
-class ProductVariantInline(NestedTabularInline):
+class ProductVariantInline(NestedStackedInline):
     model = ProductVariant
     extra = 1
 
