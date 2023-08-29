@@ -27,7 +27,7 @@ class OrderlistSerializer(serializers.ModelSerializer):
         model = ProductVariant
         fields = (
             'product_id', 'name', 'product_variant_id', 'product_variant_key', 'product_variant_value', 'main_image',
-            'discount', 'seven_days_back', 'free_send', 'warranty',
+            'discount', 'free_send', 'warranty',
             'quantity', 'price', 'final_price', 'sum_price', 'sum_final_price', 'sum_discount_price',)
 
 
@@ -37,8 +37,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
     main_image = productImagesSerializer(
         source='product.product_main_image', allow_null=True)
     discount = serializers.IntegerField(source='product.discount')
-    seven_days_back = serializers.BooleanField(
-        source='product.seven_days_back')
     free_send = serializers.BooleanField(source='product.free_send')
     warranty = serializers.CharField(source='product.warranty')
     price = serializers.IntegerField(source='product.price')
@@ -60,7 +58,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = (
             'product_id', 'name', 'product_variant_id', 'product_variant_key', 'product_variant_value', 'main_image',
-            'discount', 'seven_days_back', 'free_send', 'warranty',
+            'discount', 'free_send', 'warranty',
             'quantity', 'price', 'final_price', 'sum_price', 'sum_final_price', 'sum_discount_price',)
 
 
