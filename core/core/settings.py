@@ -184,10 +184,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # STATICFILES_DIRS = [
 # os.path.join(BASE_DIR, 'static'),
 # ]
@@ -231,10 +234,12 @@ TINYMCE_DEFAULT_CONFIG = {
 
 }
 
+
+
 # # AWS S3 settings
 # AWS_ACCESS_KEY_ID = "c687e10c-cee2-4c03-be8f-5655ca7ba04a"
 # AWS_SECRET_ACCESS_KEY = "b9acbb6ef2075290b90b261db76d868a7967dfe437dbf496e49c39f0c773af3b"
-# AWS_STORAGE_BUCKET_NAME = "arbaeen2"
+# AWS_STORAGE_BUCKET_NAME = "takgeneral"
 # AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ir-thr-at1.arvanstorage.ir"
 # AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
 # AWS_SERVICE_NAME = "s3"

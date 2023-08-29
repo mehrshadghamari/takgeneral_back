@@ -144,6 +144,13 @@ class productCountFromSpecificBrand(serializers.ModelSerializer):
 
 class AllCategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField('get_image_url')
+
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
 
     def get_children(self, obj):
         children = obj.children.all()
@@ -152,13 +159,20 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'url', 'parent', 'is_active', 'children']
+        fields = ['id', 'name', 'image' ,'url', 'parent', 'is_active', 'children']
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_image_url')
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
     class Meta:
         model = Category
-        fields = ['id', 'name', 'url', 'parent', 'is_active', ]
+        fields = ['id', 'name', 'image' , 'url', 'parent', 'is_active', ]
 
 
 class BrandSerializer(serializers.ModelSerializer):

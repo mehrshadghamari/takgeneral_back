@@ -31,7 +31,7 @@ from .serializers import productDetailSerializer
 class AllCategoryList(APIView):
     def get(self, request):
         queryset = Category.objects.filter(parent=None)
-        serializer = AllCategorySerializer(queryset, many=True)
+        serializer = AllCategorySerializer(queryset, many=True, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -39,11 +39,11 @@ class products(APIView):
     def get(self, request, cat_id):
         category_obj = get_object_or_404(Category, id=cat_id)
         if category_obj.parent is None:
-            main_category_serializer = CategorySerializer(category_obj)
+            main_category_serializer = CategorySerializer(category_obj,context={"request": request})
             categories = category_obj.get_children()
-            sub_categories_serializer = CategorySerializer(categories, many=True)
+            sub_categories_serializer = CategorySerializer(categories, many=True,context={"request": request})
             breadcrumb = category_obj.get_ancestors(include_self=True)
-            breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
+            breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
             brands = Product.objects.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
             main_banner = category_obj.mainbanner_set.all()
@@ -68,18 +68,18 @@ class products(APIView):
 
         else:
             if category_obj.is_leaf_node():
-                main_category_serializer = CategorySerializer(category_obj)
-                sub_categories_serializer = CategorySerializer(category_obj.parent.get_children(), many=True)
+                main_category_serializer = CategorySerializer(category_obj,context={"request": request})
+                sub_categories_serializer = CategorySerializer(category_obj.parent.get_children(), many=True,context={"request": request})
                 breadcrumb = category_obj.get_ancestors(include_self=True)
-                breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
+                breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
                 product_query = Product.objects.with_price_info().select_related("brand", "category", ).filter(
                     category=category_obj).order_by('-special_offer', '-created_at')
 
             else:
-                main_category_serializer = CategorySerializer(category_obj)
-                sub_categories_serializer = CategorySerializer(category_obj.get_children(), many=True)
+                main_category_serializer = CategorySerializer(category_obj,context={"request": request})
+                sub_categories_serializer = CategorySerializer(category_obj.get_children(), many=True,context={"request": request})
                 breadcrumb = category_obj.get_ancestors(include_self=True)
-                breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
+                breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
                 product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
                     category__in=category_obj.get_children()).order_by('-special_offer', '-created_at')
 
@@ -211,7 +211,7 @@ class ProductDetail(APIView):
         product_serializer = productDetailSerializer(
             product_instance, context={"request": request})
         breadcrumb = product_instance.category.get_ancestors(include_self=True)
-        breadcrumb_serializer = CategorySerializer(breadcrumb, many=True)
+        breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
         comments = Comment.objects.filter(product__id=id).order_by('-created_at')
         comments_serializer = CommentsSerializer(comments, many=True)
         questions = Question.objects.filter(product__id=id).order_by('-created_at')
