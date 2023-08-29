@@ -149,8 +149,13 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         request = self.context.get('request')
-        image_url = obj.image.url
-        return request.build_absolute_uri(image_url)
+        if obj.image:
+            image_url = obj.image.url
+            url=request.build_absolute_uri(image_url)
+        else:
+            url = ''
+        
+        return url
 
     def get_children(self, obj):
         children = obj.children.all()
@@ -167,8 +172,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         request = self.context.get('request')
-        image_url = obj.image.url
-        return request.build_absolute_uri(image_url)
+        if obj.image:
+            image_url = obj.image.url
+            url=request.build_absolute_uri(image_url)
+        else:
+            url = ''
+        
+        return url
 
     class Meta:
         model = Category
