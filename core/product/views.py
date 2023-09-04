@@ -44,7 +44,7 @@ class products(APIView):
             sub_categories_serializer = CategorySerializer(categories, many=True,context={"request": request})
             breadcrumb = category_obj.get_ancestors(include_self=True)
             breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
-            brands = Product.objects.values('brand__id').annotate(
+            brands = Product.objects.filter(category__in=category_obj.get_children()).values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
             main_banner = category_obj.mainbanner_set.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
