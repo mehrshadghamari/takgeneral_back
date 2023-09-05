@@ -221,9 +221,10 @@ class BrandInfoSerializer(serializers.Serializer):
     def get_logo_url(self, obj):
         request = self.context.get('request')
         logo = obj.get('brand__logo')  # Access as a dictionary key
-        if logo and logo.url:
-            return request.build_absolute_uri(logo.url)
-        return None
+        # if logo and logo.url:
+        return request.build_absolute_uri(logo.url)
+        # return None
+        
 
     class Meta:
         fields = ['id', 'name', 'logo', 'product_count']
