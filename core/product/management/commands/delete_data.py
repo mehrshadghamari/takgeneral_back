@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-
 from product.models import Category
 from product.models import Product
 from product.models import ProductBrand

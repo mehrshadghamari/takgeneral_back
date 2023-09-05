@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from extention.models import Banner
 from extention.models import Blog
 from extention.models import BlogImage
@@ -13,6 +11,7 @@ from extention.models import MetaTagSchema
 from extention.models import PopularHomeCategory
 from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
+from rest_framework import serializers
 
 
 class ContentSerializer(serializers.ModelSerializer):

@@ -1,12 +1,8 @@
 import math
 
+from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models import Q
-from django.core.paginator import Paginator
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from extention.models import Blog
 from extention.models import Content
 from extention.models import HomeBanner
@@ -22,6 +18,9 @@ from product.models import Category
 from product.models import Product
 from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class HomeApi(APIView):
@@ -36,7 +35,7 @@ class HomeApi(APIView):
         end_banners_serializer = HomeBannerSerializer(end_banners, many=True, context={"request": request})
 
         mother_categories = Category.objects.filter(parent=None)
-        mother_categories_serializer = CategorySerializer(mother_categories, many=True)
+        mother_categories_serializer = CategorySerializer(mother_categories, many=True, context={"request": request})
 
         popular_categories = PopularHomeCategory.objects.all()
         popular_categories_serializer = PopularHomeCategorySerializer(
@@ -84,9 +83,9 @@ class BlogsApi(APIView):
         paginator = Paginator(blogs, page_size)
         blogs_serializer = AllBlogSerializer(paginator.page(
                 page_number), many=True, context={"request": request})
-        
+
         page_count = math.ceil(blogs.count() / int(page_size))
-        
+
         return Response({'current_page': int(page_number),
                          'page_count': page_count,
                          'blogs':blogs_serializer.data,}

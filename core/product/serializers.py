@@ -1,8 +1,8 @@
-from rest_framework import serializers
-
 from product_action.models import Comment
 from product_action.models import Question
 from product_action.models import Reply
+from rest_framework import serializers
+
 from .models import Category
 from .models import Product
 from .models import ProductBrand
@@ -151,11 +151,12 @@ class AllCategorySerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if obj.image:
             image_url = obj.image.url
-            url=request.build_absolute_uri(image_url)
+            url = request.build_absolute_uri(image_url)
         else:
             url = ''
-        
+
         return url
+
 
     def get_children(self, obj):
         children = obj.children.all()
@@ -177,7 +178,7 @@ class CategorySerializer(serializers.ModelSerializer):
             url=request.build_absolute_uri(image_url)
         else:
             url = ''
-        
+
         return url
 
     class Meta:

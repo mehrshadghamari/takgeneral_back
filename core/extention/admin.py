@@ -1,8 +1,4 @@
 from django.contrib import admin
-from nested_inline.admin import NestedModelAdmin
-from nested_inline.admin import NestedStackedInline
-from nested_inline.admin import NestedTabularInline
-
 from extention.models import Banner
 from extention.models import Blog
 from extention.models import BlogImage
@@ -15,6 +11,9 @@ from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import MetaTagSchema
 from extention.models import PopularHomeCategory
+from nested_inline.admin import NestedModelAdmin
+from nested_inline.admin import NestedStackedInline
+from nested_inline.admin import NestedTabularInline
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)

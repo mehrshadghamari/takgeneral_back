@@ -1,13 +1,15 @@
 from django import forms
 from django.contrib import admin
-from mptt.admin import MPTTModelAdmin
-from nested_inline.admin import NestedModelAdmin
-from nested_inline.admin import NestedTabularInline,NestedStackedInline
 from extention.admin import BannerInline
 from extention.admin import ContentInline
 from extention.admin import MainBannerInline
 from extention.admin import MetaTagInline
 from extention.admin import PopularHomeCategoryInline
+from mptt.admin import MPTTModelAdmin
+from nested_inline.admin import NestedModelAdmin
+from nested_inline.admin import NestedStackedInline
+from nested_inline.admin import NestedTabularInline
+
 from .models import Category
 from .models import Product
 from .models import ProductBrand
@@ -17,7 +19,6 @@ from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
 from .models import ProductVariant
-
 
 # Register your models here.
 

@@ -1,11 +1,10 @@
 from django.core.exceptions import ValidationError
 
 
-
 def validate_meli_code(value: str) -> bool:
     """
     To see how the algorithem works, see http://www.aliarash.com/article/codemeli/codemeli.htm
-    
+
     """
     if not len(value) == 10:
         # raise ValueError("کد ملی باید ۱۰ رقم باشد.")
@@ -32,4 +31,3 @@ def validate_meli_code(value: str) -> bool:
 def national_code_validator(value):
     if not validate_meli_code(value):
         raise ValidationError(f'{str(value)}+ is not valid')
-

@@ -1,12 +1,12 @@
+from account.models import MyUser
 from django.db.models import F
 from django.db.models import IntegerField
 from django.db.models import Value
+from product.models import ProductVariant
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from account.models import MyUser
-from product.models import ProductVariant
 from .models import Order
 from .models import OrderItem
 from .serializers import CartSerializer

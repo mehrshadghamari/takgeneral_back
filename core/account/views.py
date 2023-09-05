@@ -3,6 +3,12 @@ from datetime import timedelta
 
 import redis
 import requests
+from account.models import Address
+from account.models import MyUser
+from account.serializers import LogOutSerializer
+from account.serializers import UserAddressSerializer
+from account.serializers import UserInfoSerialozer
+from account.serializers import UserRegisterOrLoginSendOTpSerializr
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,13 +16,6 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-
-from account.models import Address
-from account.models import MyUser
-from account.serializers import LogOutSerializer
-from account.serializers import UserAddressSerializer
-from account.serializers import UserInfoSerialozer
-from account.serializers import UserRegisterOrLoginSendOTpSerializr
 
 r = redis.Redis(host='localhost', port=6379, db=0)
 

@@ -1,9 +1,8 @@
+from account.models import MyUser
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
 from django_jalali.db import models as jmodels
-
-from account.models import MyUser
 
 
 class Comment(models.Model):

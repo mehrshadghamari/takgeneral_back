@@ -4,10 +4,6 @@ from django.core.paginator import Paginator
 from django.db.models import Avg
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from extention.models import Content
 from extention.models import MetaTag
 from extention.serializers import BannerSAerializer
@@ -17,6 +13,10 @@ from extention.serializers import MetaTagSerializer
 from product.models import ProductBrand
 from product_action.models import Comment
 from product_action.models import Question
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import Category
 from .models import Product
 from .serializers import AllCategorySerializer
@@ -46,6 +46,7 @@ class products(APIView):
             breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
             brands = Product.objects.filter(category__in=category_obj.get_children()).values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
+            brands_serializer = BrandSerializer(brands,many=True,context={"request": request})
             main_banner = category_obj.mainbanner_set.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
             other_banner = category_obj.banner_set.all()
@@ -61,7 +62,7 @@ class products(APIView):
                 'meta_tag': meta_tag_serializer.data,
                 'main_banner': main_banner_serializer.data,
                 'other_banner': other_banner_serializer.data,
-                'brands': brands,
+                'brands': brands_serializer.data,
                 "main_category": main_category_serializer.data,
                 "sub_category": sub_categories_serializer.data},
                 status=status.HTTP_200_OK)
@@ -85,7 +86,7 @@ class products(APIView):
 
             brand_query_before = product_query.values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'product_count')
-            
+
 
             min_price = self.request.query_params.get('min_price', None)
             max_price = self.request.query_params.get('max_price', None)
@@ -143,6 +144,8 @@ class products(APIView):
                     included_brand_ids.add(brand_id)  # Add the brand ID to the set
                     brands.append(brand_data)
 
+            brands_serializer = BrandSerializer(brands,many=True,context={"request": request})
+
             response = Response({
                 'breadcrumb': breadcrumb_serializer.data,
                 'page_content': page_content_serializer.data,
@@ -154,7 +157,7 @@ class products(APIView):
                 "main_category": main_category_serializer.data,
                 "sub_category": sub_categories_serializer.data,
                 'product': product_serializer.data,
-                'brands': brands},
+                'brands': brands_serializer.data},
                 status=status.HTTP_200_OK)
 
         return response

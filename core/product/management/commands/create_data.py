@@ -4,7 +4,6 @@ import uuid
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
-
 from product.models import Category
 from product.models import Product
 from product.models import ProductBrand

@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import Q
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
-
 from product.managers import ProductManager
 from product.managers import ProductVariantManager
 

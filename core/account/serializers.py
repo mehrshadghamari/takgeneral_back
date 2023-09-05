@@ -1,10 +1,9 @@
+from account.models import Address
+from account.models import MyUser
 from django.core import validators
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import TokenError
-
-from account.models import Address
-from account.models import MyUser
 
 
 class UserRegisterOrLoginSendOTpSerializr(serializers.Serializer):

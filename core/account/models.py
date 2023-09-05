@@ -1,5 +1,6 @@
 from random import random
 
+from account.validators import national_code_validator
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -8,8 +9,6 @@ from django.core import validators
 from django.db import models
 from django.utils import timezone
 from django_jalali.db import models as jmodels
-
-from account.validators import national_code_validator
 
 
 class UserManager(BaseUserManager):

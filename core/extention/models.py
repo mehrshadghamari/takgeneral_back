@@ -1,8 +1,7 @@
 from django.db import models
 from django_jalali.db import models as jmodels
-from tinymce import models as tinymce_model
-
 from product.models import Product
+from tinymce import models as tinymce_model
 
 
 class MainBanner(models.Model):
@@ -123,23 +122,23 @@ class MetaTag(models.Model):
     og_image = models.CharField(max_length=257, null=True, blank=True)
     twiter_cart = models.CharField(max_length=257, null=True, blank=True)
     canonical = models.CharField(max_length=257, null=True, blank=True)
-    follow = models.BooleanField(default=True, null=True, blank=True) 
+    follow = models.BooleanField(default=True, null=True, blank=True)
     index = models.BooleanField(default=True, null=True, blank=True)
 
 
 
     @property
     def google_index(self):
-        
+
         if self.index and self.follow==False:
             return 'index,nofollow'
-        
+
         if self.index and self.follow==True:
             return 'index,follow'
-        
+
         if self.index==False and self.follow==False:
             return 'index,nofollow'
-        
+
         if self.index==False and self.follow==True:
             return 'noindex,follow'
 
