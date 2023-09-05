@@ -144,18 +144,18 @@ class productCountFromSpecificBrand(serializers.ModelSerializer):
 
 class AllCategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField('get_image_url')
+    # image = serializers.SerializerMethodField('get_image_url')
 
 
-    def get_image_url(self, obj):
-        request = self.context.get('request')
-        if obj.image:
-            image_url = obj.image.url
-            url = request.build_absolute_uri(image_url)
-        else:
-            url = ''
+    # def get_image_url(self, obj):
+    #     request = self.context.get('request')
+    #     if obj.image:
+    #         image_url = obj.image.url
+    #         url = request.build_absolute_uri(image_url)
+    #     else:
+    #         url = ''
 
-        return url
+    #     return url
 
 
     def get_children(self, obj):
@@ -165,7 +165,7 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image' ,'url', 'parent', 'is_active', 'children']
+        fields = ['id', 'name' ,'url', 'parent', 'is_active', 'children']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -220,13 +220,12 @@ class BrandInfoSerializer(serializers.Serializer):
 
     def get_logo_url(self, obj):
         request = self.context.get('request')
-        logo = obj.brand__logo
+        logo = obj.get('brand__logo')  # Access as a dictionary key
         if logo and logo.url:
             return request.build_absolute_uri(logo.url)
         return None
 
     class Meta:
-        model = ProductBrand
         fields = ['id', 'name', 'logo', 'product_count']
 
 # class FilterOptionSerializer(serializers.ModelSerializer):
