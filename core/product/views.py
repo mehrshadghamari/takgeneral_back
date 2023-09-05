@@ -21,7 +21,7 @@ from .models import Category
 from .models import Product
 from .serializers import AllCategorySerializer
 from .serializers import AllProductSerializer
-from .serializers import BrandSerializer
+from .serializers import BrandSerializer,BrandInfoSerializer
 from .serializers import CategorySerializer
 from .serializers import CommentsSerializer
 from .serializers import QuestionSerializer
@@ -46,7 +46,7 @@ class products(APIView):
             breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
             brands = Product.objects.filter(category__in=category_obj.get_children()).values('brand__id').annotate(
                 product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
-            brands_serializer = BrandSerializer(brands,many=True,context={"request": request})
+            brands_serializer = BrandInfoSerializer(brands,many=True,context={"request": request})
             main_banner = category_obj.mainbanner_set.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
             other_banner = category_obj.banner_set.all()
@@ -144,7 +144,7 @@ class products(APIView):
                     included_brand_ids.add(brand_id)  # Add the brand ID to the set
                     brands.append(brand_data)
 
-            brands_serializer = BrandSerializer(brands,many=True,context={"request": request})
+            brands_serializer = BrandInfoSerializer(brands,many=True,context={"request": request})
 
             response = Response({
                 'breadcrumb': breadcrumb_serializer.data,

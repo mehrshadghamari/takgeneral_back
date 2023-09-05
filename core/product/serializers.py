@@ -200,6 +200,35 @@ class BrandSerializer(serializers.ModelSerializer):
         model = ProductBrand
         fields = ['id', 'name', 'logo', 'url', ]
 
+
+
+# class BrandInfoSerializer(serializers.Serializer):
+#     brand_id = serializers.IntegerField(source='brand__id')
+#     brand_name = serializers.CharField(source='brand__name')
+#     brand_logo = serializers.ImageField(source='brand__logo')
+#     product_count = serializers.IntegerField()
+
+#     class Meta:
+#         fields = ('brand_id', 'brand_name', 'brand_logo', 'product_count')
+
+
+class BrandInfoSerializer(serializers.Serializer):
+    logo = serializers.SerializerMethodField("get_logo_url")
+    product_count = serializers.IntegerField()
+    id = serializers.IntegerField(source='brand__id')
+    name = serializers.CharField(source='brand__name')
+
+    def get_logo_url(self, obj):
+        request = self.context.get('request')
+        logo = obj.brand__logo
+        if logo and logo.url:
+            return request.build_absolute_uri(logo.url)
+        return None
+
+    class Meta:
+        model = ProductBrand
+        fields = ['id', 'name', 'logo', 'product_count']
+
 # class FilterOptionSerializer(serializers.ModelSerializer):
 #     filter_option_type = serializers.SerializerMethodField("get_filter_option_type")
 
