@@ -222,7 +222,7 @@ class BrandInfoSerializer(serializers.Serializer):
         request = self.context.get('request')
         logo = obj.get('brand__logo')  # Access as a dictionary key
         # if logo and logo.url:
-        return request.build_absolute_uri(logo.url)
+        return request.build_absolute_uri(logo)
         # return None
         
 
