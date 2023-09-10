@@ -174,8 +174,7 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_image_url(self, obj):
         request = self.context.get('request')
         if obj.image:
-            image_url = obj.image.url
-            url=request.build_absolute_uri(image_url)
+            url=request.build_absolute_uri(obj.image.url)
         else:
             url = ''
 
@@ -191,10 +190,9 @@ class BrandSerializer(serializers.ModelSerializer):
 
     def get_logo_url(self, obj):
         request = self.context.get('request')
-        logo = obj.logo
-        if logo and logo.url:
-            return request.build_absolute_uri(logo.url)
-        return None
+        if obj.logo:
+            return request.build_absolute_uri(obj.logo.url)
+        return ""
 
     class Meta:
         model = ProductBrand

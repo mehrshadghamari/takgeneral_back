@@ -237,8 +237,8 @@ TINYMCE_DEFAULT_CONFIG = {
 
 
 # # AWS S3 settings
-# AWS_ACCESS_KEY_ID = "c687e10c-cee2-4c03-be8f-5655ca7ba04a"
-# AWS_SECRET_ACCESS_KEY = "b9acbb6ef2075290b90b261db76d868a7967dfe437dbf496e49c39f0c773af3b"
+# AWS_ACCESS_KEY_ID = "c3a824eb-963c-400e-b862-ea1c147d45ba"
+# AWS_SECRET_ACCESS_KEY = "d4c696b5c7ec0c9294ba69fa6f4ec5884597acfc0f69d69f53131a9a9099f24f"
 # AWS_STORAGE_BUCKET_NAME = "takgeneral"
 # AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ir-thr-at1.arvanstorage.ir"
 # AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
@@ -251,6 +251,7 @@ TINYMCE_DEFAULT_CONFIG = {
 #     "CacheControl": "max-age=86400",
 # }
 # AWS_QUERYSTRING_AUTH = False
+
 
 # # AWS S3 storage settings
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
