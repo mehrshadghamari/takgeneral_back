@@ -25,7 +25,7 @@ class OrderlistSerializer(serializers.ModelSerializer):
     
     def get_main_image(self, obj):
         request = self.context.get('request')
-        image = obj.product_main_image
+        image = obj.product_main_image.image
         if image:
             iamge_url = request.build_absolute_uri(image.url)
         else: 
@@ -66,7 +66,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     
     def get_main_image(self, obj):
         request = self.context.get('request')
-        image = obj.product.product_main_image
+        image = obj.product.product_main_image.image
         if image:
             iamge_url = request.build_absolute_uri(image.url)
         else: 
