@@ -83,7 +83,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductVariant
-        exclude = ('option', 'inventory_status', 'waranty_tamir',
+        exclude = ('option', 'Inventory_number', 'waranty_tamir',
                    'waranty_taviz', 'month_of_waranty',)
 
 
