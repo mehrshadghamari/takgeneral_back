@@ -210,31 +210,48 @@ class BrandSerializer(serializers.ModelSerializer):
 #         fields = ('brand_id', 'brand_name', 'brand_logo', 'product_count')
 
 
+# class BrandInfoSerializer(serializers.Serializer):
+#     logo = serializers.SerializerMethodField("get_logo_url")
+#     product_count = serializers.IntegerField()
+#     # id = serializers.IntegerField(source='brand__id')
+#     # name = serializers.CharField(source='brand__name')
+#     id = serializers.SerializerMethodField('get_id')
+#     name = serializers.SerializerMethodField('get_name')
+
+#     def get_logo_url(self, obj):
+#         request = self.context.get('request')
+#         # logo = obj.get('brand__logo')  # Access as a dictionary key
+#         # # if logo and logo.url:
+#         logo = obj.brand.logo
+#         if logo:
+#             return request.build_absolute_uri(logo.url)
+        
+#         return ''
+
+#     def get_id(self, obj):
+#         return obj.brand.id
+    
+#     def get_name(self, obj):
+#         return obj.brand.name
+
+        
+
+#     class Meta:
+#         fields = ['id', 'name', 'logo', 'product_count']
+
+
 class BrandInfoSerializer(serializers.Serializer):
     logo = serializers.SerializerMethodField("get_logo_url")
     product_count = serializers.IntegerField()
-    # id = serializers.IntegerField(source='brand__id')
-    # name = serializers.CharField(source='brand__name')
-    id = serializers.SerializerMethodField('get_id')
-    name = serializers.SerializerMethodField('get_name')
+    id = serializers.IntegerField(source='brand__id')
+    name = serializers.CharField(source='brand__name')
 
     def get_logo_url(self, obj):
         request = self.context.get('request')
-        # logo = obj.get('brand__logo')  # Access as a dictionary key
-        # # if logo and logo.url:
-        logo = obj.brand.logo
-        if logo:
-            return request.build_absolute_uri(logo.url)
-        
+        logo_url = obj.get('brand__logo')  # Access the 'brand__logo' key from the dictionary
+        if logo_url:
+            return request.build_absolute_uri(logo_url)
         return ''
-
-    def get_id(self, obj):
-        return obj.brand.id
-    
-    def get_name(self, obj):
-        return obj.brand.name
-
-        
 
     class Meta:
         fields = ['id', 'name', 'logo', 'product_count']
