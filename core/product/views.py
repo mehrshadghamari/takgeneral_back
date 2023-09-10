@@ -136,19 +136,19 @@ class products(APIView):
             meta_tag = MetaTag.objects.filter(category=category_obj).first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
-            included_brand_ids = set()
+            # included_brand_ids = set()
  
-            brands = []
+            # brands = []
 
-            # Loop through the brand data
-            for brand_data in brand_query:
-                brand_id = brand_data['brand__id']
-                # Check if the brand ID has already been included in the response
-                if brand_id not in included_brand_ids:
-                    included_brand_ids.add(brand_id)  # Add the brand ID to the set
-                    brands.append(brand_data)
+            # # Loop through the brand data
+            # for brand_data in brand_query:
+            #     brand_id = brand_data['brand__id']
+            #     # Check if the brand ID has already been included in the response
+            #     if brand_id not in included_brand_ids:
+            #         included_brand_ids.add(brand_id)  # Add the brand ID to the set
+            #         brands.append(brand_data)
 
-            brands_info = ProductBrand.objects.filter(id__in=brands.values('brand__id'))
+            brands_info = ProductBrand.objects.filter(id__in=brand_query.values('brand__id'))
             brand_count_map = {item['brand__id']: item['product_count'] for item in brands}
 
             combined_data = []
