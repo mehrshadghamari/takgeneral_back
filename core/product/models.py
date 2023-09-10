@@ -276,6 +276,19 @@ class ProductVariant(models.Model):
             warranty = f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
 
         return warranty
+    
+    @property
+    def inventory_status(self):
+        if self.Inventory_number==0 or None:
+            status = "کالا موجود نیست"
+        elif self.Inventory_number<0 or self.Inventory_number<=3 :
+            status = f'عدد ازاین کالا موجود هست {self.inventory_status}'
+        elif self.Inventory_number>=4:
+            status = 'کالا موحود هست'
+
+        return status
+
+
 
 
 # for release 2
