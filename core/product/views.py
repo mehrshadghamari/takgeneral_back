@@ -149,7 +149,7 @@ class products(APIView):
             #         brands.append(brand_data)
 
             brands_info = ProductBrand.objects.filter(id__in=brand_query.values('brand__id'))
-            brand_count_map = {item['brand__id']: item['product_count'] for item in brands}
+            brand_count_map = {item['brand__id']: item['product_count'] for item in brand_query}
 
             combined_data = []
 
