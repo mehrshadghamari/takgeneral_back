@@ -211,26 +211,26 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class BrandInfoSerializer(serializers.Serializer):
-    # logo = serializers.SerializerMethodField("get_logo_url")
+    logo = serializers.SerializerMethodField("get_logo_url")
     product_count = serializers.IntegerField()
     id = serializers.IntegerField(source='brand__id')
     name = serializers.CharField(source='brand__name')
 
 
-    # def get_logo_url(self, obj):
-    #     request = self.context.get('request')
-    #     # logo = obj.get('brand__logo')  # Access as a dictionary key
-    #     # # if logo and logo.url:
-    #     logo = obj.brand.logo
-    #     if logo:
-    #         return request.build_absolute_uri(logo.url)
+    def get_logo_url(self, obj):
+        request = self.context.get('request')
+        logo = obj.get('brand__logo')  # Access as a dictionary key
+        # if logo and logo.url:
+        # logo = obj.brand.logo
+        if logo:
+            return request.build_absolute_uri(logo)
         
-    #     return ''
+        return ''
 
         
 
     class Meta:
-        fields = ['id', 'name', 'product_count']
+        fields = ['id', 'name', 'product_count','logo']
 
 
 # class BrandInfoSerializer(serializers.Serializer):
