@@ -25,8 +25,12 @@ class OrderlistSerializer(serializers.ModelSerializer):
     
     def get_main_image(self, obj):
         request = self.context.get('request')
-        image_url = obj.product_main_image
-        return request.build_absolute_uri(image_url)
+        image = obj.product_main_image
+        if image:
+            iamge_url = request.build_absolute_uri(image.url)
+        else: 
+            iamge_url = ''
+        return iamge_url
 
     class Meta:
         model = ProductVariant
@@ -62,8 +66,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
     
     def get_main_image(self, obj):
         request = self.context.get('request')
-        image_url = obj.product.product_main_image
-        return request.build_absolute_uri(image_url)
+        image = obj.product.product_main_image
+        if image:
+            iamge_url = request.build_absolute_uri(image.url)
+        else: 
+            iamge_url = ''
+        return iamge_url
 
     class Meta:
         model = OrderItem
