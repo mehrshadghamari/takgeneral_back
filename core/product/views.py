@@ -44,8 +44,8 @@ class products(APIView):
             sub_categories_serializer = CategorySerializer(categories, many=True,context={"request": request})
             breadcrumb = category_obj.get_ancestors(include_self=True)
             breadcrumb_serializer = CategorySerializer(breadcrumb, many=True,context={"request": request})
-            # brands = Product.objects.filter(category__in=category_obj.get_children()).values('brand__id').annotate(
-            #     product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
+            brands = Product.objects.filter(category__in=category_obj.get_children()).values('brand__id').annotate(
+                product_count=Count('brand')).only('brand__id', 'brand__name', 'brand__logo', 'product_count')
             # brands_serializer = BrandInfoSerializer(brands,many=True,context={"request": request})
             brands_ids = Product.objects.select_related('brand').filter(category__in=category_obj.get_children()).values_list('brand__id',flat=True)
             brand_ids_list = list(set(brands_ids))
@@ -137,7 +137,7 @@ class products(APIView):
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
             included_brand_ids = set()
-            # ... (your existing code)
+ 
             brands = []
 
             # Loop through the brand data
@@ -148,7 +148,31 @@ class products(APIView):
                     included_brand_ids.add(brand_id)  # Add the brand ID to the set
                     brands.append(brand_data)
 
-            brands_serializer = BrandInfoSerializer(brands,many=True,context={"request": request})
+            brands_info = ProductBrand.objects.filter(id__in=brands.values('brand__id'))
+            brand_count_map = {item['brand__id']: item['product_count'] for item in brands}
+
+            combined_data = []
+
+            # Iterate over the brands_info queryset
+            for brand_info in brands_info:
+                brand_id = brand_info.id
+                product_count = brand_count_map.get(brand_id, 0)  # Get the product count from the map
+
+                # Create a new dictionary with the combined data
+                combined_brand_info = {
+                    'id': brand_id,
+                    'name': brand_info.name,
+                    'logo': brand_info.logo.url if brand_info.logo else "",
+                    'product_count': product_count,
+                }
+
+                combined_data.append(combined_brand_info)
+
+
+            brands_serializer = BrandInfoSerializer(combined_data,many=True,context={"request": request})
+
+
+
 
             response = Response({
                 'breadcrumb': breadcrumb_serializer.data,
