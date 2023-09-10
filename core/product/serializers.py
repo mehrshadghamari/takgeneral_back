@@ -80,6 +80,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     final_price = serializers.FloatField()
     product_available = serializers.BooleanField()
     warranty = serializers.CharField()
+    inventory_status = serializers.CharField()
 
     class Meta:
         model = ProductVariant
