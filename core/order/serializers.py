@@ -14,13 +14,19 @@ class OrderlistSerializer(serializers.ModelSerializer):
     warranty = serializers.CharField()
     product_id = serializers.IntegerField()
     name = serializers.CharField(source='product_name')
-    main_image = productImagesSerializer(source='product_main_image', allow_null=True)
+    # main_image = productImagesSerializer(source='product_main_image', allow_null=True)
+    main_image = serializers.SerializerMethodField('get_main_image')
     product_variant_id = serializers.IntegerField(source='id')
     product_variant_key = serializers.SerializerMethodField("get_product_variant_key")
     product_variant_value = serializers.CharField(source='option_value')
 
     def get_product_variant_key(self, obj):
         return obj.option.name
+    
+    def get_main_image(self, obj):
+        request = self.context.get('request')
+        image_url = obj.product_main_image
+        return request.build_absolute_uri(image_url)
 
     class Meta:
         model = ProductVariant
@@ -33,8 +39,9 @@ class OrderlistSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source='product.product_id')
     name = serializers.CharField(source='product.product_name')
-    main_image = productImagesSerializer(
-        source='product.product_main_image', allow_null=True)
+    # main_image = productImagesSerializer(
+        # source='product.product_main_image', allow_null=True)
+    main_image = serializers.SerializerMethodField('get_main_image')
     discount = serializers.IntegerField(source='product.discount')
     free_send = serializers.BooleanField(source='product.free_send')
     warranty = serializers.CharField(source='product.warranty')
@@ -52,6 +59,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     def get_final_price(self, obj):
         return int(obj.product.final_price)
+    
+    def get_main_image(self, obj):
+        request = self.context.get('request')
+        image_url = obj.product.product_main_image
+        return request.build_absolute_uri(image_url)
 
     class Meta:
         model = OrderItem
