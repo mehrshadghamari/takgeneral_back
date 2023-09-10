@@ -279,9 +279,11 @@ class ProductVariant(models.Model):
     
     @property
     def inventory_status(self):
+        status = ''
+
         if self.Inventory_number==0 or None:
             status = "کالا موجود نیست"
-        if self.Inventory_number<0 and self.Inventory_number<=3 :
+        if self.Inventory_number>0 and self.Inventory_number<=3 :
             status = f'عدد ازاین کالا موجود هست {self.inventory_status}'
         if self.Inventory_number>=4:
             status = 'کالا موحود هست'
