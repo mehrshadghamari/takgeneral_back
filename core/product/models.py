@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -57,6 +58,11 @@ class ProductBrand(models.Model):
     logo = models.ImageField(null=True)  # new
     url = models.CharField(max_length=64, null=True, unique=True, db_index=True)
 
+    main_banners = GenericRelation("extention.MainBanner")
+    banners = GenericRelation("extention.Banner")
+    content = GenericRelation("extention.Content")
+    meta_tag = GenericRelation("extention.MetaTag")
+
     def __str__(self):
         return self.name
 
@@ -70,6 +76,10 @@ class Product(models.Model):
     special_offer = models.BooleanField(default=False)
     pdf = models.FileField(null=True,blank=True)
     created_at = models.DateField(auto_now_add=True, null=True)
+
+
+    content = GenericRelation("extention.Content")
+    meta_tag = GenericRelation("extention.MetaTag")
 
     objects = ProductManager()
 
@@ -223,7 +233,7 @@ class ProductVariant(models.Model):
     price = models.FloatField()
     discount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField()
-    made_in = models.CharField(max_length=25,choices=made_in_chiose,null=True)
+    made_in = models.CharField(max_length=25,choices=made_in_chiose,null=True,blank=True)
     min_price= models.BooleanField()
     free_send = models.BooleanField()
     waranty_tamir = models.BooleanField()
@@ -276,7 +286,7 @@ class ProductVariant(models.Model):
             warranty = f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
 
         return warranty
-    
+
     @property
     def inventory_status(self):
         status = ''
@@ -303,6 +313,11 @@ class Category(MPTTModel):
     description = models.CharField(max_length=127, null=True, blank=True)
     parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     is_active = models.BooleanField(default=False)
+
+    main_banners = GenericRelation("extention.MainBanner")
+    banners = GenericRelation("extention.Banner")
+    content = GenericRelation("extention.Content")
+    meta_tag = GenericRelation("extention.MetaTag")
 
     class MPTTMeta:
         order_insertion_by = ['name']

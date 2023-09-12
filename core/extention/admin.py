@@ -11,9 +11,11 @@ from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import MetaTagSchema
 from extention.models import PopularHomeCategory
-from nested_inline.admin import NestedModelAdmin
-from nested_inline.admin import NestedStackedInline
-from nested_inline.admin import NestedTabularInline
+from nested_admin.nested import NestedGenericStackedInline
+from nested_admin.nested import NestedGenericTabularInline
+from nested_admin.nested import NestedModelAdmin
+from nested_admin.nested import NestedStackedInline
+from nested_admin.nested import NestedTabularInline
 
 admin.site.register(MainBanner)
 admin.site.register(Banner)
@@ -32,13 +34,13 @@ class BlogInline(NestedTabularInline):
     extra = 1
 
 
-class MainBannerInline(NestedTabularInline):
+class MainBannerInline(NestedGenericTabularInline):
     model = MainBanner
     fields = ["mobile_image", "image", "alt", "link_url"]
     extra = 1
 
 
-class BannerInline(NestedTabularInline):
+class BannerInline(NestedGenericTabularInline):
     model = Banner
     fields = ["image", "alt", "link_url"]
     extra = 2
@@ -49,7 +51,7 @@ class MetaTagSchemaInline(NestedTabularInline):
     extra = 1
 
 
-class MetaTagInline(NestedStackedInline):
+class MetaTagInline(NestedGenericStackedInline):
     model = MetaTag
     inlines = [MetaTagSchemaInline]
 
@@ -74,7 +76,7 @@ class ContentImageInline(NestedTabularInline):
     extra = 2
 
 
-class ContentInline(NestedTabularInline):
+class ContentInline(NestedGenericTabularInline):
     model = Content
     extra = 1
     fields = ["desc"]

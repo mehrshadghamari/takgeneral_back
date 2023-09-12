@@ -22,6 +22,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tynymce/', include('tinymce.urls')),
+    path('_nested_admin/', include('nested_admin.urls')),
     path('', include('account.urls')),
     path('', include('extention.urls')),
     path('', include('product.urls')),

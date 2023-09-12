@@ -6,9 +6,9 @@ from extention.admin import MainBannerInline
 from extention.admin import MetaTagInline
 from extention.admin import PopularHomeCategoryInline
 from mptt.admin import MPTTModelAdmin
-from nested_inline.admin import NestedModelAdmin
-from nested_inline.admin import NestedStackedInline
-from nested_inline.admin import NestedTabularInline
+from nested_admin.nested import NestedModelAdmin
+from nested_admin.nested import NestedStackedInline
+from nested_admin.nested import NestedTabularInline
 
 from .models import Category
 from .models import Product

@@ -32,7 +32,7 @@ class MetaTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MetaTag
-        exclude = ("product", "category", "brand","index","follow")
+        exclude = ("content_type","object_id","index","follow")
 
 
 
@@ -43,7 +43,7 @@ class MainBannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainBanner
-        exclude = ("category", "brand")
+        exclude = ("content_type", "object_id")
 
     def get_mobile_image_url(self, obj):
         request = self.context.get('request')
@@ -61,7 +61,7 @@ class BannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        exclude = ("category", "brand")
+        exclude = ("content_type", "object_id")
 
     def get_image_url(self, obj):
         request = self.context.get('request')

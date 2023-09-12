@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_jalali.db import models as jmodels
 from product.models import Product
@@ -5,22 +7,40 @@ from tinymce import models as tinymce_model
 
 
 class MainBanner(models.Model):
-    category = models.ForeignKey("product.Category", on_delete=models.CASCADE, null=True, blank=True)
-    brand = models.ForeignKey("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
+    # category = models.ForeignKey("product.Category", on_delete=models.CASCADE, null=True, blank=True)
+    # brand = models.ForeignKey("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField()
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
     url = models.CharField(max_length=64)
     link_url = models.CharField(max_length=257)
 
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
 
 class Banner(models.Model):
-    category = models.ForeignKey("product.Category", on_delete=models.CASCADE, null=True, blank=True)
-    brand = models.ForeignKey("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
+    # category = models.ForeignKey("product.Category", on_delete=models.CASCADE, null=True, blank=True)
+    # brand = models.ForeignKey("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField()
     alt = models.CharField(max_length=127)
     url = models.CharField(max_length=64)
     link_url = models.CharField(max_length=257)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
 
 
 class HomeMainBanner(models.Model):
@@ -61,12 +81,21 @@ class PopularHomeCategory(models.Model):
 
 
 class Content(models.Model):
-    product = models.OneToOneField("product.Product", on_delete=models.CASCADE, null=True, blank=True)
-    category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
-    brand = models.OneToOneField("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
+    # product = models.OneToOneField("product.Product", on_delete=models.CASCADE, null=True, blank=True)
+    # category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
+    # brand = models.OneToOneField("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
     url = models.CharField(max_length=128, null=True)
     desc = tinymce_model.HTMLField()
     # desc2 = models.TextField(null=True)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
 
 
 class ContentImage(models.Model):
@@ -108,9 +137,9 @@ class BlogTag(models.Model):
 
 
 class MetaTag(models.Model):
-    product = models.OneToOneField("product.Product", on_delete=models.CASCADE, null=True, blank=True)
-    category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
-    brand = models.OneToOneField("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
+    # product = models.OneToOneField("product.Product", on_delete=models.CASCADE, null=True, blank=True)
+    # category = models.OneToOneField("product.Category", on_delete=models.CASCADE, null=True, blank=True)
+    # brand = models.OneToOneField("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=257, null=True, blank=True)
     desc = models.CharField(max_length=257, null=True, blank=True)
     og_title = models.CharField(max_length=257, null=True, blank=True)
@@ -124,6 +153,15 @@ class MetaTag(models.Model):
     canonical = models.CharField(max_length=257, null=True, blank=True)
     follow = models.BooleanField(default=True, null=True, blank=True)
     index = models.BooleanField(default=True, null=True, blank=True)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
 
 
 

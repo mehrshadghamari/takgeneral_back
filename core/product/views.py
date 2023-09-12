@@ -21,7 +21,8 @@ from .models import Category
 from .models import Product
 from .serializers import AllCategorySerializer
 from .serializers import AllProductSerializer
-from .serializers import BrandSerializer,BrandInfoSerializer
+from .serializers import BrandInfoSerializer
+from .serializers import BrandSerializer
 from .serializers import CategorySerializer
 from .serializers import CommentsSerializer
 from .serializers import QuestionSerializer
@@ -51,13 +52,13 @@ class products(APIView):
             brand_ids_list = list(set(brands_ids))
             brands=ProductBrand.objects.filter(id__in=brand_ids_list)
             brands_serializer = BrandSerializer(brands, many=True,context={"request": request})
-            main_banner = category_obj.mainbanner_set.all()
+            main_banner = category_obj.main_banners.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
-            other_banner = category_obj.banner_set.all()
+            other_banner = category_obj.banners.all()
             other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
-            page_content = Content.objects.filter(category=category_obj).first()
+            page_content = category_obj.content.first()
             page_content_serializer = ContentSerializer(page_content)
-            meta_tag = MetaTag.objects.filter(category=category_obj).first()
+            meta_tag = category_obj.meta_tag.first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
             response = Response({
@@ -127,17 +128,17 @@ class products(APIView):
 
             page_count = math.ceil(product_query.count() / int(page_size))
 
-            main_banner = category_obj.mainbanner_set.all()
+            main_banner = category_obj.main_banners.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
-            other_banner = category_obj.banner_set.all()
+            other_banner = category_obj.banners.all()
             other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
-            page_content = Content.objects.filter(category=category_obj).first()
+            page_content = category_obj.content.first()
             page_content_serializer = ContentSerializer(page_content)
-            meta_tag = MetaTag.objects.filter(category=category_obj).first()
+            meta_tag = category_obj.meta_tag.first()
             meta_tag_serializer = MetaTagSerializer(meta_tag)
 
             # included_brand_ids = set()
- 
+
             # brands = []
 
             # # Loop through the brand data
@@ -195,15 +196,15 @@ class Brands(APIView):
     def get(self, request, brand_id):
         brand_obj = get_object_or_404(ProductBrand,id=brand_id)
         brand_serializer = BrandSerializer(brand_obj, context={"request": request})
-        main_banner = brand_obj.mainbanner_set.all()
+        main_banner = brand_obj.main_banners.all()
         main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
-        other_banner = brand_obj.banner_set.all()
+        other_banner = brand_obj.banners.all()
         other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
-        page_content = Content.objects.filter(brand=brand_obj).first()
+        page_content = brand_obj.content.first()
         page_content_serializer = ContentSerializer(page_content)
         product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
             brand=brand_obj).order_by('-special_offer', '-created_at')
-        meta_tag = MetaTag.objects.filter(brand=brand_obj).first()
+        meta_tag = brand_obj.meta_tag.first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
         # default page number = 1
         page_number = self.request.query_params.get('page', 1)
@@ -257,9 +258,10 @@ class ProductDetail(APIView):
 
         avg = comments.aggregate(avg_rate=Avg('rate'))
 
-        page_content = Content.objects.filter(product=product_instance).first()
+
+        page_content = product_instance.content.first()
         page_content_serializer = ContentSerializer(page_content)
-        meta_tag = MetaTag.objects.filter(product=product_instance).first()
+        meta_tag = product_instance.meta_tag.first()
         meta_tag_serializer = MetaTagSerializer(meta_tag)
 
         return Response({

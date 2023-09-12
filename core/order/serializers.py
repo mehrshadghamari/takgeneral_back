@@ -22,13 +22,13 @@ class OrderlistSerializer(serializers.ModelSerializer):
 
     def get_product_variant_key(self, obj):
         return obj.option.name
-    
+
     def get_main_image(self, obj):
         request = self.context.get('request')
         img_object = obj.product_main_image
         if img_object:
             iamge_url = request.build_absolute_uri(img_object.image.url)
-        else: 
+        else:
             iamge_url = ''
         return iamge_url
 
@@ -63,13 +63,13 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     def get_final_price(self, obj):
         return int(obj.product.final_price)
-    
+
     def get_main_image(self, obj):
         request = self.context.get('request')
         img_object = obj.product.product_main_image
         if img_object:
             iamge_url = request.build_absolute_uri(img_object.image.url)
-        else: 
+        else:
             iamge_url = ''
         return iamge_url
 
