@@ -32,9 +32,7 @@ class MetaTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MetaTag
-        exclude = ("content_type","object_id","index","follow")
-
-
+        exclude = ("content_type", "object_id", "index", "follow")
 
 
 class MainBannerSAerializer(serializers.ModelSerializer):
@@ -108,7 +106,6 @@ class PopularHomeCategorySerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
-
 
     class Meta:
         model = PopularHomeCategory

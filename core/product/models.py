@@ -68,15 +68,14 @@ class ProductBrand(models.Model):
 
 
 class Product(models.Model):
-    product_type = models.ForeignKey("product.ProductType", null=True,blank=True ,on_delete=models.RESTRICT)
+    product_type = models.ForeignKey("product.ProductType", null=True, blank=True, on_delete=models.RESTRICT)
     category = models.ForeignKey("product.Category", on_delete=models.RESTRICT, null=True, db_index=True)
     url = models.SlugField(max_length=255, unique=True, null=True, db_index=True)
     name = models.CharField(max_length=64)
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE, db_index=True)
     special_offer = models.BooleanField(default=False)
-    pdf = models.FileField(null=True,blank=True)
+    pdf = models.FileField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, null=True)
-
 
     content = GenericRelation("extention.Content")
     meta_tag = GenericRelation("extention.MetaTag")
@@ -222,10 +221,9 @@ class ProductOptionType(models.Model):
 
 
 class ProductVariant(models.Model):
-
-    made_in_chiose =(
-        ("کالای اورجینال","کالای اورجینال"),
-        ("کالای ایرانی","کالای ایرانی")
+    made_in_chiose = (
+        ("کالای اورجینال", "کالای اورجینال"),
+        ("کالای ایرانی", "کالای ایرانی")
     )
 
     option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
@@ -233,12 +231,12 @@ class ProductVariant(models.Model):
     price = models.FloatField()
     discount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField()
-    made_in = models.CharField(max_length=25,choices=made_in_chiose,null=True,blank=True)
-    min_price= models.BooleanField()
+    made_in = models.CharField(max_length=25, choices=made_in_chiose, null=True, blank=True)
+    min_price = models.BooleanField()
     free_send = models.BooleanField()
     waranty_tamir = models.BooleanField()
     waranty_taviz = models.BooleanField()
-    month_of_waranty = models.PositiveSmallIntegerField(null=True,blank=True)
+    month_of_waranty = models.PositiveSmallIntegerField(null=True, blank=True)
 
     objects = ProductVariantManager()
 
@@ -291,16 +289,14 @@ class ProductVariant(models.Model):
     def inventory_status(self):
         status = ''
 
-        if self.Inventory_number==0 or None:
+        if self.Inventory_number == 0 or None:
             status = "کالا موجود نیست"
-        if self.Inventory_number>0 and self.Inventory_number<=3 :
+        if self.Inventory_number > 0 and self.Inventory_number <= 3:
             status = f'عدد ازاین کالا موجود هست {self.Inventory_number}'
-        if self.Inventory_number>=4:
+        if self.Inventory_number >= 4:
             status = 'کالا موحود هست'
 
         return status
-
-
 
 
 # for release 2

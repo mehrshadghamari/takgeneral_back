@@ -129,15 +129,15 @@ class Command(BaseCommand):
                     waranty_tamir = random.choice([True, False])
                     waranty_taviz = random.choice([True, False])
                     month_of_waranty = random.choice([6, 12, 24])
-                    made_in = random.choice(['کالای ایرانی','کالای اورجینال'])
+                    made_in = random.choice(['کالای ایرانی', 'کالای اورجینال'])
 
                     ProductVariant.objects.create(
                         option=option_instance,
                         option_value=None,
                         Inventory_number=Inventory_number,
-                        discount = discount,
-                        price = price,
-                        made_in = made_in,
+                        discount=discount,
+                        price=price,
+                        made_in=made_in,
                         min_price=min_price,
                         free_send=free_send,
                         waranty_tamir=waranty_tamir,

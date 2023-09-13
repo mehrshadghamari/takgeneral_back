@@ -14,7 +14,6 @@ from extention.models import PopularHomeCategory
 from nested_admin.nested import NestedGenericStackedInline
 from nested_admin.nested import NestedGenericTabularInline
 from nested_admin.nested import NestedModelAdmin
-from nested_admin.nested import NestedStackedInline
 from nested_admin.nested import NestedTabularInline
 
 admin.site.register(MainBanner)

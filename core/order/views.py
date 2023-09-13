@@ -54,7 +54,7 @@ class CartDetailsPreview(APIView):
                         order_item.save()
 
             order_items = order.items.all()
-            items = OrderItemSerializer(order_items, many=True,context={"request": request})
+            items = OrderItemSerializer(order_items, many=True, context={"request": request})
 
             order_data = {
                 'order_id': order.id,
@@ -88,15 +88,13 @@ class CartDetailsPreview(APIView):
                 sum_discount_price=F('sum_price') - F('sum_final_price')
             ).first() for item in cart_items]
 
-
-
             total_price = int(sum([p.sum_price for p in products]))
             total_final_price = int(sum([p.sum_final_price for p in products]))
             total_discount_price = int(sum([p.sum_discount_price for p in products]))
             total_count = int(sum([p.quantity for p in products]))
 
             # Serialize response data
-            product_serializer = OrderlistSerializer(products, many=True,context={"request": request})
+            product_serializer = OrderlistSerializer(products, many=True, context={"request": request})
             order_data = {
                 'order_id': None,
                 'paid': None,

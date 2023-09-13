@@ -1,6 +1,5 @@
 from order.models import OrderItem
 from product.models import ProductVariant
-from product.serializers import productImagesSerializer
 from rest_framework import serializers
 
 
@@ -44,7 +43,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source='product.product_id')
     name = serializers.CharField(source='product.product_name')
     # main_image = productImagesSerializer(
-        # source='product.product_main_image', allow_null=True)
+    # source='product.product_main_image', allow_null=True)
     main_image = serializers.SerializerMethodField('get_main_image')
     discount = serializers.IntegerField(source='product.discount')
     free_send = serializers.BooleanField(source='product.free_send')
