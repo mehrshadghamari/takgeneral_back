@@ -109,7 +109,6 @@ class PopularHomeCategorySerializer(serializers.ModelSerializer):
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
-
     class Meta:
         model = PopularHomeCategory
         fields = '__all__'

@@ -147,7 +147,7 @@ class MetaTag(models.Model):
     desc = models.CharField(max_length=257, null=True, blank=True)
     og_title = models.CharField(max_length=257, null=True, blank=True)
     og_desc = models.CharField(max_length=257, null=True, blank=True)
-    og_locale = models.CharField(max_length=257,default="fa_IR", null=True, blank=True)
+    og_locale = models.CharField(max_length=257, default="fa_IR", null=True, blank=True)
     og_type = models.CharField(max_length=257, null=True, blank=True)
     og_url = models.CharField(max_length=257, null=True, blank=True)
     og_site_name = models.CharField(max_length=257,default="تک جنرال", null=True, blank=True)
@@ -166,21 +166,19 @@ class MetaTag(models.Model):
             models.Index(fields=["content_type", "object_id"]),
         ]
 
-
-
     @property
     def google_index(self):
 
-        if self.index and self.follow==False:
+        if self.index and self.follow == False:
             return 'index,nofollow'
 
-        if self.index and self.follow==True:
+        if self.index and self.follow == True:
             return 'index,follow'
 
-        if self.index==False and self.follow==False:
+        if self.index == False and self.follow == False:
             return 'index,nofollow'
 
-        if self.index==False and self.follow==True:
+        if self.index == False and self.follow == True:
             return 'noindex,follow'
 
     @property

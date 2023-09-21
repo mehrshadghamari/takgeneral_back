@@ -191,7 +191,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 # STATICFILES_DIRS = [
 # os.path.join(BASE_DIR, 'static'),
 # ]
@@ -234,8 +233,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'statusbar': True,
 
 }
-
-
 
 # # AWS S3 settings
 # AWS_ACCESS_KEY_ID = "c3a824eb-963c-400e-b862-ea1c147d45ba"

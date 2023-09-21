@@ -15,7 +15,8 @@ class ProductManager(models.Manager):
     def with_price_info(self):
         from .models import ProductVariant
         prices_subquery = (
-            ProductVariant.objects.with_final_price().select_related("option__product").filter(option__product=OuterRef('pk'))
+            ProductVariant.objects.with_final_price().select_related("option__product").filter(
+                option__product=OuterRef('pk'))
             .values('option__product')
             .annotate(
                 lowest_price=Min('price'),
