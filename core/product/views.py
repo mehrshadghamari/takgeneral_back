@@ -148,8 +148,9 @@ class products(APIView):
             #     if brand_id not in included_brand_ids:
             #         included_brand_ids.add(brand_id)  # Add the brand ID to the set
             #         brands.append(brand_data)
+            br=[b["brand__id"] for b in brand_query]
 
-            brand_count_query = Product.objects.filter(brand__in=brand_query).values('brand__id').annotate(
+            brand_count_query = Product.objects.filter(brand__id__in=br).values('brand__id').annotate(
                 product_count=Count(
                     'brand')).values('brand__id', 'brand__name', 'product_count')
 
