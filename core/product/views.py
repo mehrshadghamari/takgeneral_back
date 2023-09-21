@@ -47,7 +47,7 @@ class products(APIView):
             #     product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
             # brands_serializer = BrandInfoSerializer(brands,many=True,context={"request": request})
             brands_ids = Product.objects.select_related('brand').filter(
-                category__in=category_obj.get_children()).values_list('brand__id', flat=True)
+                category__in=category_obj.get_descendants(include_self=True)).values_list('brand__id', flat=True)
             brand_ids_list = list(set(brands_ids))
             brands = ProductBrand.objects.filter(id__in=brand_ids_list)
             brands_serializer = BrandSerializer(brands, many=True, context={"request": request})
@@ -88,7 +88,7 @@ class products(APIView):
                 breadcrumb = category_obj.get_ancestors(include_self=True)
                 breadcrumb_serializer = CategorySerializer(breadcrumb, many=True, context={"request": request})
                 product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
-                    category__in=category_obj.get_children()).order_by('-special_offer', '-created_at')
+                    category__in=category_obj.get_descendants(include_self=True)).order_by('-special_offer', '-created_at')
 
             # brand_query_before = product_query.values('brand__id').annotate(
             #     product_count=Count('brand')).values('brand__id',)
