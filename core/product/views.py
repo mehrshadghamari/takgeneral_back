@@ -90,25 +90,34 @@ class products(APIView):
                 product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
                     category__in=category_obj.get_children()).order_by('-special_offer', '-created_at')
 
-            brand_query_before = product_query.values('brand__id').annotate(
-                product_count=Count('brand')).values('brand__id',)
+            # brand_query_before = product_query.values('brand__id').annotate(
+            #     product_count=Count('brand')).values('brand__id',)
+            brand_count_query = Product.objects.filter(id__in=product_query.values('id')).values('brand__id').annotate(
+                product_count=Count(
+                    'brand')).values('brand__id', 'brand__name', 'product_count')
 
             min_price = self.request.query_params.get('min_price', None)
             max_price = self.request.query_params.get('max_price', None)
             if min_price and max_price:
                 product_query = product_query.filter(final_price_Manager__gte=int(
                     min_price), final_price_Manager__lte=int(max_price))
-                brand_query_before = product_query.values('brand__id').annotate(
-                    product_count=Count('brand')).values('brand__id')
+                # brand_query_before = product_query.values('brand__id').annotate(
+                #     product_count=Count('brand')).values('brand__id')
+                brand_count_query = Product.objects.filter(id__in=product_query.values('id')).values('brand__id').annotate(
+                product_count=Count(
+                    'brand')).values('brand__id', 'brand__name', 'product_count')
 
-            brand_query = brand_query_before
+            # brand_query = brand_query_before
 
             brand = self.request.query_params.getlist('brand[]')
             if brand:
                 product_query = product_query.filter(brand__id__in=brand)
             else:
-                brand_query = product_query.values('brand__id').annotate(product_count=Count(
-                    'brand')).values('brand__id')
+                # brand_query = product_query.values('brand__id').annotate(product_count=Count(
+                #     'brand')).values('brand__id')
+                brand_count_query = Product.objects.filter(id__in=product_query.values('id')).values('brand__id').annotate(
+                product_count=Count(
+                    'brand')).values('brand__id', 'brand__name', 'product_count')
 
             ordering = self.request.query_params.get('ordering', None)
             if ordering is not None:
@@ -148,11 +157,11 @@ class products(APIView):
             #     if brand_id not in included_brand_ids:
             #         included_brand_ids.add(brand_id)  # Add the brand ID to the set
             #         brands.append(brand_data)
-            br=[b["brand__id"] for b in brand_query]
+            
 
-            brand_count_query = Product.objects.filter(brand__id__in=br).values('brand__id').annotate(
-                product_count=Count(
-                    'brand')).values('brand__id', 'brand__name', 'product_count')
+            # brand_count_query = Product.objects.filter(id__in=product_query.values('id')).values('brand__id').annotate(
+            #     product_count=Count(
+            #         'brand')).values('brand__id', 'brand__name', 'product_count')
 
             brands_info = ProductBrand.objects.filter(id__in=brand_count_query.values('brand__id'))
             brand_count_map = {item['brand__id']: item['product_count'] for item in brand_count_query}
