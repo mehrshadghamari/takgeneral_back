@@ -85,7 +85,7 @@ class ContentInline(NestedGenericTabularInline):
 
 @admin.register(Blog)
 class BlogAdmin(NestedModelAdmin):
-    inlines = [BlogInline, ]
+    inlines = [BlogInline, MetaTagInline]
     filter_horizontal = ["tag"]
 
 

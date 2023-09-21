@@ -13,6 +13,7 @@ from extention.serializers import BlogSerializer
 from extention.serializers import ContentSerializer
 from extention.serializers import HomeBannerSerializer
 from extention.serializers import HomeMainBannerSerializer
+from extention.serializers import MetaTagSerializer
 from extention.serializers import PopularHomeCategorySerializer
 from product.models import Category
 from product.models import Product
@@ -97,4 +98,8 @@ class BlogDetail(APIView):
         blog = Blog.objects.get(id=id)
         blog_serializer = BlogSerializer(
             blog, context={"request": request})
-        return Response(blog_serializer.data, status=status.HTTP_200_OK)
+        meta_tag = blog.meta_tag.first()
+        meta_tag_serializer = MetaTagSerializer(meta_tag)
+        return Response({'blog':blog_serializer.data,
+                         'meta_tag':meta_tag_serializer.data
+                         }, status=status.HTTP_200_OK)

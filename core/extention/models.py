@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_jalali.db import models as jmodels
@@ -111,6 +112,8 @@ class Blog(models.Model):
     slug = models.CharField(max_length=127, null=True)
     created_time = jmodels.jDateTimeField(auto_now_add=True)
 
+    meta_tag = GenericRelation("extention.MetaTag")
+
     @property
     def blog_images(self):
         return self.blogimage_set.all()
@@ -147,12 +150,12 @@ class MetaTag(models.Model):
     og_locale = models.CharField(max_length=257,default="fa_IR", null=True, blank=True)
     og_type = models.CharField(max_length=257, null=True, blank=True)
     og_url = models.CharField(max_length=257, null=True, blank=True)
-    og_site_name = models.CharField(max_length=257,default="tak general", null=True, blank=True)
+    og_site_name = models.CharField(max_length=257,default="تک جنرال", null=True, blank=True)
     og_image = models.CharField(max_length=257, null=True, blank=True)
     twiter_cart = models.CharField(max_length=257, null=True, blank=True)
     canonical = models.CharField(max_length=257, null=True, blank=True)
-    follow = models.BooleanField(default=True, null=True, blank=True)
-    index = models.BooleanField(default=True, null=True, blank=True)
+    follow = models.BooleanField(default=False, blank=True)
+    index = models.BooleanField(default=False, blank=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()

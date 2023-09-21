@@ -32,7 +32,7 @@ class MetaTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MetaTag
-        exclude = ("content_type","object_id","index","follow")
+        exclude = ("content_type","object_id",)
 
 
 
