@@ -35,8 +35,8 @@ class AllCategoryList(APIView):
 
 
 class products(APIView):
-    def get(self, request, cat_id):
-        category_obj = get_object_or_404(Category, id=cat_id)
+    def get(self, request, cat_url):
+        category_obj = get_object_or_404(Category, url=cat_url)
         if category_obj.parent is None:
             main_category_serializer = CategorySerializer(category_obj, context={"request": request})
             categories = category_obj.get_children()
@@ -203,8 +203,8 @@ class products(APIView):
 
 
 class Brands(APIView):
-    def get(self, request, brand_id):
-        brand_obj = get_object_or_404(ProductBrand, id=brand_id)
+    def get(self, request, brand_url):
+        brand_obj = get_object_or_404(ProductBrand, url=brand_url)
         brand_serializer = BrandSerializer(brand_obj, context={"request": request})
         main_banner = brand_obj.main_banners.all()
         main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})

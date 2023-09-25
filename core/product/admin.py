@@ -19,6 +19,7 @@ from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
 from .models import ProductVariant
+from .models import ProductAttention
 
 # Register your models here.
 
@@ -39,6 +40,10 @@ class ProductForm(forms.ModelForm):
 
 
 # inlines
+
+class ProductAttentionInline(NestedTabularInline):
+    model=ProductAttention
+    extra = 1
 
 
 class ProductSpecificationInline(NestedTabularInline):
@@ -111,9 +116,10 @@ class ProductTypeAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
     form = ProductForm
-    autocomplete_fields = ("brand", "product_type",)
+    autocomplete_fields = ("brand", "product_type","category")
     # filter_horizontal = [""]
     inlines = [
+        ProductAttentionInline,
         productProductOptionTypeInline,
         ProductImageInline,
         ProductSpecificationValueInline,

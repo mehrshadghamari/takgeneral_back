@@ -67,15 +67,21 @@ class ProductBrand(models.Model):
         return self.name
 
 
+class ProductAttention(models.Model):
+    text = models.CharField(max_length=257)
+    product = models.ForeignKey('product.Product',null=True,blank=True,on_delete=models.CASCADE)
+
+
 class Product(models.Model):
     product_type = models.ForeignKey("product.ProductType", null=True, blank=True, on_delete=models.RESTRICT)
     category = models.ForeignKey("product.Category", on_delete=models.RESTRICT, null=True, db_index=True)
     url = models.SlugField(max_length=255, unique=True, null=True, db_index=True)
     name = models.CharField(max_length=64)
-    brand = models.ForeignKey('product.ProductBrand', on_delete=models.CASCADE, db_index=True)
+    brand = models.ForeignKey('product.ProductBrand', on_delete=models.RESTRICT, db_index=True)
     special_offer = models.BooleanField(default=False)
     pdf = models.FileField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, null=True)
+    update_at = models.DateField(auto_now=True, null=True)
 
     content = GenericRelation("extention.Content")
     meta_tag = GenericRelation("extention.MetaTag")
@@ -229,7 +235,7 @@ class ProductVariant(models.Model):
     option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
     option_value = models.CharField(max_length=127, null=True, blank=True)
     price = models.FloatField()
-    discount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(99), MinValueValidator(0)])
+    discount = models.PositiveSmallIntegerField(default=0,validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField()
     made_in = models.CharField(max_length=25, choices=made_in_chiose, null=True, blank=True)
     min_price = models.BooleanField()
@@ -237,6 +243,8 @@ class ProductVariant(models.Model):
     waranty_tamir = models.BooleanField()
     waranty_taviz = models.BooleanField()
     month_of_waranty = models.PositiveSmallIntegerField(null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True, null=True)
+    update_at = models.DateField(auto_now=True, null=True)
 
     objects = ProductVariantManager()
 
