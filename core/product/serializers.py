@@ -48,7 +48,7 @@ class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'user_alias_name', 'title', 'content', 'likes_count',
-                  'diss_likes_count', 'suggest_me', 'arzesh_rate', 'kefiyat_rate', 'created_at')
+                  'diss_likes_count', 'suggest_me', 'kefiyat_rate', 'created_at')
 
 
 class ReplySerializer(serializers.ModelSerializer):
