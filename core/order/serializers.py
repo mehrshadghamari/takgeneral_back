@@ -34,13 +34,14 @@ class OrderlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
         fields = (
-            'product_id', 'name', 'product_variant_id', 'product_variant_key', 'product_variant_value', 'main_image',
+            'product_id','product_url', 'name', 'product_variant_id', 'product_variant_key', 'product_variant_value', 'main_image',
             'discount', 'free_send', 'warranty',
             'quantity', 'price', 'final_price', 'sum_price', 'sum_final_price', 'sum_discount_price',)
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source='product.product_id')
+    product_url = serializers.IntegerField(source='product.product_url')
     name = serializers.CharField(source='product.product_name')
     # main_image = productImagesSerializer(
     # source='product.product_main_image', allow_null=True)
@@ -75,7 +76,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = (
-            'product_id', 'name', 'product_variant_id', 'product_variant_key', 'product_variant_value', 'main_image',
+            'product_id', 'product_url', 'name', 'product_variant_id', 'product_variant_key', 'product_variant_value', 'main_image',
             'discount', 'free_send', 'warranty',
             'quantity', 'price', 'final_price', 'sum_price', 'sum_final_price', 'sum_discount_price',)
 

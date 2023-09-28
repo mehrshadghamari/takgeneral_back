@@ -259,6 +259,10 @@ class ProductVariant(models.Model):
     @property
     def product_id(self):
         return self.option.product.id
+    
+    @property
+    def product_url(self):
+        return self.option.product.url
 
     @property
     def product_name(self):
@@ -354,6 +358,9 @@ class ProductSpecificationValue(models.Model):
 
     def __str__(self):
         return self.value
+    
+    class Meta:
+        ordering = ["-specification"]
 
 # class FilterOptionType(models.Model):
 #     name = models.CharField(max_length=50, unique=True)
