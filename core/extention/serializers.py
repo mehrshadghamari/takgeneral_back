@@ -29,6 +29,27 @@ class MetaTagSchemaSerializer(serializers.ModelSerializer):
 class MetaTagSerializer(serializers.ModelSerializer):
     schemas = MetaTagSchemaSerializer(many=True)
     google_index = serializers.CharField()
+    og_image = serializers.SerializerMethodField("get_og_image_url")
+    twiter_image = serializers.SerializerMethodField("get_twiter_image_url")
+
+    def get_og_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.og_image:
+            image_url = request.build_absolute_uri(obj.og_image.url)
+        else:
+            image_url = ''
+
+        return image_url
+
+    def get_twiter_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.twiter_image:
+            image_url = request.build_absolute_uri(obj.twiter_image.url)
+        else:
+            image_url = ''
+
+        return image_url
+
 
     class Meta:
         model = MetaTag
