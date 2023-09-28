@@ -360,7 +360,7 @@ class ProductSpecificationValue(models.Model):
         return self.value
     
     class Meta:
-        ordering = ["-specification"]
+        ordering = ["specification"]
 
 # class FilterOptionType(models.Model):
 #     name = models.CharField(max_length=50, unique=True)
