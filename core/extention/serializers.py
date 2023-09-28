@@ -137,10 +137,15 @@ class BlogSerializer(serializers.ModelSerializer):
     blog_images = BlogImageSerializer(many=True)
     tag = BlogTagSerializer(many=True)
     created_time = serializers.SerializerMethodField()
+    updated_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
         return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
                 'timestamp': int(obj.created_time.timestamp())}
+    
+    def get_updated_time(self, obj):
+        return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
+                'timestamp': int(obj.updated_time.timestamp())}
 
     class Meta:
         model = Blog
@@ -149,13 +154,19 @@ class BlogSerializer(serializers.ModelSerializer):
 
 class AllBlogSerializer(serializers.ModelSerializer):
     main_image = BlogImageSerializer()
+    blog_images = BlogImageSerializer(many=True)
     tag = BlogTagSerializer(many=True)
     created_time = serializers.SerializerMethodField()
+    updated_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
         return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
                 'timestamp': int(obj.created_time.timestamp())}
+    
+    def get_updated_time(self, obj):
+        return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
+                'timestamp': int(obj.updated_time.timestamp())}
 
     class Meta:
         model = Blog
-        fields = ("id", "title", "main_image", "tag", "desc", "created_time")
+        fields = ("id", "title", "main_image", "blog_images","tag", "desc", "created_time")
