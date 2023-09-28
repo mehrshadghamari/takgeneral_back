@@ -58,7 +58,7 @@ class products(APIView):
             page_content = category_obj.content.first()
             page_content_serializer = ContentSerializer(page_content)
             meta_tag = category_obj.meta_tag.first()
-            meta_tag_serializer = MetaTagSerializer(meta_tag)
+            meta_tag_serializer = MetaTagSerializer(meta_tag,context={"request": request})
 
             response = Response({
                 'breadcrumb': breadcrumb_serializer.data,
@@ -144,7 +144,7 @@ class products(APIView):
             page_content = category_obj.content.first()
             page_content_serializer = ContentSerializer(page_content)
             meta_tag = category_obj.meta_tag.first()
-            meta_tag_serializer = MetaTagSerializer(meta_tag)
+            meta_tag_serializer = MetaTagSerializer(meta_tag,context={"request": request})
 
             # included_brand_ids = set()
 
@@ -215,7 +215,7 @@ class Brands(APIView):
         product_query = Product.objects.with_price_info().select_related("brand", "category").filter(
             brand=brand_obj).order_by('-special_offer', '-created_at')
         meta_tag = brand_obj.meta_tag.first()
-        meta_tag_serializer = MetaTagSerializer(meta_tag)
+        meta_tag_serializer = MetaTagSerializer(meta_tag,context={"request": request})
         # default page number = 1
         page_number = self.request.query_params.get('page', 1)
         # default page_size = 20
@@ -271,7 +271,7 @@ class ProductDetail(APIView):
         page_content = product_instance.content.first()
         page_content_serializer = ContentSerializer(page_content)
         meta_tag = product_instance.meta_tag.first()
-        meta_tag_serializer = MetaTagSerializer(meta_tag)
+        meta_tag_serializer = MetaTagSerializer(meta_tag,context={"request": request})
 
         return Response({
             'breadcrumb': breadcrumb_serializer.data,

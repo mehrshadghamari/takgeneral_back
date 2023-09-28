@@ -99,7 +99,7 @@ class BlogDetail(APIView):
         blog_serializer = BlogSerializer(
             blog, context={"request": request})
         meta_tag = blog.meta_tag.first()
-        meta_tag_serializer = MetaTagSerializer(meta_tag)
+        meta_tag_serializer = MetaTagSerializer(meta_tag,context={"request": request})
         return Response({'blog':blog_serializer.data,
                          'meta_tag':meta_tag_serializer.data
                          }, status=status.HTTP_200_OK)
