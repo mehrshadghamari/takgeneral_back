@@ -94,8 +94,8 @@ class BlogsApi(APIView):
 
 
 class BlogDetail(APIView):
-    def get(self, request, id):
-        blog = Blog.objects.get(id=id)
+    def get(self, request, slug):
+        blog = Blog.objects.get(slug=slug)
         blog_serializer = BlogSerializer(
             blog, context={"request": request})
         meta_tag = blog.meta_tag.first()
