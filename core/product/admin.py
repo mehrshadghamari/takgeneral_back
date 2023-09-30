@@ -132,8 +132,8 @@ class ProductAdmin(NestedModelAdmin):
         form.base_fields['product_type'].widget.can_add_related = False
         return form
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "category":
-            # Filter the category field's queryset to show only leaf nodes
-            kwargs["queryset"] = Category.objects.filter(children__isnull=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    #     if db_field.name == "category":
+    #         # Filter the category field's queryset to show only leaf nodes
+    #         kwargs["queryset"] = Category.objects.filter(children__isnull=True)
+    #     return super().formfield_for_foreignkey(db_field, request, **kwargs)
