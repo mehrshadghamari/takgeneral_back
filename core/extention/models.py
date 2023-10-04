@@ -115,9 +115,6 @@ class Blog(models.Model):
 
     meta_tag = GenericRelation("extention.MetaTag")
 
-    @property
-    def x (self):
-        return 4
 
     @property
     def blog_images(self):
