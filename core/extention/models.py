@@ -116,6 +116,10 @@ class Blog(models.Model):
     meta_tag = GenericRelation("extention.MetaTag")
 
     @property
+    def x (self):
+        return 4
+
+    @property
     def blog_images(self):
         return self.blogimage_set.all()
 
@@ -193,3 +197,8 @@ class MetaTagSchema(models.Model):
     meta_tag = models.ForeignKey("extention.MetaTag", related_name='schemas', on_delete=models.CASCADE, null=True,
                                  blank=True)
     schema = models.TextField()
+
+class Redirect(models.Model) :
+    source = models.CharField(max_length=255)
+    destination = models.CharField(max_length=255)
+    permanent = models.BooleanField(default=True)

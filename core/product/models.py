@@ -259,7 +259,7 @@ class ProductVariant(models.Model):
     @property
     def product_id(self):
         return self.option.product.id
-    
+
     @property
     def product_url(self):
         return self.option.product.url
@@ -358,7 +358,7 @@ class ProductSpecificationValue(models.Model):
 
     def __str__(self):
         return self.value
-    
+
     class Meta:
         ordering = ["specification"]
 

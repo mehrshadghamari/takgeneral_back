@@ -9,6 +9,7 @@ from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import MetaTagSchema
 from extention.models import PopularHomeCategory
+from extention.models import Redirect
 from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
 from rest_framework import serializers
@@ -163,7 +164,7 @@ class BlogSerializer(serializers.ModelSerializer):
     def get_created_time(self, obj):
         return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
                 'timestamp': int(obj.created_time.timestamp())}
-    
+
     def get_updated_time(self, obj):
         return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
                 'timestamp': int(obj.updated_time.timestamp())}
@@ -183,7 +184,7 @@ class AllBlogSerializer(serializers.ModelSerializer):
     def get_created_time(self, obj):
         return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
                 'timestamp': int(obj.created_time.timestamp())}
-    
+
     def get_updated_time(self, obj):
         return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
                 'timestamp': int(obj.updated_time.timestamp())}
@@ -191,3 +192,8 @@ class AllBlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ("id", "slug" ,"title", "main_image", "blog_images","tag", "desc", "created_time","updated_time")
+
+class RedirectSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model = Redirect
+        fields = '__all__'

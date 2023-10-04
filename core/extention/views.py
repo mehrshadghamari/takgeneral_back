@@ -8,6 +8,7 @@ from extention.models import Content
 from extention.models import HomeBanner
 from extention.models import HomeMainBanner
 from extention.models import PopularHomeCategory
+from extention.models import Redirect
 from extention.serializers import AllBlogSerializer
 from extention.serializers import BlogSerializer
 from extention.serializers import ContentSerializer
@@ -15,6 +16,7 @@ from extention.serializers import HomeBannerSerializer
 from extention.serializers import HomeMainBannerSerializer
 from extention.serializers import MetaTagSerializer
 from extention.serializers import PopularHomeCategorySerializer
+from extention.serializers import RedirectSerializer
 from product.models import Category
 from product.models import Product
 from product.serializers import AllProductSerializer
@@ -103,3 +105,10 @@ class BlogDetail(APIView):
         return Response({'blog':blog_serializer.data,
                          'meta_tag':meta_tag_serializer.data
                          }, status=status.HTTP_200_OK)
+
+
+class RedirectView(APIView) :
+    def get(self , request) :
+        result = Redirect.objects.all()
+        result_serializer = RedirectSerializer(result , many=True) ;
+        return Response(result_serializer.data , status = status.HTTP_200_OK)

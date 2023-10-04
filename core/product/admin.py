@@ -12,6 +12,7 @@ from nested_admin.nested import NestedTabularInline
 
 from .models import Category
 from .models import Product
+from .models import ProductAttention
 from .models import ProductBrand
 from .models import ProductImage
 from .models import ProductOptionType
@@ -19,7 +20,6 @@ from .models import ProductSpecification
 from .models import ProductSpecificationValue
 from .models import ProductType
 from .models import ProductVariant
-from .models import ProductAttention
 
 # Register your models here.
 

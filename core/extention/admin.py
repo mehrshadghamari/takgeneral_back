@@ -11,6 +11,7 @@ from extention.models import MainBanner
 from extention.models import MetaTag
 from extention.models import MetaTagSchema
 from extention.models import PopularHomeCategory
+from extention.models import Redirect
 from nested_admin.nested import NestedGenericStackedInline
 from nested_admin.nested import NestedGenericTabularInline
 from nested_admin.nested import NestedModelAdmin
@@ -21,7 +22,7 @@ admin.site.register(Banner)
 admin.site.register(HomeMainBanner)
 admin.site.register(HomeBanner)
 admin.site.register(BlogTag)
-
+admin.site.register(Redirect)
 
 class PopularHomeCategoryInline(NestedTabularInline):
     model = PopularHomeCategory
