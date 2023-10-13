@@ -10,6 +10,9 @@ from extention.models import MetaTag
 from extention.models import MetaTagSchema
 from extention.models import PopularHomeCategory
 from extention.models import Redirect
+from product.models import Category
+from product.models import Product
+from product.models import ProductBrand
 from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
 from rest_framework import serializers
@@ -197,3 +200,60 @@ class RedirectSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Redirect
         fields = '__all__'
+
+
+class ProductSiteMapSerializer(serializers.ModelSerializer):
+    update_at = serializers.SerializerMethodField()
+
+    def get_update_at(self, obj):
+        if obj.update_at:
+            return {'date': obj.update_at.strftime('%Y-%m-%d'), 'time': obj.update_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.update_at.timestamp())}
+
+    class Meta :
+        model = Product
+        fields = ('id','url','update_at')
+
+
+
+class BrandSiteMapSerializer(serializers.ModelSerializer):
+    update_at = serializers.SerializerMethodField()
+
+    def get_update_at(self, obj):
+        if obj.update_at:
+            return {'date': obj.update_at.strftime('%Y-%m-%d'), 'time': obj.update_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.update_at.timestamp())}
+    class Meta :
+        model = ProductBrand
+        fields = ('id','url','update_at')
+
+
+class CategorySiteMapSerializer(serializers.ModelSerializer):
+    update_at = serializers.SerializerMethodField()
+
+    def get_update_at(self, obj):
+        if obj.update_at:
+            return {'date': obj.update_at.strftime('%Y-%m-%d'), 'time': obj.update_at.strftime('%H:%M:%S'),
+                'timestamp': int(obj.update_at.timestamp())}
+    class Meta :
+        model = Category
+        fields = ('id','url','update_at')
+
+
+class BlogSiteMapSerializer(serializers.ModelSerializer):
+    updated_time = serializers.SerializerMethodField()
+
+    def get_updated_time(self, obj):
+        if obj.updated_time:
+            return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
+                'timestamp': int(obj.updated_time.timestamp())}
+    class Meta :
+        model = Blog
+        fields = ('id','slug','updated_time')
+
+
+class SiteMapSerializer(serializers.Serializer):
+    products = ProductSiteMapSerializer(many=True)
+    brands = BrandSiteMapSerializer(many=True)
+    categories = CategorySiteMapSerializer(many=True)
+    blogs = BlogSiteMapSerializer(many=True)

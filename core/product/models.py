@@ -57,6 +57,8 @@ class ProductBrand(models.Model):
     name = models.CharField(max_length=64)
     logo = models.ImageField(null=True)  # new
     url = models.CharField(max_length=64, null=True, unique=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    update_at = models.DateTimeField(auto_now=True, null=True)
 
     main_banners = GenericRelation("extention.MainBanner")
     banners = GenericRelation("extention.Banner")
@@ -80,8 +82,8 @@ class Product(models.Model):
     brand = models.ForeignKey('product.ProductBrand', on_delete=models.RESTRICT, db_index=True)
     special_offer = models.BooleanField(default=False)
     pdf = models.FileField(null=True, blank=True)
-    created_at = models.DateField(auto_now_add=True, null=True)
-    update_at = models.DateField(auto_now=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    update_at = models.DateTimeField(auto_now=True, null=True)
 
     content = GenericRelation("extention.Content")
     meta_tag = GenericRelation("extention.MetaTag")
@@ -321,6 +323,8 @@ class Category(MPTTModel):
     description = models.CharField(max_length=127, null=True, blank=True)
     parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    update_at = models.DateTimeField(auto_now=True, null=True)
 
     main_banners = GenericRelation("extention.MainBanner")
     banners = GenericRelation("extention.Banner")

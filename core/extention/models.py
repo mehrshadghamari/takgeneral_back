@@ -110,8 +110,8 @@ class Blog(models.Model):
     desc = tinymce_model.HTMLField()
     tag = models.ManyToManyField("extention.BlogTag")
     slug = models.CharField(max_length=127, null=True)
-    created_time = jmodels.jDateTimeField(auto_now_add=True)
-    updated_time = jmodels.jDateTimeField(auto_now=True)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
     meta_tag = GenericRelation("extention.MetaTag")
 

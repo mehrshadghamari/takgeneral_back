@@ -11,14 +11,20 @@ from extention.models import PopularHomeCategory
 from extention.models import Redirect
 from extention.serializers import AllBlogSerializer
 from extention.serializers import BlogSerializer
+from extention.serializers import BlogSiteMapSerializer
+from extention.serializers import BrandSiteMapSerializer
+from extention.serializers import CategorySiteMapSerializer
 from extention.serializers import ContentSerializer
 from extention.serializers import HomeBannerSerializer
 from extention.serializers import HomeMainBannerSerializer
 from extention.serializers import MetaTagSerializer
 from extention.serializers import PopularHomeCategorySerializer
+from extention.serializers import ProductSiteMapSerializer
 from extention.serializers import RedirectSerializer
+from extention.serializers import SiteMapSerializer
 from product.models import Category
 from product.models import Product
+from product.models import ProductBrand
 from product.serializers import AllProductSerializer
 from product.serializers import CategorySerializer
 from rest_framework import status
@@ -107,8 +113,24 @@ class BlogDetail(APIView):
                          }, status=status.HTTP_200_OK)
 
 
-class RedirectView(APIView) :
-    def get(self , request) :
+class RedirectView(APIView):
+    def get(self , request):
         result = Redirect.objects.all()
         result_serializer = RedirectSerializer(result , many=True) ;
         return Response(result_serializer.data , status = status.HTTP_200_OK)
+
+
+class SiteMapApi(APIView):
+    def get(self,request):
+        blogs = Blog.objects.all()
+        products = Product.objects.all()
+        brands = ProductBrand.objects.all()
+        categories = Category.objects.all()
+        sitemap_data = {
+            'products': products,
+            'brands': brands,
+            'categories': categories,
+            'blogs': blogs,
+        }
+        sitemap_serializer=SiteMapSerializer(sitemap_data)
+        return Response(sitemap_serializer.data,status=status.HTTP_200_OK)
