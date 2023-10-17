@@ -72,17 +72,17 @@ class MetaTagInline(NestedGenericStackedInline):
               "twiter_title",
               "twiter_description",
               "twiter_image",)
-    extra = 1
+    extra = 0
 
 
 class ContentImageInline(NestedTabularInline):
     model = ContentImage
-    extra = 2
+    extra = 1
 
 
 class ContentInline(NestedGenericTabularInline):
     model = Content
-    extra = 1
+    extra = 0
     fields = ["desc"]
     inlines = [ContentImageInline]
 

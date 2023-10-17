@@ -13,7 +13,7 @@ class MainBanner(models.Model):
     image = models.ImageField()
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64)
+    url = models.CharField(max_length=64,null=True,blank=True)
     link_url = models.CharField(max_length=257)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -31,7 +31,7 @@ class Banner(models.Model):
     # brand = models.ForeignKey("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64)
+    url = models.CharField(max_length=64,null=True,blank=True)
     link_url = models.CharField(max_length=257)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -48,7 +48,7 @@ class HomeMainBanner(models.Model):
     image = models.ImageField()
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64)
+    url = models.CharField(max_length=64,null=True,blank=True)
     link_url = models.CharField(max_length=257)
 
 
@@ -60,7 +60,7 @@ class HomeBanner(models.Model):
 
     image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64)
+    url = models.CharField(max_length=64,null=True,blank=True)
     link_url = models.CharField(max_length=257)
     place = models.CharField(max_length=5, choices=banner_place, null=True)
 
