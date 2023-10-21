@@ -48,7 +48,7 @@ class HomeMainBanner(models.Model):
     image = models.ImageField()
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64,null=True,blank=True)
+    # url = models.CharField(max_length=64,null=True,blank=True)
     link_url = models.CharField(max_length=257,null=True,blank=True)
 
 
@@ -60,7 +60,7 @@ class HomeBanner(models.Model):
 
     image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64,null=True,blank=True)
+    # url = models.CharField(max_length=64,null=True,blank=True)
     link_url = models.CharField(max_length=257,null=True,blank=True)
     place = models.CharField(max_length=5, choices=banner_place, null=True)
 

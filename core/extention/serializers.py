@@ -100,6 +100,7 @@ class HomeMainBannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HomeMainBanner
+        fields = '__all__'
 
     def get_mobile_image_url(self, obj):
         request = self.context.get('request')
@@ -117,6 +118,7 @@ class HomeBannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HomeBanner
+        fields = '__all__'
 
     def get_image_url(self, obj):
         request = self.context.get('request')
