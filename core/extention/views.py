@@ -56,7 +56,7 @@ class HomeApi(APIView):
 
         amazing_offer_product = Product.objects.with_price_info().annotate(
             ekhtelaf=F('lowest_price_manager') - F('lowest_final_price_manager')).filter(
-            Q(ekhtelaf__gte=1000000) | Q(highest_discount_manager__gte=20)).order_by('?')[:20]
+            Q(ekhtelaf__gte=1000000) | Q(highest_discount_manager__gte=1)).order_by('?')[:20]
         amazing_offer_serializer = AllProductSerializer(
             amazing_offer_product, many=True, context={"request": request})
 
