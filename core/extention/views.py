@@ -30,6 +30,7 @@ from product.serializers import CategorySerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 
 
 class HomeApi(APIView):
@@ -103,7 +104,7 @@ class BlogsApi(APIView):
 
 class BlogDetail(APIView):
     def get(self, request, slug):
-        blog = Blog.objects.get(slug=slug)
+        blog = get_object_or_404(Blog,slug=slug)
         blog_serializer = BlogSerializer(
             blog, context={"request": request})
         meta_tag = blog.meta_tag.first()
