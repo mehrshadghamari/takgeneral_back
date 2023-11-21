@@ -30,4 +30,4 @@ def validate_meli_code(value: str) -> bool:
 # function for validations of Iranian national code
 def national_code_validator(value):
     if not validate_meli_code(value):
-        raise ValidationError(f'{str(value)}+ is not valid')
+        raise ValidationError(f"{str(value)}+ is not valid")

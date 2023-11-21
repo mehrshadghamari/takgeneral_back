@@ -12,8 +12,7 @@ COMMITID = git.Repo().head.object.hexsha[:8]
 content = ""
 
 if len(sys.argv) < 2:
-    print(
-        "\ncommands options are: ['major', 'minor', 'patch'] [b | v | p]\n\n- b for creating build number\n- v for bumpversion\n- p for total commit and push\n")
+    print("\ncommands options are: ['major', 'minor', 'patch'] [b | v | p]\n\n- b for creating build number\n- v for bumpversion\n- p for total commit and push\n")
     sys.exit()
 
 if "v" in sys.argv and sys.argv[1] not in ["major", "minor", "patch"]:
@@ -29,20 +28,17 @@ if len(sys.argv) >= 2:
         with open(str(os.getcwd()) + "/setup.cfg") as f:
             content_setup = f.read()
         with open(str(os.getcwd()) + "/setup.cfg", "w+") as f:
-            content_new = re.sub(r"build_number\s=\s\w+", f"build_number = {COMMITID}", content_setup,
-                                 flags=re.M)  # noqa
+            content_new = re.sub(r"build_number\s=\s\w+", f"build_number = {COMMITID}", content_setup, flags=re.M)  # noqa
             f.write(content_new)
         ########## settings.py ##########
         with open(str(os.getcwd()) + "/version.txt") as f:
             content_settings = f.read()
         with open(str(os.getcwd()) + "/version.txt", "w+") as f:
-            content_new = re.sub(r'BUILD_NUMBER\s=\s"\w+"', f'BUILD_NUMBER = "{COMMITID}"', content_settings,
-                                 flags=re.M)  # noqa
+            content_new = re.sub(r'BUILD_NUMBER\s=\s"\w+"', f'BUILD_NUMBER = "{COMMITID}"', content_settings, flags=re.M)  # noqa
             f.write(content_new)
         #################################
     if "p" in sys.argv:
-        subprocess.call(["git", "commit", '-am"version/build number"'],
-                        env={"SKIP": "end-of-file-fixer,trailing-whitespace,black"})
+        subprocess.call(["git", "commit", '-am"version/build number"'], env={"SKIP": "end-of-file-fixer,trailing-whitespace,black"})
         subprocess.call(["git", "push"])
         subprocess.call(["git", "tag", "v{}".format(re.findall(r"\d+.+", content_setup)[0])])  # NOQA
         subprocess.call(["git", "push", "--tags"])

@@ -26,14 +26,15 @@ from .models import ProductVariant
 
 # form
 
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = "__all__"
 
     def clean(self):
         cleaned_data = super().clean()
-        product_type = cleaned_data.get('product_type')
+        product_type = cleaned_data.get("product_type")
         if not product_type:
             raise forms.ValidationError("A product type must be selected.")
         return cleaned_data
@@ -41,13 +42,16 @@ class ProductForm(forms.ModelForm):
 
 # inlines
 
+
 class ProductAttentionInline(NestedTabularInline):
-    model=ProductAttention
+    model = ProductAttention
     extra = 1
 
 
 class ProductSpecificationInline(NestedTabularInline):
-    search_fields = ['name', ]
+    search_fields = [
+        "name",
+    ]
     model = ProductSpecification
 
 
@@ -83,40 +87,55 @@ class ProductSpecificationValueInline(NestedTabularInline):
     model = ProductSpecificationValue
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'specification':
-            product_id = request.resolver_match.kwargs.get('object_id')
+        if db_field.name == "specification":
+            product_id = request.resolver_match.kwargs.get("object_id")
             if product_id:
                 product = Product.objects.get(pk=product_id)
-                kwargs['queryset'] = ProductSpecification.objects.filter(product_type=product.product_type)
+                kwargs["queryset"] = ProductSpecification.objects.filter(product_type=product.product_type)
             else:
-                kwargs['queryset'] = ProductSpecification.objects.none()
+                kwargs["queryset"] = ProductSpecification.objects.none()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 # admin
 
+
 @admin.register(ProductBrand)
 class ProductBrandAdmin(NestedModelAdmin):
-    search_fields = ['name', ]
+    search_fields = [
+        "name",
+    ]
     inlines = [ContentInline, MainBannerInline, BannerInline, MetaTagInline]
 
 
 @admin.register(Category)
 class CategotyAdmin(NestedModelAdmin, MPTTModelAdmin):
-    search_fields = ['name', ]
-    inlines = [PopularHomeCategoryInline, MainBannerInline, BannerInline, ContentInline, MetaTagInline, ]
+    search_fields = [
+        "name",
+    ]
+    inlines = [
+        PopularHomeCategoryInline,
+        MainBannerInline,
+        BannerInline,
+        ContentInline,
+        MetaTagInline,
+    ]
 
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
-    search_fields = ['name', ]
-    inlines = [ProductSpecificationInline, ]
+    search_fields = [
+        "name",
+    ]
+    inlines = [
+        ProductSpecificationInline,
+    ]
 
 
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
     form = ProductForm
-    autocomplete_fields = ("brand", "product_type","category")
+    autocomplete_fields = ("brand", "product_type", "category")
     # filter_horizontal = [""]
     inlines = [
         ProductAttentionInline,
@@ -129,7 +148,7 @@ class ProductAdmin(NestedModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields['product_type'].widget.can_add_related = False
+        form.base_fields["product_type"].widget.can_add_related = False
         return form
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):

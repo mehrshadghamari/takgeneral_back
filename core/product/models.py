@@ -11,10 +11,11 @@ from product.managers import ProductVariantManager
 
 class ProductImage(models.Model):
     image = models.ImageField()
-    product = models.ForeignKey(
-        'product.Product', on_delete=models.CASCADE, related_name='images')
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE, related_name="images")
     alt_text = models.CharField(max_length=255, null=True)
-    is_main = models.BooleanField(default=False, )
+    is_main = models.BooleanField(
+        default=False,
+    )
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=True)
     upload_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -71,7 +72,7 @@ class ProductBrand(models.Model):
 
 class ProductAttention(models.Model):
     text = models.CharField(max_length=257)
-    product = models.ForeignKey('product.Product',null=True,blank=True,on_delete=models.CASCADE)
+    product = models.ForeignKey("product.Product", null=True, blank=True, on_delete=models.CASCADE)
 
 
 class Product(models.Model):
@@ -79,7 +80,7 @@ class Product(models.Model):
     category = models.ForeignKey("product.Category", on_delete=models.RESTRICT, null=True, db_index=True)
     url = models.SlugField(max_length=255, unique=True, null=True, db_index=True)
     name = models.CharField(max_length=64)
-    brand = models.ForeignKey('product.ProductBrand', on_delete=models.RESTRICT, db_index=True)
+    brand = models.ForeignKey("product.ProductBrand", on_delete=models.RESTRICT, db_index=True)
     special_offer = models.BooleanField(default=False)
     pdf = models.FileField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -151,8 +152,7 @@ class Product(models.Model):
         min_price = self.lowest_price - 1000000
 
         similar_product_ids = (
-            ProductVariant.objects
-            .select_related('option__product')
+            ProductVariant.objects.select_related("option__product")
             .filter(
                 ~Q(option__product__id=self.id),
                 price__lte=max_price,
@@ -215,11 +215,11 @@ class Product(models.Model):
         }
 
     def __str__(self):
-        return f'id : {self.id} -- name : {self.name} '
+        return f"id : {self.id} -- name : {self.name} "
 
 
 class ProductOptionType(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True, related_name='options')
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True, related_name="options")
     name = models.CharField(max_length=127, null=True, blank=True)
     no_option = models.BooleanField(default=False)
 
@@ -229,15 +229,12 @@ class ProductOptionType(models.Model):
 
 
 class ProductVariant(models.Model):
-    made_in_chiose = (
-        ("کالای اورجینال", "کالای اورجینال"),
-        ("کالای ایرانی", "کالای ایرانی")
-    )
+    made_in_chiose = (("کالای اورجینال", "کالای اورجینال"), ("کالای ایرانی", "کالای ایرانی"))
 
-    option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name='values')
+    option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name="values")
     option_value = models.CharField(max_length=127, null=True, blank=True)
     price = models.FloatField()
-    discount = models.PositiveSmallIntegerField(default=0,validators=[MaxValueValidator(99), MinValueValidator(0)])
+    discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
     Inventory_number = models.IntegerField()
     made_in = models.CharField(max_length=25, choices=made_in_chiose, null=True, blank=True)
     min_price = models.BooleanField()
@@ -286,34 +283,35 @@ class ProductVariant(models.Model):
     @property
     def warranty(self):
         if self.waranty_tamir == False and self.waranty_taviz == False:
-            warranty = ''
+            warranty = ""
 
         elif self.waranty_taviz == False:
-            warranty = f'{self.month_of_waranty} ماه گارانتی تعمیر '
+            warranty = f"{self.month_of_waranty} ماه گارانتی تعمیر "
 
         elif self.waranty_tamir == False:
-            warranty = f'{self.month_of_waranty} ماه گارانتی تعویض '
+            warranty = f"{self.month_of_waranty} ماه گارانتی تعویض "
 
         elif self.waranty_taviz == True and self.waranty_tamir == True:
-            warranty = f' {self.month_of_waranty} ماه گارانتی تعویض و تعمیر '
+            warranty = f" {self.month_of_waranty} ماه گارانتی تعویض و تعمیر "
 
         return warranty
 
     @property
     def inventory_status(self):
-        status = ''
+        status = ""
 
         if self.Inventory_number == 0 or None:
             status = "کالا موجود نیست"
         if self.Inventory_number > 0 and self.Inventory_number <= 3:
-            status = f'عدد ازاین کالا موجود هست {self.Inventory_number}'
+            status = f"عدد ازاین کالا موجود هست {self.Inventory_number}"
         if self.Inventory_number >= 4:
-            status = 'کالا موحود هست'
+            status = "کالا موحود هست"
 
         return status
 
 
 # for release 2
+
 
 class Category(MPTTModel):
     name = models.CharField(max_length=255, unique=True)
@@ -321,7 +319,7 @@ class Category(MPTTModel):
     image = models.ImageField(null=True, blank=True)
     alt_text = models.CharField(max_length=64, null=True, blank=True)
     description = models.CharField(max_length=127, null=True, blank=True)
-    parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     update_at = models.DateTimeField(auto_now=True, null=True)
@@ -332,7 +330,7 @@ class Category(MPTTModel):
     meta_tag = GenericRelation("extention.MetaTag")
 
     class MPTTMeta:
-        order_insertion_by = ['name']
+        order_insertion_by = ["name"]
 
     def __str__(self):
         return self.name
@@ -357,7 +355,9 @@ class ProductSpecification(models.Model):
 class ProductSpecificationValue(models.Model):
     product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
     specification = models.ForeignKey("product.ProductSpecification", on_delete=models.RESTRICT)
-    value = models.CharField(max_length=255, )
+    value = models.CharField(
+        max_length=255,
+    )
     search_value = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
@@ -365,6 +365,7 @@ class ProductSpecificationValue(models.Model):
 
     class Meta:
         ordering = ["specification"]
+
 
 # class FilterOptionType(models.Model):
 #     name = models.CharField(max_length=50, unique=True)

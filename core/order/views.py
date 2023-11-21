@@ -16,9 +16,9 @@ from .serializers import OrderlistSerializer
 
 class CartDetailsPreview(APIView):
     def post(self, request):
-        cart_data = request.data.get('cartsData', None)
+        cart_data = request.data.get("cartsData", None)
         if cart_data is None:
-            return Response({'error': 'Invalid input data'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
 
         user_id = request.user.id
         # user is authentiicated
@@ -38,55 +38,58 @@ class CartDetailsPreview(APIView):
 
             # Add cart items to the order or update the quantity if the product is already in the order
             for item in cart_items:
-                product = ProductVariant.objects.get(id=item['id'])
-                count = item['count']
+                product = ProductVariant.objects.get(id=item["id"])
+                count = item["count"]
                 if count == 0:  # Check if count is zero
                     # Delete the OrderItem if it exists and count is zero
                     OrderItem.objects.filter(order=order, product=product).delete()
                 else:
-                    order_item, created = OrderItem.objects.get_or_create(
-                        order=order, product=product)
+                    order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
                     if not created:
-                        order_item.quantity = item['count']
+                        order_item.quantity = item["count"]
                         order_item.save()
                     else:
-                        order_item.quantity = item['count']
+                        order_item.quantity = item["count"]
                         order_item.save()
 
             order_items = order.items.all()
             items = OrderItemSerializer(order_items, many=True, context={"request": request})
 
             order_data = {
-                'order_id': order.id,
-                'paid': order.paid,
-                'products': items.data,
-                'total_price': order.total_price,
-                'total_final_price': order.total_final_price,
-                'total_discount_price': order.total_discount_price,
-                'total_count': order.total_count,
+                "order_id": order.id,
+                "paid": order.paid,
+                "products": items.data,
+                "total_price": order.total_price,
+                "total_final_price": order.total_final_price,
+                "total_discount_price": order.total_discount_price,
+                "total_count": order.total_count,
             }
-
 
         # user is not authentiicated
         else:
             if not cart_data:
-                return Response({'products': [], 'total_price': 0, 'total_final_price': 0, 'total_discount_price': 0,
-                                 'total_count': 0})
+                return Response({"products": [], "total_price": 0, "total_final_price": 0, "total_discount_price": 0, "total_count": 0})
 
             #  Filter out objects with count = 0 from the cart_data list
-            filtered_cart_data = [item for item in cart_data if item['count'] != 0]
+            filtered_cart_data = [item for item in cart_data if item["count"] != 0]
 
             serializer = CartSerializer(data=filtered_cart_data, many=True)
             serializer.is_valid(raise_exception=True)
             cart_items = serializer.validated_data
 
             # Calculate order details
-            products = [ProductVariant.objects.with_final_price().filter(id=item['id']).annotate(
-                quantity=Value(item['count'], IntegerField()),
-                sum_final_price=F('final_price_manager') * Value(item['count'], IntegerField()),
-                sum_price=F('price') * Value(item['count'], IntegerField()),
-                sum_discount_price=F('sum_price') - F('sum_final_price')
-            ).first() for item in cart_items]
+            products = [
+                ProductVariant.objects.with_final_price()
+                .filter(id=item["id"])
+                .annotate(
+                    quantity=Value(item["count"], IntegerField()),
+                    sum_final_price=F("final_price_manager") * Value(item["count"], IntegerField()),
+                    sum_price=F("price") * Value(item["count"], IntegerField()),
+                    sum_discount_price=F("sum_price") - F("sum_final_price"),
+                )
+                .first()
+                for item in cart_items
+            ]
 
             total_price = int(sum([p.sum_price for p in products]))
             total_final_price = int(sum([p.sum_final_price for p in products]))
@@ -96,13 +99,13 @@ class CartDetailsPreview(APIView):
             # Serialize response data
             product_serializer = OrderlistSerializer(products, many=True, context={"request": request})
             order_data = {
-                'order_id': None,
-                'paid': None,
-                'products': product_serializer.data,
-                'total_price': total_price,
-                'total_final_price': total_final_price,
-                'total_discount_price': total_discount_price,
-                'total_count': total_count,
+                "order_id": None,
+                "paid": None,
+                "products": product_serializer.data,
+                "total_price": total_price,
+                "total_final_price": total_final_price,
+                "total_discount_price": total_discount_price,
+                "total_count": total_count,
             }
 
         return Response(order_data, status=status.HTTP_200_OK)

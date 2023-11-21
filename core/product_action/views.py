@@ -17,7 +17,7 @@ class CreateComment(APIView):
 
     def post(self, request):
         data = request.data.copy()
-        data['user'] = self.request.user.id
+        data["user"] = self.request.user.id
         serializer = CreateCommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -29,12 +29,15 @@ class CreateComment(APIView):
 class CommentLikeOrDisslike(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, ):
+    def post(
+        self,
+        request,
+    ):
         # Check if the comment exists
         try:
-            comment = Comment.objects.get(pk=request.data['comment'])
+            comment = Comment.objects.get(pk=request.data["comment"])
         except Comment.DoesNotExist:
-            return Response({'error': 'Comment does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Comment does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the user has already liked or disliked the comment
         user_id = request.user.id
@@ -45,22 +48,21 @@ class CommentLikeOrDisslike(APIView):
             comment_like = None
 
         data = request.data.copy()
-        data['user'] = user_id
+        data["user"] = user_id
 
-        if 'like_vote' in data:
-            like_vote = bool(data['like_vote'])
+        if "like_vote" in data:
+            like_vote = bool(data["like_vote"])
         else:
             like_vote = False
 
-        if 'dislike_vote' in data:
+        if "dislike_vote" in data:
 
-            dislike_vote = bool(data['dislike_vote'])
+            dislike_vote = bool(data["dislike_vote"])
         else:
             dislike_vote = False
 
         if like_vote and dislike_vote:
-            return Response({'error': 'You can only like or dislike the comment, not both.'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "You can only like or dislike the comment, not both."}, status=status.HTTP_400_BAD_REQUEST)
 
         # If the user already voted, update their vote
         if comment_like is not None:
@@ -74,14 +76,14 @@ class CommentLikeOrDisslike(APIView):
             serializer = CommentLikeSerializer(comment_like, data=data)
         # Otherwise, create a new like or dislike for the comment
         else:
-            data['comment'] = comment.id
-            data['user'] = user_id
+            data["comment"] = comment.id
+            data["user"] = user_id
             if like_vote:
-                data['like_vote'] = True
-                data['dislike_vote'] = False
+                data["like_vote"] = True
+                data["dislike_vote"] = False
             elif dislike_vote:
-                data['like_vote'] = False
-                data['dislike_vote'] = True
+                data["like_vote"] = False
+                data["dislike_vote"] = True
             print(data)
             serializer = CommentLikeSerializer(data=data)
 
@@ -97,7 +99,7 @@ class ProducrQuestion(APIView):
 
     def post(self, request):
         data = request.data.copy()
-        data['user'] = self.request.user.id
+        data["user"] = self.request.user.id
         serializer = CreateQuestionSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -111,7 +113,7 @@ class ReplyQuestion(APIView):
 
     def post(self, request):
         data = request.data.copy()
-        data['user'] = self.request.user.id
+        data["user"] = self.request.user.id
         serializer = CreateReplySerializer(data=data)
         if serializer.is_valid():
             serializer.save()

@@ -7,7 +7,7 @@ all_model = [Product, ProductBrand, Product, Category]
 
 
 class Command(BaseCommand):
-    help = 'create some data'
+    help = "create some data"
 
     def handle(self, *args, **options):
         for M in all_model:

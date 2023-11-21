@@ -13,8 +13,8 @@ class MainBanner(models.Model):
     image = models.ImageField()
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64,null=True,blank=True)
-    link_url = models.CharField(max_length=257,null=True,blank=True)
+    url = models.CharField(max_length=64, null=True, blank=True)
+    link_url = models.CharField(max_length=257, null=True, blank=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -31,8 +31,8 @@ class Banner(models.Model):
     # brand = models.ForeignKey("product.ProductBrand", on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField()
     alt = models.CharField(max_length=127)
-    url = models.CharField(max_length=64,null=True,blank=True)
-    link_url = models.CharField(max_length=257,null=True,blank=True)
+    url = models.CharField(max_length=64, null=True, blank=True)
+    link_url = models.CharField(max_length=257, null=True, blank=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -49,19 +49,16 @@ class HomeMainBanner(models.Model):
     mobile_image = models.ImageField()
     alt = models.CharField(max_length=127)
     # url = models.CharField(max_length=64,null=True,blank=True)
-    link_url = models.CharField(max_length=257,null=True,blank=True)
+    link_url = models.CharField(max_length=257, null=True, blank=True)
 
 
 class HomeBanner(models.Model):
-    banner_place = (
-        ("mid", "mid"),
-        ("end", "end")
-    )
+    banner_place = (("mid", "mid"), ("end", "end"))
 
     image = models.ImageField()
     alt = models.CharField(max_length=127)
     # url = models.CharField(max_length=64,null=True,blank=True)
-    link_url = models.CharField(max_length=257,null=True,blank=True)
+    link_url = models.CharField(max_length=257, null=True, blank=True)
     place = models.CharField(max_length=5, choices=banner_place, null=True)
 
 
@@ -73,11 +70,9 @@ class PopularHomeCategory(models.Model):
     @property
     def products(self):
         if self.category.is_leaf_node():
-            product_query = Product.objects.select_related("category").filter(
-                category=self.category).order_by('-special_offer')[:20]
+            product_query = Product.objects.select_related("category").filter(category=self.category).order_by("-special_offer")[:20]
         else:
-            product_query = Product.objects.select_related("category").filter(
-                category__in=self.category.get_children()).order_by('-special_offer')[:20]
+            product_query = Product.objects.select_related("category").filter(category__in=self.category.get_children()).order_by("-special_offer")[:20]
         return product_query
 
 
@@ -115,7 +110,6 @@ class Blog(models.Model):
 
     meta_tag = GenericRelation("extention.MetaTag")
 
-
     @property
     def blog_images(self):
         return self.blogimage_set.all()
@@ -150,10 +144,10 @@ class MetaTag(models.Model):
     og_title = models.CharField(max_length=257, null=True, blank=True)
     og_desc = models.CharField(max_length=257, null=True, blank=True)
     og_locale = models.CharField(max_length=257, default="fa_IR", null=True, blank=True)
-    og_site_name = models.CharField(max_length=257,default="تک جنرال", null=True, blank=True)
+    og_site_name = models.CharField(max_length=257, default="تک جنرال", null=True, blank=True)
     og_image = models.ImageField(null=True, blank=True)
-    twiter_card = models.CharField(max_length=257,default="summary", null=True, blank=True)
-    twiter_site = models.CharField(max_length=257,default="تک جنرال", null=True, blank=True)
+    twiter_card = models.CharField(max_length=257, default="summary", null=True, blank=True)
+    twiter_site = models.CharField(max_length=257, default="تک جنرال", null=True, blank=True)
     twiter_title = models.CharField(max_length=257, null=True, blank=True)
     twiter_description = models.CharField(max_length=257, null=True, blank=True)
     twiter_image = models.ImageField(null=True, blank=True)
@@ -174,16 +168,16 @@ class MetaTag(models.Model):
     def google_index(self):
 
         if self.index and self.follow == False:
-            return 'index,nofollow'
+            return "index,nofollow"
 
         if self.index and self.follow == True:
-            return 'index,follow'
+            return "index,follow"
 
         if self.index == False and self.follow == False:
-            return 'index,nofollow'
+            return "index,nofollow"
 
         if self.index == False and self.follow == True:
-            return 'noindex,follow'
+            return "noindex,follow"
 
     @property
     def schemas(self):
@@ -191,11 +185,11 @@ class MetaTag(models.Model):
 
 
 class MetaTagSchema(models.Model):
-    meta_tag = models.ForeignKey("extention.MetaTag", related_name='schemas', on_delete=models.CASCADE, null=True,
-                                 blank=True)
+    meta_tag = models.ForeignKey("extention.MetaTag", related_name="schemas", on_delete=models.CASCADE, null=True, blank=True)
     schema = models.TextField()
 
-class Redirect(models.Model) :
+
+class Redirect(models.Model):
     source = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
     permanent = models.BooleanField(default=True)

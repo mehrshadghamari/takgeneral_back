@@ -27,7 +27,7 @@ class ContentSerializer(serializers.ModelSerializer):
 class MetaTagSchemaSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetaTagSchema
-        fields = ('schema')
+        fields = "schema"
 
 
 class MetaTagSerializer(serializers.ModelSerializer):
@@ -37,91 +37,91 @@ class MetaTagSerializer(serializers.ModelSerializer):
     twiter_image = serializers.SerializerMethodField("get_twiter_image_url")
 
     def get_og_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if obj.og_image:
             image_url = request.build_absolute_uri(obj.og_image.url)
         else:
-            image_url = ''
+            image_url = ""
 
         return image_url
 
     def get_twiter_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if obj.twiter_image:
             image_url = request.build_absolute_uri(obj.twiter_image.url)
         else:
-            image_url = ''
+            image_url = ""
 
         return image_url
 
-
     class Meta:
         model = MetaTag
-        exclude = ("content_type","object_id",)
-
-
+        exclude = (
+            "content_type",
+            "object_id",
+        )
 
 
 class MainBannerSAerializer(serializers.ModelSerializer):
-    mobile_image = serializers.SerializerMethodField('get_mobile_image_url')
-    image = serializers.SerializerMethodField('get_image_url')
+    mobile_image = serializers.SerializerMethodField("get_mobile_image_url")
+    image = serializers.SerializerMethodField("get_image_url")
 
     class Meta:
         model = MainBanner
         exclude = ("content_type", "object_id")
 
     def get_mobile_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         mobile_image_url = obj.mobile_image.url
         return request.build_absolute_uri(mobile_image_url)
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
 
 class BannerSAerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField("get_image_url")
 
     class Meta:
         model = Banner
         exclude = ("content_type", "object_id")
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
 
 class HomeMainBannerSerializer(serializers.ModelSerializer):
-    mobile_image = serializers.SerializerMethodField('get_mobile_image_url')
-    image = serializers.SerializerMethodField('get_image_url')
+    mobile_image = serializers.SerializerMethodField("get_mobile_image_url")
+    image = serializers.SerializerMethodField("get_image_url")
 
     class Meta:
         model = HomeMainBanner
-        fields = '__all__'
+        fields = "__all__"
 
     def get_mobile_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         mobile_image_url = obj.mobile_image.url
         return request.build_absolute_uri(mobile_image_url)
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
 
 class HomeBannerSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField("get_image_url")
 
     class Meta:
         model = HomeBanner
-        fields = '__all__'
+        fields = "__all__"
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
@@ -129,16 +129,16 @@ class HomeBannerSerializer(serializers.ModelSerializer):
 class PopularHomeCategorySerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     products = AllProductSerializer(many=True)
-    image = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField("get_image_url")
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
     class Meta:
         model = PopularHomeCategory
-        fields = '__all__'
+        fields = "__all__"
 
 
 class BlogTagSerializer(serializers.ModelSerializer):
@@ -148,10 +148,10 @@ class BlogTagSerializer(serializers.ModelSerializer):
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField("get_image_url")
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
@@ -167,12 +167,10 @@ class BlogSerializer(serializers.ModelSerializer):
     updated_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
-        return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_time.timestamp())}
+        return {"date": obj.created_time.strftime("%Y-%m-%d"), "time": obj.created_time.strftime("%H:%M:%S"), "timestamp": int(obj.created_time.timestamp())}
 
     def get_updated_time(self, obj):
-        return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
-                'timestamp': int(obj.updated_time.timestamp())}
+        return {"date": obj.updated_time.strftime("%Y-%m-%d"), "time": obj.updated_time.strftime("%H:%M:%S"), "timestamp": int(obj.updated_time.timestamp())}
 
     class Meta:
         model = Blog
@@ -187,21 +185,20 @@ class AllBlogSerializer(serializers.ModelSerializer):
     updated_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
-        return {'date': obj.created_time.strftime('%Y-%m-%d'), 'time': obj.created_time.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_time.timestamp())}
+        return {"date": obj.created_time.strftime("%Y-%m-%d"), "time": obj.created_time.strftime("%H:%M:%S"), "timestamp": int(obj.created_time.timestamp())}
 
     def get_updated_time(self, obj):
-        return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
-                'timestamp': int(obj.updated_time.timestamp())}
+        return {"date": obj.updated_time.strftime("%Y-%m-%d"), "time": obj.updated_time.strftime("%H:%M:%S"), "timestamp": int(obj.updated_time.timestamp())}
 
     class Meta:
         model = Blog
-        fields = ("id", "slug" ,"title", "main_image", "blog_images","tag", "desc", "created_time","updated_time")
+        fields = ("id", "slug", "title", "main_image", "blog_images", "tag", "desc", "created_time", "updated_time")
 
-class RedirectSerializer(serializers.ModelSerializer) :
-    class Meta :
+
+class RedirectSerializer(serializers.ModelSerializer):
+    class Meta:
         model = Redirect
-        fields = '__all__'
+        fields = "__all__"
 
 
 class ProductSiteMapSerializer(serializers.ModelSerializer):
@@ -209,13 +206,11 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
 
     def get_update_at(self, obj):
         if obj.update_at:
-            return {'date': obj.update_at.strftime('%Y-%m-%d'), 'time': obj.update_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.update_at.timestamp())}
+            return {"date": obj.update_at.strftime("%Y-%m-%d"), "time": obj.update_at.strftime("%H:%M:%S"), "timestamp": int(obj.update_at.timestamp())}
 
-    class Meta :
+    class Meta:
         model = Product
-        fields = ('id','url','update_at')
-
+        fields = ("id", "url", "update_at")
 
 
 class BrandSiteMapSerializer(serializers.ModelSerializer):
@@ -223,11 +218,11 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
 
     def get_update_at(self, obj):
         if obj.update_at:
-            return {'date': obj.update_at.strftime('%Y-%m-%d'), 'time': obj.update_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.update_at.timestamp())}
-    class Meta :
+            return {"date": obj.update_at.strftime("%Y-%m-%d"), "time": obj.update_at.strftime("%H:%M:%S"), "timestamp": int(obj.update_at.timestamp())}
+
+    class Meta:
         model = ProductBrand
-        fields = ('id','url','update_at')
+        fields = ("id", "url", "update_at")
 
 
 class CategorySiteMapSerializer(serializers.ModelSerializer):
@@ -235,11 +230,11 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
 
     def get_update_at(self, obj):
         if obj.update_at:
-            return {'date': obj.update_at.strftime('%Y-%m-%d'), 'time': obj.update_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.update_at.timestamp())}
-    class Meta :
+            return {"date": obj.update_at.strftime("%Y-%m-%d"), "time": obj.update_at.strftime("%H:%M:%S"), "timestamp": int(obj.update_at.timestamp())}
+
+    class Meta:
         model = Category
-        fields = ('id','url','update_at')
+        fields = ("id", "url", "update_at")
 
 
 class BlogSiteMapSerializer(serializers.ModelSerializer):
@@ -247,11 +242,11 @@ class BlogSiteMapSerializer(serializers.ModelSerializer):
 
     def get_updated_time(self, obj):
         if obj.updated_time:
-            return {'date': obj.updated_time.strftime('%Y-%m-%d'), 'time': obj.updated_time.strftime('%H:%M:%S'),
-                'timestamp': int(obj.updated_time.timestamp())}
-    class Meta :
+            return {"date": obj.updated_time.strftime("%Y-%m-%d"), "time": obj.updated_time.strftime("%H:%M:%S"), "timestamp": int(obj.updated_time.timestamp())}
+
+    class Meta:
         model = Blog
-        fields = ('id','slug','updated_time')
+        fields = ("id", "slug", "updated_time")
 
 
 class SiteMapSerializer(serializers.Serializer):

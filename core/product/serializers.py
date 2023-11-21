@@ -24,10 +24,10 @@ class AttributeSerializer(serializers.ModelSerializer):
 
 
 class productImagesSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField("get_image_url")
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         image_url = obj.image.url
         return request.build_absolute_uri(image_url)
 
@@ -42,25 +42,22 @@ class CommentsSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = Comment
-        fields = ('id', 'user_alias_name', 'title', 'content', 'likes_count',
-                  'diss_likes_count', 'suggest_me', 'rate', 'created_at')
+        fields = ("id", "user_alias_name", "title", "content", "likes_count", "diss_likes_count", "suggest_me", "rate", "created_at")
 
 
 class ReplySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = Reply
-        fields = ('id', 'user', 'content', 'created_at')
+        fields = ("id", "user", "content", "created_at")
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -68,12 +65,11 @@ class QuestionSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = Question
-        fields = ('id', 'user', 'content', 'created_at', 'replys')
+        fields = ("id", "user", "content", "created_at", "replys")
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
@@ -84,8 +80,12 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductVariant
-        exclude = ('option', 'waranty_tamir',
-                   'waranty_taviz', 'month_of_waranty',)
+        exclude = (
+            "option",
+            "waranty_tamir",
+            "waranty_taviz",
+            "month_of_waranty",
+        )
 
 
 class ProductOptionTypeSerializer(serializers.ModelSerializer):
@@ -99,16 +99,16 @@ class ProductOptionTypeSerializer(serializers.ModelSerializer):
 class productDetailSerializer(serializers.ModelSerializer):
     attributes = AttributeSerializer(many=True)
     all_images = productImagesSerializer(many=True)
-    brand = serializers.SerializerMethodField('get_brand')
+    brand = serializers.SerializerMethodField("get_brand")
     options = ProductOptionTypeSerializer()
     pdf = serializers.SerializerMethodField("get_pdf_url")
 
     def get_pdf_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if obj.pdf:
             pdf_url = request.build_absolute_uri(obj.pdf.url)
         else:
-            pdf_url = ''
+            pdf_url = ""
         return pdf_url
 
     def get_brand(self, obj):
@@ -116,7 +116,7 @@ class productDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = "__all__"
 
 
 class ProductVariantPriceSerializer(serializers.ModelSerializer):
@@ -126,7 +126,7 @@ class ProductVariantPriceSerializer(serializers.ModelSerializer):
 
 
 class AllProductSerializer(serializers.ModelSerializer):
-    brand = serializers.SerializerMethodField('get_brand')
+    brand = serializers.SerializerMethodField("get_brand")
     main_image = productImagesSerializer()
     min_price = ProductVariantPriceSerializer()
 
@@ -135,8 +135,7 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'url', 'main_image', 'name',
-                  'min_price', 'brand', 'special_offer')
+        fields = ("id", "url", "main_image", "name", "min_price", "brand", "special_offer")
 
 
 class productCountFromSpecificBrand(serializers.ModelSerializer):
@@ -144,7 +143,11 @@ class productCountFromSpecificBrand(serializers.ModelSerializer):
 
     class Meta:
         model = ProductBrand
-        fields = ('id', 'name', 'product_count',)
+        fields = (
+            "id",
+            "name",
+            "product_count",
+        )
 
 
 class AllCategorySerializer(serializers.ModelSerializer):
@@ -169,38 +172,50 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'url', 'parent', 'is_active', 'children']
+        fields = ["id", "name", "url", "parent", "is_active", "children"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField("get_image_url")
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if obj.image:
             url = request.build_absolute_uri(obj.image.url)
         else:
-            url = ''
+            url = ""
 
         return url
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image', 'url', 'parent', 'is_active', ]
+        fields = [
+            "id",
+            "name",
+            "image",
+            "url",
+            "parent",
+            "is_active",
+        ]
 
 
 class BrandSerializer(serializers.ModelSerializer):
     logo = serializers.SerializerMethodField("get_logo_url")
 
     def get_logo_url(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if obj.logo:
             return request.build_absolute_uri(obj.logo.url)
         return ""
 
     class Meta:
         model = ProductBrand
-        fields = ['id', 'name', 'logo', 'url', ]
+        fields = [
+            "id",
+            "name",
+            "logo",
+            "url",
+        ]
 
 
 class BrandInfoSerializer(serializers.Serializer):
@@ -210,15 +225,16 @@ class BrandInfoSerializer(serializers.Serializer):
     logo = serializers.SerializerMethodField("get_logo_url")
 
     def get_logo_url(self, obj):
-        request = self.context.get('request')
-        logo = obj.get('logo')  # Access as a dictionary key
+        request = self.context.get("request")
+        logo = obj.get("logo")  # Access as a dictionary key
         if logo:
             return request.build_absolute_uri(logo)
 
-        return ''
+        return ""
 
     class Meta:
-        fields = ['id', 'name', 'product_count', 'logo']
+        fields = ["id", "name", "product_count", "logo"]
+
 
 # class FilterOptionSerializer(serializers.ModelSerializer):
 #     filter_option_type = serializers.SerializerMethodField("get_filter_option_type")

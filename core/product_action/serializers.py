@@ -10,47 +10,47 @@ class CreateCommentSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = Comment
-        fields = ('id', 'user_alias_name', 'product', 'user', 'title',
-                  'content', 'suggest_me', 'rate', 'created_at')
-        read_only_fields = ('id', 'created_at',)
+        fields = ("id", "user_alias_name", "product", "user", "title", "content", "suggest_me", "rate", "created_at")
+        read_only_fields = (
+            "id",
+            "created_at",
+        )
 
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=Comment.objects.all(),
-                fields=('user', 'product'),
-                message="Some custom message."
-            )]
+        validators = [serializers.UniqueTogetherValidator(queryset=Comment.objects.all(), fields=("user", "product"), message="Some custom message.")]
 
 
 class CreateQuestionSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = Question
-        fields = ('id', 'user', 'content', 'product', 'created_at')
-        read_only_fields = ('id', 'created_at',)
+        fields = ("id", "user", "content", "product", "created_at")
+        read_only_fields = (
+            "id",
+            "created_at",
+        )
 
 
 class CreateReplySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = Reply
-        fields = ('id', 'user', 'question', 'content', 'created_at')
-        read_only_fields = ('id', 'created_at',)
+        fields = ("id", "user", "question", "content", "created_at")
+        read_only_fields = (
+            "id",
+            "created_at",
+        )
 
 
 class CommentLikeSerializer(serializers.ModelSerializer):
@@ -59,10 +59,8 @@ class CommentLikeSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {'date': obj.created_at.strftime('%Y-%m-%d'), 'time': obj.created_at.strftime('%H:%M:%S'),
-                'timestamp': int(obj.created_at.timestamp())}
+        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
 
     class Meta:
         model = CommentLike
-        fields = ('id', 'comment', 'user', 'like_vote',
-                  'dislike_vote', 'created_at')
+        fields = ("id", "comment", "user", "like_vote", "dislike_vote", "created_at")

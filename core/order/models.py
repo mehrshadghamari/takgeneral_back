@@ -2,14 +2,13 @@ from django.db import models
 
 
 class Order(models.Model):
-    user = models.ForeignKey(
-        "account.MyUser", on_delete=models.CASCADE, related_name='orders')
+    user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE, related_name="orders")
     paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('paid', '-updated')
+        ordering = ("paid", "-updated")
 
     @property
     def total_price(self):
@@ -29,8 +28,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name='items')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     # product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
     product = models.ForeignKey("product.ProductVariant", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)

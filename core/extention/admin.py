@@ -24,6 +24,7 @@ admin.site.register(HomeBanner)
 admin.site.register(BlogTag)
 admin.site.register(Redirect)
 
+
 class PopularHomeCategoryInline(NestedTabularInline):
     model = PopularHomeCategory
     extra = 1
@@ -55,23 +56,25 @@ class MetaTagInline(NestedGenericStackedInline):
     model = MetaTag
     inlines = [MetaTagSchemaInline]
 
-    fields = ("title",
-              "desc",
-              "og_title",
-              "og_desc",
-            #   "og_type",
-            #   "og_url",
-              "og_locale",
-              "og_site_name",
-              "canonical",
-              "follow",
-              "index",
-              "og_image",
-              "twiter_card",
-              "twiter_site",
-              "twiter_title",
-              "twiter_description",
-              "twiter_image",)
+    fields = (
+        "title",
+        "desc",
+        "og_title",
+        "og_desc",
+        #   "og_type",
+        #   "og_url",
+        "og_locale",
+        "og_site_name",
+        "canonical",
+        "follow",
+        "index",
+        "og_image",
+        "twiter_card",
+        "twiter_site",
+        "twiter_title",
+        "twiter_description",
+        "twiter_image",
+    )
     extra = 0
 
 
@@ -96,7 +99,10 @@ class BlogAdmin(NestedModelAdmin):
 @admin.register(Content)
 class ContenttAdmin(admin.ModelAdmin):
     # ...
-    fields = ["url", "desc", ]
+    fields = [
+        "url",
+        "desc",
+    ]
     inlines = [
         ContentImageInline,
     ]

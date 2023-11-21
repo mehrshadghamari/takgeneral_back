@@ -20,16 +20,16 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('tynymce/', include('tinymce.urls')),
-    path('_nested_admin/', include('nested_admin.urls')),
-    path('', include('account.urls')),
-    path('', include('extention.urls')),
-    path('', include('product.urls')),
-    path('', include('order.urls')),
-    path('', include('product_action.urls')),
-    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("admin/", admin.site.urls),
+    path("tynymce/", include("tinymce.urls")),
+    path("_nested_admin/", include("nested_admin.urls")),
+    path("", include("account.urls")),
+    path("", include("extention.urls")),
+    path("", include("product.urls")),
+    path("", include("order.urls")),
+    path("", include("product_action.urls")),
+    path("token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
 # if settings.DEBUG:
 # urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

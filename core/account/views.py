@@ -17,7 +17,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.Redis(host="localhost", port=6379, db=0)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -26,7 +26,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        token['phone_number'] = user.phone_number
+        token["phone_number"] = user.phone_number
         # token['full_name'] = user.full_name
         # token['who'] = user.doctor_or_patient
 
@@ -40,24 +40,24 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def get_tokens_for_user(user):
     refresh = MyTokenObtainPairSerializer.get_token(user)
     return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        "refresh": str(refresh),
+        "access": str(refresh.access_token),
     }
 
 
 class GetUserInfoAndId(APIView):
     """
-     helping api for front end about user info
+    helping api for front end about user info
     """
 
     def post(self, request):
         data = self.request.data
-        access_token = data['access_token']
+        access_token = data["access_token"]
         access_token_obj = AccessToken(access_token)
-        user_id = access_token_obj['user_id']
-        user_full_name = access_token_obj['full_name']
-        user_phone_number = access_token_obj['phone_number']
-        return Response({'user_id': user_id, 'user_full_name': user_full_name, 'user_phone_number': user_phone_number})
+        user_id = access_token_obj["user_id"]
+        user_full_name = access_token_obj["full_name"]
+        user_phone_number = access_token_obj["phone_number"]
+        return Response({"user_id": user_id, "user_full_name": user_full_name, "user_phone_number": user_phone_number})
 
 
 class LogoutView(APIView):
@@ -76,13 +76,14 @@ class UserRegisterOrLoginSendOTp(APIView):
     """
     api for patient register
     """
-    throttle_scope = 'otp'
+
+    throttle_scope = "otp"
 
     def post(self, request):
         registered = True
         serializer = UserRegisterOrLoginSendOTpSerializr(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            phone_number = serializer.data['phone_number']
+            phone_number = serializer.data["phone_number"]
 
             if not phone_number:
                 return Response({"msg": "phone number is requierd'"}, status=status.HTTP_400_BAD_REQUEST)
@@ -93,7 +94,8 @@ class UserRegisterOrLoginSendOTp(APIView):
             except MyUser.DoesNotExist:
                 registered = False
                 MyUser.objects.create(
-                    phone_number=phone_number, )
+                    phone_number=phone_number,
+                )
 
             code = random.randint(10000, 99999)
             r.setex(str(phone_number), timedelta(minutes=2), value=code)
@@ -101,8 +103,7 @@ class UserRegisterOrLoginSendOTp(APIView):
             # code=cache.set(str(phone_number), code,2*60)
             # code=cache.get(str(phone_number))
 
-            return Response({"msg": "code sent successfully", "code": code, "registered": registered},
-                            status=status.HTTP_200_OK)
+            return Response({"msg": "code sent successfully", "code": code, "registered": registered}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -111,15 +112,16 @@ class UserVerifyOTP(APIView):
     """
     api for check OTp code for login patient
     """
-    throttle_scope = 'verfiy_code'
+
+    throttle_scope = "verfiy_code"
 
     def post(self, request):
-        phone_number = self.request.data['phone_number']
-        code = self.request.data['code']
+        phone_number = self.request.data["phone_number"]
+        code = self.request.data["code"]
         try:
             user = MyUser.objects.get(phone_number=phone_number)
         except MyUser.DoesNotExist:
-            return Response({'msg': 'user with this phone number does not exist'})
+            return Response({"msg": "user with this phone number does not exist"})
 
         # cached_code=cache.get(str(phone_number))
         cached_code = r.get(str(phone_number)).decode()
@@ -127,7 +129,12 @@ class UserVerifyOTP(APIView):
         if code != cached_code:
             return Response({"msg": "code not matched"}, status=status.HTTP_403_FORBIDDEN)
         token = get_tokens_for_user(user)
-        return Response({"token": token, }, status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                "token": token,
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class UserAddInfo(APIView):
@@ -181,24 +188,24 @@ class UserStatus(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print('***************************')
+        print("***************************")
         print(type(request.user.phone_number))
         p = str(request.user.phone_number)
         print(p[2:])
-        phone_number = '0' + p[2:]
-        if request.user.full_name == ' ':
+        phone_number = "0" + p[2:]
+        if request.user.full_name == " ":
             full_name = None
         else:
             full_name = request.user.full_name
-        return Response({'phone_number': phone_number, 'full_name': full_name})
+        return Response({"phone_number": phone_number, "full_name": full_name})
 
 
 class LocationApi(APIView):
     def post(self, request):
-        LATITUDE = self.request.data.get('lat', None)
-        LONGITUDE = self.request.data.get('lng', None)
-        TERM = self.request.data.get('term', None)
-        url = f'https://api.neshan.org/v1/search?term={TERM}&lat={LATITUDE}&lng={LONGITUDE}'
-        headers = {'Api-Key': 'service.0378d5fd9fed448a88ea1e27a5e7f08c'}
+        LATITUDE = self.request.data.get("lat", None)
+        LONGITUDE = self.request.data.get("lng", None)
+        TERM = self.request.data.get("term", None)
+        url = f"https://api.neshan.org/v1/search?term={TERM}&lat={LATITUDE}&lng={LONGITUDE}"
+        headers = {"Api-Key": "service.0378d5fd9fed448a88ea1e27a5e7f08c"}
         req = requests.get(url=url, headers=headers)
         return Response(req.json(), status=req.status_code)
