@@ -222,6 +222,18 @@ TINYMCE_DEFAULT_CONFIG = {
     "statusbar": True,
 }
 
+
+# ########## ZARINPAL Settings  ##########
+# ZARINPAL = {
+#     "WSDL": "https://www.zarinpal.com/pg/services/WebGate/wsdl",
+#     "SANDBOX_WSDL": "https://sandbox.zarinpal.com/pg/services/WebGate/wsdl",
+#     "WEB_GATEWAY": "https://www.zarinpal.com/pg/StartPay/",
+#     "SANDBOX_WEB_GATEWAY": "https://sandbox.zarinpal.com/pg/StartPay/",
+#     "MERCHANT_ID": os.getenv("ZARINPAL_MERCHANT_ID"),
+#     "EMAIL": "admin@hamafza-startup.ir",
+# }
+
+
 # # AWS S3 settings
 # AWS_ACCESS_KEY_ID = "c3a824eb-963c-400e-b862-ea1c147d45ba"
 # AWS_SECRET_ACCESS_KEY = "d4c696b5c7ec0c9294ba69fa6f4ec5884597acfc0f69d69f53131a9a9099f24f"

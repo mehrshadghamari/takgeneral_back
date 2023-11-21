@@ -2,8 +2,16 @@ from django.db import models
 
 
 class Order(models.Model):
+
+    STATUS_CHOICES = (
+        ("PENDING", "PENDING"),
+        ("PROCESSING", "PROCESSING"),
+        ("COMPLETED", "COMPLETED"),
+    )
+
     user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE, related_name="orders")
     paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -29,7 +37,6 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
-    # product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
     product = models.ForeignKey("product.ProductVariant", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
