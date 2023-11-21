@@ -9,7 +9,7 @@ repos:
       args: ['--exclude','SC1090,SC2046,SC2005,SC2035,SC2086']
 
   - repo: https://github.com/timothycrosley/isort
-    rev: 4.3.21
+    rev: 5.12.0
     hooks:
     - id: isort
       language: python
@@ -58,8 +58,14 @@ repos:
       name: requirements-txt-fixer
       description: Sorts entries in requirements.txt
 
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        args: [--safe, --line-length=170]
+
   - repo: https://github.com/PyCQA/flake8
-    rev: 3.7.9
+    rev: 3.9.2
     hooks:
     - id: flake8
       language: python
@@ -86,3 +92,13 @@ repos:
       'flake8-markdown', # Lints Python code blocks in Markdown files using flake8
       #'flake8-docstrings', # Extension for flake8 which uses pydocstyle to check docstrings
     ]
+
+  # - repo: https://github.com/pycqa/pylint
+  #   rev: "pylint-2.7.2"
+  #   hooks:
+  #   - id: pylint
+  #     exclude: "[a-zA-Z]*/(migrations)/(.)*"
+  #     args: [ "--load-plugins=pylint_django", "--django-settings-module=arbaeen.settings.base_settings" ]
+  #     additional_dependencies: [
+  #         pylint_django,
+  #     ]
