@@ -112,3 +112,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     count = serializers.IntegerField()
+
+
+class PaymentSerializer(serializers.Serializer):
+    order_id = serializers.IntegerField(required=True)
+    order_description = serializers.CharField(required=False)

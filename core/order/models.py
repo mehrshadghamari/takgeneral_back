@@ -10,8 +10,11 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE, related_name="orders")
-    paid = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
+    authority = models.CharField(max_length=64, null=True, blank=True, unique=True)
+    Payment_ref_id = models.IntegerField(null=True, blank=True, unique=True)
+    paid = models.BooleanField(default=False)
+    Payment_time = models.DateTimeField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

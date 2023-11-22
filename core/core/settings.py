@@ -224,14 +224,15 @@ TINYMCE_DEFAULT_CONFIG = {
 
 
 # ########## ZARINPAL Settings  ##########
-# ZARINPAL = {
-#     "WSDL": "https://www.zarinpal.com/pg/services/WebGate/wsdl",
-#     "SANDBOX_WSDL": "https://sandbox.zarinpal.com/pg/services/WebGate/wsdl",
-#     "WEB_GATEWAY": "https://www.zarinpal.com/pg/StartPay/",
-#     "SANDBOX_WEB_GATEWAY": "https://sandbox.zarinpal.com/pg/StartPay/",
-#     "MERCHANT_ID": os.getenv("ZARINPAL_MERCHANT_ID"),
-#     "EMAIL": "admin@hamafza-startup.ir",
-# }
+ZARINPAL_CONFIG = {
+    "WSDL": "https://www.zarinpal.com/pg/services/WebGate/wsdl",
+    "SANDBOX_WSDL": "https://sandbox.zarinpal.com/pg/services/WebGate/wsdl",
+    "WEB_GATEWAY": "https://www.zarinpal.com/pg/StartPay/",
+    "SANDBOX_WEB_GATEWAY": "https://sandbox.zarinpal.com/pg/StartPay/",
+    "MERCHANT_ID": "d45a8a3d-89df-4377-be5f-91f8728308c3",
+    "EMAIL": "mehrshad2014ghamari@gmail.com",
+    "CALLBACK_URL": "http://127.0.0.1:8000/callback-payment",
+}
 
 
 # # AWS S3 settings

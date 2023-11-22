@@ -1,17 +1,25 @@
+from datetime import datetime
+
 from account.models import MyUser
 from django.db.models import F
 from django.db.models import IntegerField
 from django.db.models import Value
+from django.shortcuts import get_object_or_404
 from product.models import ProductVariant
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from core.helpers.zarinpal import ZarinPal
+from core.settings import ZARINPAL_CONFIG
 
 from .models import Order
 from .models import OrderItem
 from .serializers import CartSerializer
 from .serializers import OrderItemSerializer
 from .serializers import OrderlistSerializer
+from .serializers import PaymentSerializer
 
 
 class CartDetailsPreview(APIView):
@@ -109,3 +117,57 @@ class CartDetailsPreview(APIView):
             }
 
         return Response(order_data, status=status.HTTP_200_OK)
+
+
+# payment api
+
+
+class Pay(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = self.request.user
+        serializer = PaymentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        order_data = serializer.validated_data
+        order_object = get_object_or_404(Order, id=order_data["order_id"], paid=False)
+
+        zp = ZarinPal(
+            amount=order_object.total_final_price,  # toman
+            detail=order_data.get("order_description") if order_data.get("order_description", None) else f" بابت خرید محصول از سایت تک جنرال",
+            email=ZARINPAL_CONFIG["EMAIL"],
+            phone_number=user.phone_number,
+            callback=ZARINPAL_CONFIG["CALLBACK_URL"],
+        )
+
+        url, authority = zp.pay()
+
+        order_object.authority = authority
+        order_object.status = "PROCESSING"
+        order_object.save()
+
+        return Response({"payment_link": url}, status=status.HTTP_200_OK)
+
+
+class VerfyPaymnet(APIView):
+    def get(self, request):
+        payment_status = request.query_params.get("Status")
+        authority = request.query_params.get("Authority")
+        order_object = Order.objects.filter(authority=authority, status="PROCESSING").first()
+        if order_object:
+            payment_status, ref_id, msg, card_pan_mask = ZarinPal.payment_validation(amount=order_object.total_final_price, authority=order_object.authority)
+            if payment_status == "OK":
+                order_object.paid = True
+                order_object.Payment_ref_id = ref_id
+                order_object.Payment_time = datetime.now()
+                order_object.status = "COMPLETED"
+                order_object.save()
+
+        else:
+            payment_status = "NOK"
+            ref_id = 0
+
+        if payment_status == "OK":
+            return Response({"message": "Transaction success. RefID: " + str(ref_id), "msg": msg, "ref_id": ref_id, "card_pan_mask": card_pan_mask})
+        else:
+            return Response({"message": "Transaction failed or canceled by user"})

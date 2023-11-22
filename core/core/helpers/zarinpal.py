@@ -3,6 +3,8 @@ import typing
 
 from suds.client import Client
 
+from core.settings import DEBUG
+from core.settings import ZARINPAL_CONFIG
 
 
 class ZarinPal:
@@ -106,9 +108,9 @@ class ZarinPal:
         },
     }
 
-    SANDBOX = settings.DEBUG
-    WSDL = settings.ZARINPAL["SANDBOX_WSDL"] if SANDBOX else settings.ZARINPAL["WSDL"]
-    WEB_GATEWAY = settings.ZARINPAL["SANDBOX_WEB_GATEWAY"] if SANDBOX else settings.ZARINPAL["WEB_GATEWAY"]
+    SANDBOX = DEBUG
+    WSDL = ZARINPAL_CONFIG["SANDBOX_WSDL"] if SANDBOX else ZARINPAL_CONFIG["WSDL"]
+    WEB_GATEWAY = ZARINPAL_CONFIG["SANDBOX_WEB_GATEWAY"] if SANDBOX else ZARINPAL_CONFIG["WEB_GATEWAY"]
 
     def __init__(self, amount, detail, email, phone_number, callback):
 
@@ -125,7 +127,7 @@ class ZarinPal:
 
     def pay(self):
         zarin_client = Client(self.WSDL)
-        result = zarin_client.service.PaymentRequest(settings.ZARINPAL["MERCHANT_ID"], self.amount, self.detail, self.email, self.phone_number, self.callback)
+        result = zarin_client.service.PaymentRequest(ZARINPAL_CONFIG["MERCHANT_ID"], self.amount, self.detail, self.email, self.phone_number, self.callback)
 
         self.authority = result.Authority
         self.__status_handler(result.Status)
@@ -135,7 +137,7 @@ class ZarinPal:
     @classmethod
     def payment_validation(cls, authority: str, amount, exception=False):
         zarin_client = Client(cls.WSDL)
-        result = zarin_client.service.PaymentVerificationWithExtra(settings.ZARINPAL["MERCHANT_ID"], authority, amount)
+        result = zarin_client.service.PaymentVerificationWithExtra(ZARINPAL_CONFIG["MERCHANT_ID"], authority, amount)
 
         status_msg = cls.__status_handler(result.Status, exception)
 
@@ -157,21 +159,17 @@ class ZarinPal:
             return msg
 
 
-
-
-
 # first api :
 
 # zp = ZarinPal(
 #     amount=payment.amount,
 #     detail=purchase.description,
-#     email=settings.ZARINPAL["EMAIL"],
+#     email=ZARINPAL_CONFIG["EMAIL"],
 #     phone_number=purchase.user,
 #     callback=settings.CALLBACK_URL,
 # )
 
 # url, authority = zp.pay()
-
 
 
 # second api (call back) :
@@ -186,3 +184,38 @@ class ZarinPal:
 #     payment_status, ref_id, msg, card_pan_mask = ZarinPal.payment_validation(amount=payment.amount, authority=payment_authority)
 # else:
 #     payment_status = "NOK"
+
+
+# class Pay(APIView):
+#     def post(self,request):
+#         amount=self.request.amount
+#         user=1
+#         client = Client(ZARINPAL_WEBSERVICE)
+#         result = client.service.PaymentRequest(MMERCHANT_ID,
+#                                         amount,
+#                                         description,
+#                                         'http://127.0.0.1:8000//verify/')
+#         if result.Status == 100:
+
+#             return  Response({"link":'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)},status=status.HTTP_200_OK)
+
+#         else:
+
+#             return HttpResponse('Error')
+
+
+# class ver(APIView):
+#     def post(self, request):
+#         client = Client(ZARINPAL_WEBSERVICE)
+#         if request.data.get('Status') == 'OK':
+#             result = client.service.PaymentVerification(MMERCHANT_ID,
+#                                                         request.data['Authority'],
+#                                                         10000)
+#             if result.Status == 100:
+#                 return Response({'message': 'Transaction success. RefID: ' + str(result.RefID)})
+#             elif result.Status == 101:
+#                 return Response({'message': 'Transaction submitted : ' + str(result.Status)})
+#             else:
+#                 return Response({'message': 'Transaction failed. Status: ' + str(result.Status)})
+#         else:
+#             return Response({'message': 'Transaction failed or canceled by user'})
