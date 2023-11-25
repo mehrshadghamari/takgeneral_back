@@ -55,7 +55,7 @@ class OrderlistSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source="product.product_id")
-    product_url = serializers.IntegerField(source="product.product_url")
+    product_url = serializers.CharField(source="product.product_url")
     name = serializers.CharField(source="product.product_name")
     # main_image = productImagesSerializer(
     # source='product.product_main_image', allow_null=True)
