@@ -4,6 +4,7 @@ from django.db import models
 class Order(models.Model):
 
     STATUS_CHOICES = (
+        ("REQUEST", "REQUEST"),
         ("PENDING", "PENDING"),
         ("PROCESSING", "PROCESSING"),
         ("COMPLETED", "COMPLETED"),
@@ -17,7 +18,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default="PENDING",
+        default="REQUEST",
     )
     authority = models.CharField(
         max_length=64,

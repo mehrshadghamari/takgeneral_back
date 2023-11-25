@@ -153,7 +153,7 @@ class Pay(APIView):
         url, authority = zp.pay()
 
         order_object.authority = authority
-        order_object.status = "PROCESSING"
+        order_object.status = "PENDING"
         order_object.save()
 
         return Response({"payment_link": url}, status=status.HTTP_200_OK)
@@ -163,7 +163,7 @@ class VerfyPaymnet(APIView):
     def get(self, request):
         payment_status = request.query_params.get("Status")
         authority = request.query_params.get("Authority")
-        order_object = Order.objects.filter(authority=authority, status="PROCESSING").first()
+        order_object = Order.objects.filter(authority=authority, status="PENDING").first()
         if order_object:
             payment_status, ref_id, msg, card_pan_mask = ZarinPal.payment_validation(
                 amount=order_object.total_final_price, authority=order_object.authority
@@ -172,7 +172,7 @@ class VerfyPaymnet(APIView):
                 order_object.paid = True
                 order_object.Payment_ref_id = ref_id
                 order_object.Payment_time = datetime.now()
-                order_object.status = "COMPLETED"
+                order_object.status = "PROCESSING"
                 order_object.save()
 
         else:
@@ -188,5 +188,7 @@ class VerfyPaymnet(APIView):
                     "card_pan_mask": card_pan_mask,
                 }
             )
+            # return HttpResponseRedirect('http://127.0.0.1:8000/admin/order/order/')
         else:
             return Response({"message": "Transaction failed or canceled by user"})
+            # return HttpResponseRedirect('https://yourdomain.com/failure-page/')
