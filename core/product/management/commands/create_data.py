@@ -63,7 +63,9 @@ class Command(BaseCommand):
             for main_category_name in main_categories:
 
                 main_category_slug = slugify(str(uuid.uuid4()))
-                main_category = Category.objects.create(name=main_category_name, url=main_category_slug, is_active=True)
+                main_category = Category.objects.create(
+                    name=main_category_name, url=main_category_slug, is_active=True
+                )
 
                 # Create subcategories
                 for subcategory_name, main_category_index in subcategories:

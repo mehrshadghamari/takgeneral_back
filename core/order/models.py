@@ -9,17 +9,46 @@ class Order(models.Model):
         ("COMPLETED", "COMPLETED"),
     )
 
-    user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE, related_name="orders")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
-    authority = models.CharField(max_length=64, null=True, blank=True, unique=True)
-    Payment_ref_id = models.IntegerField(null=True, blank=True, unique=True)
-    paid = models.BooleanField(default=False)
-    Payment_time = models.DateTimeField(null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        "account.MyUser",
+        on_delete=models.CASCADE,
+        related_name="orders",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="PENDING",
+    )
+    authority = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    Payment_ref_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    paid = models.BooleanField(
+        default=False,
+    )
+    Payment_time = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
-        ordering = ("paid", "-updated")
+        ordering = (
+            "paid",
+            "-updated",
+        )
 
     @property
     def total_price(self):
@@ -39,9 +68,18 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey("product.ProductVariant", on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="items",
+    )
+    product = models.ForeignKey(
+        "product.ProductVariant",
+        on_delete=models.CASCADE,
+    )
+    quantity = models.IntegerField(
+        default=1,
+    )
 
     @property
     def sum_final_price(self):

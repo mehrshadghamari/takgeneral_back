@@ -36,7 +36,9 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 
         validators = [
             serializers.UniqueTogetherValidator(
-                queryset=Comment.objects.all(), fields=("user", "product"), message="Some custom message."
+                queryset=Comment.objects.all(),
+                fields=("user", "product"),
+                message="Some custom message.",
             )
         ]
 

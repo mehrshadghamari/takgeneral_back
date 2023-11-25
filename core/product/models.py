@@ -11,13 +11,27 @@ from product.managers import ProductVariantManager
 
 class ProductImage(models.Model):
     image = models.ImageField()
-    product = models.ForeignKey("product.Product", on_delete=models.CASCADE, related_name="images")
-    alt_text = models.CharField(max_length=255, null=True)
+    product = models.ForeignKey(
+        "product.Product",
+        on_delete=models.CASCADE,
+        related_name="images",
+    )
+    alt_text = models.CharField(
+        max_length=255,
+        null=True,
+    )
     is_main = models.BooleanField(
         default=False,
     )
-    created_at = models.DateTimeField(auto_now_add=True, editable=False, null=True)
-    upload_at = models.DateTimeField(auto_now=True, null=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+        null=True,
+    )
+    upload_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+    )
 
     # def save(self, *args, **kwargs):
 
@@ -55,39 +69,103 @@ class ProductImage(models.Model):
 
 
 class ProductBrand(models.Model):
-    name = models.CharField(max_length=64)
-    logo = models.ImageField(null=True)  # new
-    url = models.CharField(max_length=64, null=True, unique=True, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    update_at = models.DateTimeField(auto_now=True, null=True)
+    name = models.CharField(
+        max_length=64,
+    )
+    logo = models.ImageField(
+        null=True,
+    )  # new
+    url = models.CharField(
+        max_length=64,
+        null=True,
+        unique=True,
+        db_index=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+    )
+    update_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+    )
 
-    main_banners = GenericRelation("extention.MainBanner")
-    banners = GenericRelation("extention.Banner")
-    content = GenericRelation("extention.Content")
-    meta_tag = GenericRelation("extention.MetaTag")
+    main_banners = GenericRelation(
+        "extention.MainBanner",
+    )
+    banners = GenericRelation(
+        "extention.Banner",
+    )
+    content = GenericRelation(
+        "extention.Content",
+    )
+    meta_tag = GenericRelation(
+        "extention.MetaTag",
+    )
 
     def __str__(self):
         return self.name
 
 
 class ProductAttention(models.Model):
-    text = models.CharField(max_length=257)
-    product = models.ForeignKey("product.Product", null=True, blank=True, on_delete=models.CASCADE)
+    text = models.CharField(
+        max_length=257,
+    )
+    product = models.ForeignKey(
+        "product.Product",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
 
 
 class Product(models.Model):
-    product_type = models.ForeignKey("product.ProductType", null=True, blank=True, on_delete=models.RESTRICT)
-    category = models.ForeignKey("product.Category", on_delete=models.RESTRICT, null=True, db_index=True)
-    url = models.SlugField(max_length=255, unique=True, null=True, db_index=True)
+    product_type = models.ForeignKey(
+        "product.ProductType",
+        null=True,
+        blank=True,
+        on_delete=models.RESTRICT,
+    )
+    category = models.ForeignKey(
+        "product.Category",
+        on_delete=models.RESTRICT,
+        null=True,
+        db_index=True,
+    )
+    url = models.SlugField(
+        max_length=255,
+        unique=True,
+        null=True,
+        db_index=True,
+    )
     name = models.CharField(max_length=64)
-    brand = models.ForeignKey("product.ProductBrand", on_delete=models.RESTRICT, db_index=True)
-    special_offer = models.BooleanField(default=False)
-    pdf = models.FileField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    update_at = models.DateTimeField(auto_now=True, null=True)
+    brand = models.ForeignKey(
+        "product.ProductBrand",
+        on_delete=models.RESTRICT,
+        db_index=True,
+    )
+    special_offer = models.BooleanField(
+        default=False,
+    )
+    pdf = models.FileField(
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+    )
+    update_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+    )
 
-    content = GenericRelation("extention.Content")
-    meta_tag = GenericRelation("extention.MetaTag")
+    content = GenericRelation(
+        "extention.Content",
+    )
+    meta_tag = GenericRelation(
+        "extention.MetaTag",
+    )
 
     objects = ProductManager()
 
@@ -223,9 +301,20 @@ class Product(models.Model):
 
 
 class ProductOptionType(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True, related_name="options")
-    name = models.CharField(max_length=127, null=True, blank=True)
-    no_option = models.BooleanField(default=False)
+    product = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="options",
+    )
+    name = models.CharField(
+        max_length=127,
+        null=True,
+        blank=True,
+    )
+    no_option = models.BooleanField(
+        default=False,
+    )
 
     @property
     def product_variant(self):
@@ -233,21 +322,49 @@ class ProductOptionType(models.Model):
 
 
 class ProductVariant(models.Model):
-    made_in_chiose = (("کالای اورجینال", "کالای اورجینال"), ("کالای ایرانی", "کالای ایرانی"))
+    made_in_chiose = (
+        ("کالای اورجینال", "کالای اورجینال"),
+        ("کالای ایرانی", "کالای ایرانی"),
+    )
 
-    option = models.ForeignKey(ProductOptionType, on_delete=models.CASCADE, related_name="values")
-    option_value = models.CharField(max_length=127, null=True, blank=True)
+    option = models.ForeignKey(
+        ProductOptionType,
+        on_delete=models.CASCADE,
+        related_name="values",
+    )
+    option_value = models.CharField(
+        max_length=127,
+        null=True,
+        blank=True,
+    )
     price = models.FloatField()
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(99), MinValueValidator(0)])
+    discount = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[MaxValueValidator(99), MinValueValidator(0)],
+    )
     Inventory_number = models.IntegerField()
-    made_in = models.CharField(max_length=25, choices=made_in_chiose, null=True, blank=True)
+    made_in = models.CharField(
+        max_length=25,
+        choices=made_in_chiose,
+        null=True,
+        blank=True,
+    )
     min_price = models.BooleanField()
     free_send = models.BooleanField()
     waranty_tamir = models.BooleanField()
     waranty_taviz = models.BooleanField()
-    month_of_waranty = models.PositiveSmallIntegerField(null=True, blank=True)
-    created_at = models.DateField(auto_now_add=True, null=True)
-    update_at = models.DateField(auto_now=True, null=True)
+    month_of_waranty = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateField(
+        auto_now_add=True,
+        null=True,
+    )
+    update_at = models.DateField(
+        auto_now=True,
+        null=True,
+    )
 
     objects = ProductVariantManager()
 
@@ -318,57 +435,121 @@ class ProductVariant(models.Model):
 
 
 class Category(MPTTModel):
-    name = models.CharField(max_length=255, unique=True)
-    url = models.SlugField(max_length=255, unique=True, db_index=True)
-    image = models.ImageField(null=True, blank=True)
-    alt_text = models.CharField(max_length=64, null=True, blank=True)
-    description = models.CharField(max_length=127, null=True, blank=True)
-    parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
-    is_active = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    update_at = models.DateTimeField(auto_now=True, null=True)
+    name = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+    url = models.SlugField(
+        max_length=255,
+        unique=True,
+        db_index=True,
+    )
+    image = models.ImageField(
+        null=True,
+        blank=True,
+    )
+    alt_text = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+    )
+    description = models.CharField(
+        max_length=127,
+        null=True,
+        blank=True,
+    )
+    parent = TreeForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="children",
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+    )
+    update_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+    )
 
-    main_banners = GenericRelation("extention.MainBanner")
-    banners = GenericRelation("extention.Banner")
-    content = GenericRelation("extention.Content")
-    meta_tag = GenericRelation("extention.MetaTag")
+    main_banners = GenericRelation(
+        "extention.MainBanner",
+    )
+    banners = GenericRelation(
+        "extention.Banner",
+    )
+    content = GenericRelation(
+        "extention.Content",
+    )
+    meta_tag = GenericRelation(
+        "extention.MetaTag",
+    )
 
     class MPTTMeta:
-        order_insertion_by = ["name"]
+        order_insertion_by = [
+            "name",
+        ]
 
     def __str__(self):
         return self.name
 
 
 class ProductType(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
 
     def __str__(self):
         return self.name
 
 
 class ProductSpecification(models.Model):
-    product_type = models.ForeignKey(ProductType, on_delete=models.RESTRICT)
-    name = models.CharField(max_length=255)
+    product_type = models.ForeignKey(
+        ProductType,
+        on_delete=models.RESTRICT,
+    )
+    name = models.CharField(
+        max_length=255,
+    )
 
     def __str__(self):
         return self.name
 
 
 class ProductSpecificationValue(models.Model):
-    product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
-    specification = models.ForeignKey("product.ProductSpecification", on_delete=models.RESTRICT)
+    product = models.ForeignKey(
+        "product.Product",
+        on_delete=models.CASCADE,
+    )
+    specification = models.ForeignKey(
+        "product.ProductSpecification",
+        on_delete=models.RESTRICT,
+    )
     value = models.CharField(
         max_length=255,
     )
-    search_value = models.CharField(max_length=255, null=True, blank=True)
+    search_value = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.value
 
     class Meta:
-        ordering = ["specification"]
+        ordering = [
+            "specification",
+        ]
 
 
 # class FilterOptionType(models.Model):

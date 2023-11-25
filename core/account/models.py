@@ -86,11 +86,25 @@ class User(AbstractBaseUser, PermissionsMixin):
             "unique": ("A user with that username already exists."),
         },
     )
-    first_name = models.CharField(max_length=80)
-    last_name = models.CharField(max_length=80)
-    national_code = models.CharField(max_length=10, unique=True, null=True, validators=[national_code_validator])
+    first_name = models.CharField(
+        max_length=80,
+    )
+    last_name = models.CharField(
+        max_length=80,
+    )
+    national_code = models.CharField(
+        max_length=10,
+        unique=True,
+        null=True,
+        validators=[national_code_validator],
+    )
 
-    email = models.EmailField(("email address"), unique=True, null=True, blank=True)
+    email = models.EmailField(
+        ("email address"),
+        unique=True,
+        null=True,
+        blank=True,
+    )
     phone_number = models.BigIntegerField(
         ("mobile number"),
         unique=True,
@@ -103,7 +117,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         },
     )
     is_staff = models.BooleanField(
-        ("staff status"), default=False, help_text=("Designates whether the user can log into this admin site.")
+        ("staff status"), default=False, help_text=("Designates whether the user can log into this admin site.",)
     )
     is_active = models.BooleanField(
         ("active"),
@@ -112,13 +126,22 @@ class User(AbstractBaseUser, PermissionsMixin):
             "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
         ),
     )
-    date_joined = models.DateTimeField(("date joined"), default=timezone.now)
-    last_seen = models.DateTimeField(("last seen date"), null=True)
+    date_joined = models.DateTimeField(
+        ("date joined"),
+        default=timezone.now,
+    )
+    last_seen = models.DateTimeField(
+        ("last seen date"),
+        null=True,
+    )
 
     objects = UserManager()
 
     USERNAME_FIELD = "phone_number"
-    REQUIRED_FIELDS = ["email", "username"]
+    REQUIRED_FIELDS = [
+        "email",
+        "username",
+    ]
 
     class Meta:
         db_table = "users"
@@ -163,9 +186,16 @@ class MyUser(User):
 
 
 class Address(models.Model):
-    user = models.ForeignKey("account.MyUser", on_delete=models.CASCADE)
-    title = models.CharField(max_length=80)
-    post_code = models.CharField(max_length=10)
+    user = models.ForeignKey(
+        "account.MyUser",
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(
+        max_length=80,
+    )
+    post_code = models.CharField(
+        max_length=10,
+    )
     full_address = models.TextField()
     pelak = models.IntegerField()
     vahed = models.IntegerField()
