@@ -190,16 +190,21 @@ class UserStatus(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print("***************************")
-        print(type(request.user.phone_number))
-        p = str(request.user.phone_number)
-        print(p[2:])
+        user_obj = request.user
+        p = str(user_obj.phone_number)
         phone_number = "0" + p[2:]
-        if request.user.full_name == " ":
+        if user_obj.full_name == " ":
             full_name = None
         else:
-            full_name = request.user.full_name
-        return Response({"phone_number": phone_number, "full_name": full_name})
+            full_name = user_obj.full_name
+        
+        if user_obj.full_name and user_obj.national_code and user_obj.phone_number :
+            profile_complete = True
+        else:
+            profile_complete = False
+
+        
+        return Response({"phone_number": phone_number, "full_name": full_name,"profile_complete":profile_complete})
 
 
 class LocationApi(APIView):
