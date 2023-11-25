@@ -51,4 +51,13 @@ class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         # fields='__all__'
-        fields = ("id", "title", "post_code", "full_address", "pelak", "vahed", "lt", "lng")
+        fields = (
+            "id",
+            "title",
+            "post_code",
+            "full_address",
+            "pelak",
+            "vahed",
+            "lt",
+            "lng",
+        )

@@ -5,11 +5,21 @@ from rest_framework import serializers
 
 from .models import Category
 from .models import Product
+from .models import ProductAttention
 from .models import ProductBrand
 from .models import ProductImage
 from .models import ProductOptionType
 from .models import ProductSpecificationValue
 from .models import ProductVariant
+
+
+class ProductAttentionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductAttention
+        fields = (
+            "id",
+            "text",
+        )
 
 
 class AttributeSerializer(serializers.ModelSerializer):
@@ -20,7 +30,10 @@ class AttributeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductSpecificationValue
-        fields = ("specification", "value")
+        fields = (
+            "specification",
+            "value",
+        )
 
 
 class productImagesSerializer(serializers.ModelSerializer):
@@ -33,7 +46,11 @@ class productImagesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImage
-        exclude = ("created_at", "upload_at", "product")
+        exclude = (
+            "created_at",
+            "upload_at",
+            "product",
+        )
 
 
 class CommentsSerializer(serializers.ModelSerializer):
@@ -46,7 +63,17 @@ class CommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ("id", "user_alias_name", "title", "content", "likes_count", "diss_likes_count", "suggest_me", "rate", "created_at")
+        fields = (
+            "id",
+            "user_alias_name",
+            "title",
+            "content",
+            "likes_count",
+            "diss_likes_count",
+            "suggest_me",
+            "rate",
+            "created_at",
+        )
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -57,7 +84,12 @@ class ReplySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reply
-        fields = ("id", "user", "content", "created_at")
+        fields = (
+            "id",
+            "user",
+            "content",
+            "created_at",
+        )
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -69,7 +101,13 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ("id", "user", "content", "created_at", "replys")
+        fields = (
+            "id",
+            "user",
+            "content",
+            "created_at",
+            "replys",
+        )
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
@@ -93,10 +131,16 @@ class ProductOptionTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductOptionType
-        fields = ("id", "no_option", "name", "product_variant")
+        fields = (
+            "id",
+            "no_option",
+            "name",
+            "product_variant",
+        )
 
 
 class productDetailSerializer(serializers.ModelSerializer):
+    attentions = ProductAttentionSerializer(many=True)
     attributes = AttributeSerializer(many=True)
     all_images = productImagesSerializer(many=True)
     brand = serializers.SerializerMethodField("get_brand")
@@ -122,7 +166,11 @@ class productDetailSerializer(serializers.ModelSerializer):
 class ProductVariantPriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
-        fields = ("price", "final_price", "discount")
+        fields = (
+            "price",
+            "final_price",
+            "discount",
+        )
 
 
 class AllProductSerializer(serializers.ModelSerializer):
@@ -135,7 +183,15 @@ class AllProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ("id", "url", "main_image", "name", "min_price", "brand", "special_offer")
+        fields = (
+            "id",
+            "url",
+            "main_image",
+            "name",
+            "min_price",
+            "brand",
+            "special_offer",
+        )
 
 
 class productCountFromSpecificBrand(serializers.ModelSerializer):
@@ -172,7 +228,14 @@ class AllCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ["id", "name", "url", "parent", "is_active", "children"]
+        fields = [
+            "id",
+            "name",
+            "url",
+            "parent",
+            "is_active",
+            "children",
+        ]
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -233,7 +296,12 @@ class BrandInfoSerializer(serializers.Serializer):
         return ""
 
     class Meta:
-        fields = ["id", "name", "product_count", "logo"]
+        fields = (
+            "id",
+            "name",
+            "product_count",
+            "logo",
+        )
 
 
 # class FilterOptionSerializer(serializers.ModelSerializer):

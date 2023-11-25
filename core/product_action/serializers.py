@@ -14,7 +14,17 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ("id", "user_alias_name", "product", "user", "title", "content", "suggest_me", "rate", "created_at")
+        fields = (
+            "id",
+            "user_alias_name",
+            "product",
+            "user",
+            "title",
+            "content",
+            "suggest_me",
+            "rate",
+            "created_at",
+        )
         read_only_fields = (
             "id",
             "created_at",
@@ -31,7 +41,13 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ("id", "user", "content", "product", "created_at")
+        fields = (
+            "id",
+            "user",
+            "content",
+            "product",
+            "created_at",
+        )
         read_only_fields = (
             "id",
             "created_at",
@@ -46,7 +62,13 @@ class CreateReplySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reply
-        fields = ("id", "user", "question", "content", "created_at")
+        fields = (
+            "id",
+            "user",
+            "question",
+            "content",
+            "created_at",
+        )
         read_only_fields = (
             "id",
             "created_at",
@@ -63,4 +85,11 @@ class CommentLikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CommentLike
-        fields = ("id", "comment", "user", "like_vote", "dislike_vote", "created_at")
+        fields = (
+            "id",
+            "comment",
+            "user",
+            "like_vote",
+            "dislike_vote",
+            "created_at",
+        )

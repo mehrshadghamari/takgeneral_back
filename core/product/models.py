@@ -108,6 +108,10 @@ class Product(models.Model):
         return self.options.all()
 
     @property
+    def attentions(self):
+        return self.productattention_set.all()
+
+    @property
     def prices(self):
         product_variants = ProductVariant.objects.filter(option__product_id=self.id)
         prices = [

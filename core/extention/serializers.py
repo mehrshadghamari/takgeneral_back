@@ -27,7 +27,7 @@ class ContentSerializer(serializers.ModelSerializer):
 class MetaTagSchemaSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetaTagSchema
-        fields = "schema"
+        fields = ("schema",)
 
 
 class MetaTagSerializer(serializers.ModelSerializer):
@@ -68,7 +68,10 @@ class MainBannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainBanner
-        exclude = ("content_type", "object_id")
+        exclude = (
+            "content_type",
+            "object_id",
+        )
 
     def get_mobile_image_url(self, obj):
         request = self.context.get("request")
@@ -86,7 +89,10 @@ class BannerSAerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        exclude = ("content_type", "object_id")
+        exclude = (
+            "content_type",
+            "object_id",
+        )
 
     def get_image_url(self, obj):
         request = self.context.get("request")
@@ -192,7 +198,17 @@ class AllBlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ("id", "slug", "title", "main_image", "blog_images", "tag", "desc", "created_time", "updated_time")
+        fields = (
+            "id",
+            "slug",
+            "title",
+            "main_image",
+            "blog_images",
+            "tag",
+            "desc",
+            "created_time",
+            "updated_time",
+        )
 
 
 class RedirectSerializer(serializers.ModelSerializer):
@@ -210,7 +226,11 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ("id", "url", "update_at")
+        fields = (
+            "id",
+            "url",
+            "update_at",
+        )
 
 
 class BrandSiteMapSerializer(serializers.ModelSerializer):
@@ -222,7 +242,11 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductBrand
-        fields = ("id", "url", "update_at")
+        fields = (
+            "id",
+            "url",
+            "update_at",
+        )
 
 
 class CategorySiteMapSerializer(serializers.ModelSerializer):
@@ -234,7 +258,11 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ("id", "url", "update_at")
+        fields = (
+            "id",
+            "url",
+            "update_at",
+        )
 
 
 class BlogSiteMapSerializer(serializers.ModelSerializer):
@@ -246,7 +274,11 @@ class BlogSiteMapSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ("id", "slug", "updated_time")
+        fields = (
+            "id",
+            "slug",
+            "updated_time",
+        )
 
 
 class SiteMapSerializer(serializers.Serializer):
