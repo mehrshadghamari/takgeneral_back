@@ -1,5 +1,4 @@
 import json
-import typing
 
 from suds.client import Client
 

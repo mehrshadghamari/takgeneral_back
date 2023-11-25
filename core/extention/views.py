@@ -12,15 +12,11 @@ from extention.models import PopularHomeCategory
 from extention.models import Redirect
 from extention.serializers import AllBlogSerializer
 from extention.serializers import BlogSerializer
-from extention.serializers import BlogSiteMapSerializer
-from extention.serializers import BrandSiteMapSerializer
-from extention.serializers import CategorySiteMapSerializer
 from extention.serializers import ContentSerializer
 from extention.serializers import HomeBannerSerializer
 from extention.serializers import HomeMainBannerSerializer
 from extention.serializers import MetaTagSerializer
 from extention.serializers import PopularHomeCategorySerializer
-from extention.serializers import ProductSiteMapSerializer
 from extention.serializers import RedirectSerializer
 from extention.serializers import SiteMapSerializer
 from product.models import Category

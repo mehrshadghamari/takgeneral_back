@@ -2,7 +2,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django_jalali.db import models as jmodels
 from product.models import Product
 from tinymce import models as tinymce_model
 
