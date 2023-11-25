@@ -59,7 +59,11 @@ class CommentsSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
+        return {
+            "date": obj.created_at.strftime("%Y-%m-%d"),
+            "time": obj.created_at.strftime("%H:%M:%S"),
+            "timestamp": int(obj.created_at.timestamp()),
+        }
 
     class Meta:
         model = Comment
@@ -80,7 +84,11 @@ class ReplySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
+        return {
+            "date": obj.created_at.strftime("%Y-%m-%d"),
+            "time": obj.created_at.strftime("%H:%M:%S"),
+            "timestamp": int(obj.created_at.timestamp()),
+        }
 
     class Meta:
         model = Reply
@@ -97,7 +105,11 @@ class QuestionSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
-        return {"date": obj.created_at.strftime("%Y-%m-%d"), "time": obj.created_at.strftime("%H:%M:%S"), "timestamp": int(obj.created_at.timestamp())}
+        return {
+            "date": obj.created_at.strftime("%Y-%m-%d"),
+            "time": obj.created_at.strftime("%H:%M:%S"),
+            "timestamp": int(obj.created_at.timestamp()),
+        }
 
     class Meta:
         model = Question

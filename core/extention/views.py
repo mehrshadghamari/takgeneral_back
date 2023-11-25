@@ -44,7 +44,9 @@ class HomeApi(APIView):
         mother_categories_serializer = CategorySerializer(mother_categories, many=True, context={"request": request})
 
         popular_categories = PopularHomeCategory.objects.all()
-        popular_categories_serializer = PopularHomeCategorySerializer(popular_categories, many=True, context={"request": request})
+        popular_categories_serializer = PopularHomeCategorySerializer(
+            popular_categories, many=True, context={"request": request}
+        )
 
         special_offer_products = Product.objects.filter(special_offer=True).order_by("?")[:20]
         special_offer_serializer = AllProductSerializer(special_offer_products, many=True, context={"request": request})

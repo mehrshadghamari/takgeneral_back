@@ -173,10 +173,18 @@ class BlogSerializer(serializers.ModelSerializer):
     updated_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
-        return {"date": obj.created_time.strftime("%Y-%m-%d"), "time": obj.created_time.strftime("%H:%M:%S"), "timestamp": int(obj.created_time.timestamp())}
+        return {
+            "date": obj.created_time.strftime("%Y-%m-%d"),
+            "time": obj.created_time.strftime("%H:%M:%S"),
+            "timestamp": int(obj.created_time.timestamp()),
+        }
 
     def get_updated_time(self, obj):
-        return {"date": obj.updated_time.strftime("%Y-%m-%d"), "time": obj.updated_time.strftime("%H:%M:%S"), "timestamp": int(obj.updated_time.timestamp())}
+        return {
+            "date": obj.updated_time.strftime("%Y-%m-%d"),
+            "time": obj.updated_time.strftime("%H:%M:%S"),
+            "timestamp": int(obj.updated_time.timestamp()),
+        }
 
     class Meta:
         model = Blog
@@ -191,10 +199,18 @@ class AllBlogSerializer(serializers.ModelSerializer):
     updated_time = serializers.SerializerMethodField()
 
     def get_created_time(self, obj):
-        return {"date": obj.created_time.strftime("%Y-%m-%d"), "time": obj.created_time.strftime("%H:%M:%S"), "timestamp": int(obj.created_time.timestamp())}
+        return {
+            "date": obj.created_time.strftime("%Y-%m-%d"),
+            "time": obj.created_time.strftime("%H:%M:%S"),
+            "timestamp": int(obj.created_time.timestamp()),
+        }
 
     def get_updated_time(self, obj):
-        return {"date": obj.updated_time.strftime("%Y-%m-%d"), "time": obj.updated_time.strftime("%H:%M:%S"), "timestamp": int(obj.updated_time.timestamp())}
+        return {
+            "date": obj.updated_time.strftime("%Y-%m-%d"),
+            "time": obj.updated_time.strftime("%H:%M:%S"),
+            "timestamp": int(obj.updated_time.timestamp()),
+        }
 
     class Meta:
         model = Blog
@@ -222,7 +238,11 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
 
     def get_update_at(self, obj):
         if obj.update_at:
-            return {"date": obj.update_at.strftime("%Y-%m-%d"), "time": obj.update_at.strftime("%H:%M:%S"), "timestamp": int(obj.update_at.timestamp())}
+            return {
+                "date": obj.update_at.strftime("%Y-%m-%d"),
+                "time": obj.update_at.strftime("%H:%M:%S"),
+                "timestamp": int(obj.update_at.timestamp()),
+            }
 
     class Meta:
         model = Product
@@ -238,7 +258,11 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
 
     def get_update_at(self, obj):
         if obj.update_at:
-            return {"date": obj.update_at.strftime("%Y-%m-%d"), "time": obj.update_at.strftime("%H:%M:%S"), "timestamp": int(obj.update_at.timestamp())}
+            return {
+                "date": obj.update_at.strftime("%Y-%m-%d"),
+                "time": obj.update_at.strftime("%H:%M:%S"),
+                "timestamp": int(obj.update_at.timestamp()),
+            }
 
     class Meta:
         model = ProductBrand
@@ -254,7 +278,11 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
 
     def get_update_at(self, obj):
         if obj.update_at:
-            return {"date": obj.update_at.strftime("%Y-%m-%d"), "time": obj.update_at.strftime("%H:%M:%S"), "timestamp": int(obj.update_at.timestamp())}
+            return {
+                "date": obj.update_at.strftime("%Y-%m-%d"),
+                "time": obj.update_at.strftime("%H:%M:%S"),
+                "timestamp": int(obj.update_at.timestamp()),
+            }
 
     class Meta:
         model = Category
@@ -270,7 +298,11 @@ class BlogSiteMapSerializer(serializers.ModelSerializer):
 
     def get_updated_time(self, obj):
         if obj.updated_time:
-            return {"date": obj.updated_time.strftime("%Y-%m-%d"), "time": obj.updated_time.strftime("%H:%M:%S"), "timestamp": int(obj.updated_time.timestamp())}
+            return {
+                "date": obj.updated_time.strftime("%Y-%m-%d"),
+                "time": obj.updated_time.strftime("%H:%M:%S"),
+                "timestamp": int(obj.updated_time.timestamp()),
+            }
 
     class Meta:
         model = Blog

@@ -10,7 +10,15 @@ from product.models import ProductBrand
 from product.models import ProductOptionType
 from product.models import ProductVariant
 
-all_brand = ["پمپ پنتاکس pentax", "ابارا Ebara", "پمپ دیزل ساز Dieselsaz", "پمپ ورتکس wortex", "پمپ لئو Leo", "پمپ الکتروژن Electrogen", "پمپ گراندفوس Grundfos"]
+all_brand = [
+    "پمپ پنتاکس pentax",
+    "ابارا Ebara",
+    "پمپ دیزل ساز Dieselsaz",
+    "پمپ ورتکس wortex",
+    "پمپ لئو Leo",
+    "پمپ الکتروژن Electrogen",
+    "پمپ گراندفوس Grundfos",
+]
 
 main_categories = [
     "پمپ",
@@ -61,13 +69,20 @@ class Command(BaseCommand):
                 for subcategory_name, main_category_index in subcategories:
                     if main_category_index == main_categories.index(main_category_name):
                         subcategory_slug = slugify(str(uuid.uuid4()))
-                        subcategory = Category.objects.create(name=subcategory_name, url=subcategory_slug, parent=main_category, is_active=True)
+                        subcategory = Category.objects.create(
+                            name=subcategory_name, url=subcategory_slug, parent=main_category, is_active=True
+                        )
 
                         # Create sub-subcategories
                         for sub_subcategory_name, subcategory_index in sub_subcategories:
                             if subcategory_index == subcategories.index((subcategory_name, main_category_index)):
                                 sub_subcategory_slug = slugify(str(uuid.uuid4()))
-                                Category.objects.create(name=sub_subcategory_name, url=sub_subcategory_slug, parent=subcategory, is_active=True)
+                                Category.objects.create(
+                                    name=sub_subcategory_name,
+                                    url=sub_subcategory_slug,
+                                    parent=subcategory,
+                                    is_active=True,
+                                )
 
             # create brands
             for b in all_brand:
@@ -83,11 +98,17 @@ class Command(BaseCommand):
 
                 # Create the product object
                 product_instance = Product.objects.create(
-                    name=name, url=url, brand=brand_instance, category=category_instance, special_offer=random.choice([True, False])
+                    name=name,
+                    url=url,
+                    brand=brand_instance,
+                    category=category_instance,
+                    special_offer=random.choice([True, False]),
                 )
                 no_option = random.choice([True, False])
                 if not no_option:
-                    option_instance = ProductOptionType.objects.create(product=product_instance, name=random.choice(["مایع", "گاز"]))
+                    option_instance = ProductOptionType.objects.create(
+                        product=product_instance, name=random.choice(["مایع", "گاز"])
+                    )
                     for i in range(1, 4):
                         Inventory_number = random.randint(1, 100)
                         discount = random.randint(0, 50)

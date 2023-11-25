@@ -23,7 +23,14 @@ class UserManager(BaseUserManager):
             raise ValueError("The given username must be set")
         email = self.normalize_email(email)
         user = self.model(
-            phone_number=phone_number, username=username, email=email, is_staff=is_staff, is_active=True, is_superuser=is_superuser, date_joined=now, **extra_fields
+            phone_number=phone_number,
+            username=username,
+            email=email,
+            is_staff=is_staff,
+            is_active=True,
+            is_superuser=is_superuser,
+            date_joined=now,
+            **extra_fields,
         )
 
         if not extra_fields.get("no_password"):
@@ -67,7 +74,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[
             validators.RegexValidator(
                 r"^[a-zA-Z][a-zA-Z0-9_\.]+$",
-                ("Enter a valid username starting with a-z. " "This value may contain only letters, numbers " "and underscore characters."),
+                (
+                    "Enter a valid username starting with a-z. "
+                    "This value may contain only letters, numbers "
+                    "and underscore characters."
+                ),
                 "invalid",
             ),
         ],
@@ -91,9 +102,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             "unique": ("A user with this mobile number already exists."),
         },
     )
-    is_staff = models.BooleanField(("staff status"), default=False, help_text=("Designates whether the user can log into this admin site."))
+    is_staff = models.BooleanField(
+        ("staff status"), default=False, help_text=("Designates whether the user can log into this admin site.")
+    )
     is_active = models.BooleanField(
-        ("active"), default=True, help_text=("Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts.")
+        ("active"),
+        default=True,
+        help_text=(
+            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
+        ),
     )
     date_joined = models.DateTimeField(("date joined"), default=timezone.now)
     last_seen = models.DateTimeField(("last seen date"), null=True)

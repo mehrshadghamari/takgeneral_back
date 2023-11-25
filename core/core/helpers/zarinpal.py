@@ -126,7 +126,9 @@ class ZarinPal:
 
     def pay(self):
         zarin_client = Client(self.WSDL)
-        result = zarin_client.service.PaymentRequest(ZARINPAL_CONFIG["MERCHANT_ID"], self.amount, self.detail, self.email, self.phone_number, self.callback)
+        result = zarin_client.service.PaymentRequest(
+            ZARINPAL_CONFIG["MERCHANT_ID"], self.amount, self.detail, self.email, self.phone_number, self.callback
+        )
 
         self.authority = result.Authority
         self.__status_handler(result.Status)

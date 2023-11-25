@@ -76,7 +76,15 @@ class CartDetailsPreview(APIView):
         # user is not authentiicated
         else:
             if not cart_data:
-                return Response({"products": [], "total_price": 0, "total_final_price": 0, "total_discount_price": 0, "total_count": 0})
+                return Response(
+                    {
+                        "products": [],
+                        "total_price": 0,
+                        "total_final_price": 0,
+                        "total_discount_price": 0,
+                        "total_count": 0,
+                    }
+                )
 
             #  Filter out objects with count = 0 from the cart_data list
             filtered_cart_data = [item for item in cart_data if item["count"] != 0]
@@ -134,7 +142,9 @@ class Pay(APIView):
 
         zp = ZarinPal(
             amount=order_object.total_final_price,  # toman
-            detail=order_data.get("order_description") if order_data.get("order_description", None) else f" بابت خرید محصول از سایت تک جنرال",
+            detail=order_data.get("order_description")
+            if order_data.get("order_description", None)
+            else f" بابت خرید محصول از سایت تک جنرال",
             email=ZARINPAL_CONFIG["EMAIL"],
             phone_number=user.phone_number,
             callback=ZARINPAL_CONFIG["CALLBACK_URL"],
@@ -155,7 +165,9 @@ class VerfyPaymnet(APIView):
         authority = request.query_params.get("Authority")
         order_object = Order.objects.filter(authority=authority, status="PROCESSING").first()
         if order_object:
-            payment_status, ref_id, msg, card_pan_mask = ZarinPal.payment_validation(amount=order_object.total_final_price, authority=order_object.authority)
+            payment_status, ref_id, msg, card_pan_mask = ZarinPal.payment_validation(
+                amount=order_object.total_final_price, authority=order_object.authority
+            )
             if payment_status == "OK":
                 order_object.paid = True
                 order_object.Payment_ref_id = ref_id
@@ -168,6 +180,13 @@ class VerfyPaymnet(APIView):
             ref_id = 0
 
         if payment_status == "OK":
-            return Response({"message": "Transaction success. RefID: " + str(ref_id), "msg": msg, "ref_id": ref_id, "card_pan_mask": card_pan_mask})
+            return Response(
+                {
+                    "message": "Transaction success. RefID: " + str(ref_id),
+                    "msg": msg,
+                    "ref_id": ref_id,
+                    "card_pan_mask": card_pan_mask,
+                }
+            )
         else:
             return Response({"message": "Transaction failed or canceled by user"})

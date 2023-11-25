@@ -62,7 +62,9 @@ class CommentLikeOrDisslike(APIView):
             dislike_vote = False
 
         if like_vote and dislike_vote:
-            return Response({"error": "You can only like or dislike the comment, not both."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "You can only like or dislike the comment, not both."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         # If the user already voted, update their vote
         if comment_like is not None:

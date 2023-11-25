@@ -7,7 +7,9 @@ from rest_framework_simplejwt.tokens import TokenError
 
 
 class UserRegisterOrLoginSendOTpSerializr(serializers.Serializer):
-    phone_number = serializers.CharField(validators=[validators.RegexValidator(r"^989[0-3,9]\d{8}$", ("Enter a valid mobile number."), "invalid")])
+    phone_number = serializers.CharField(
+        validators=[validators.RegexValidator(r"^989[0-3,9]\d{8}$", ("Enter a valid mobile number."), "invalid")]
+    )
 
 
 class LogOutSerializer(serializers.Serializer):

@@ -103,7 +103,9 @@ class UserRegisterOrLoginSendOTp(APIView):
             # code=cache.set(str(phone_number), code,2*60)
             # code=cache.get(str(phone_number))
 
-            return Response({"msg": "code sent successfully", "code": code, "registered": registered}, status=status.HTTP_200_OK)
+            return Response(
+                {"msg": "code sent successfully", "code": code, "registered": registered}, status=status.HTTP_200_OK
+            )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

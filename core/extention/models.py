@@ -69,9 +69,17 @@ class PopularHomeCategory(models.Model):
     @property
     def products(self):
         if self.category.is_leaf_node():
-            product_query = Product.objects.select_related("category").filter(category=self.category).order_by("-special_offer")[:20]
+            product_query = (
+                Product.objects.select_related("category")
+                .filter(category=self.category)
+                .order_by("-special_offer")[:20]
+            )
         else:
-            product_query = Product.objects.select_related("category").filter(category__in=self.category.get_children()).order_by("-special_offer")[:20]
+            product_query = (
+                Product.objects.select_related("category")
+                .filter(category__in=self.category.get_children())
+                .order_by("-special_offer")[:20]
+            )
         return product_query
 
 
@@ -184,7 +192,9 @@ class MetaTag(models.Model):
 
 
 class MetaTagSchema(models.Model):
-    meta_tag = models.ForeignKey("extention.MetaTag", related_name="schemas", on_delete=models.CASCADE, null=True, blank=True)
+    meta_tag = models.ForeignKey(
+        "extention.MetaTag", related_name="schemas", on_delete=models.CASCADE, null=True, blank=True
+    )
     schema = models.TextField()
 
 

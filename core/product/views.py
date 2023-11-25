@@ -46,7 +46,11 @@ class products(APIView):
             # brands = Product.objects.filter(category__in=category_obj.get_children()).values('brand__id').annotate(
             #     product_count=Count('brand')).values('brand__id', 'brand__name', 'brand__logo', 'product_count')
             # brands_serializer = BrandInfoSerializer(brands,many=True,context={"request": request})
-            brands_ids = Product.objects.select_related("brand").filter(category__in=category_obj.get_descendants(include_self=True)).values_list("brand__id", flat=True)
+            brands_ids = (
+                Product.objects.select_related("brand")
+                .filter(category__in=category_obj.get_descendants(include_self=True))
+                .values_list("brand__id", flat=True)
+            )
             brand_ids_list = list(set(brands_ids))
             brands = ProductBrand.objects.filter(id__in=brand_ids_list)
             brands_serializer = BrandSerializer(brands, many=True, context={"request": request})
@@ -76,7 +80,9 @@ class products(APIView):
         else:
             if category_obj.is_leaf_node():
                 main_category_serializer = CategorySerializer(category_obj, context={"request": request})
-                sub_categories_serializer = CategorySerializer(category_obj.parent.get_children(), many=True, context={"request": request})
+                sub_categories_serializer = CategorySerializer(
+                    category_obj.parent.get_children(), many=True, context={"request": request}
+                )
                 breadcrumb = category_obj.get_ancestors(include_self=True)
                 breadcrumb_serializer = CategorySerializer(breadcrumb, many=True, context={"request": request})
                 product_query = (
@@ -91,7 +97,9 @@ class products(APIView):
 
             else:
                 main_category_serializer = CategorySerializer(category_obj, context={"request": request})
-                sub_categories_serializer = CategorySerializer(category_obj.get_children(), many=True, context={"request": request})
+                sub_categories_serializer = CategorySerializer(
+                    category_obj.get_children(), many=True, context={"request": request}
+                )
                 breadcrumb = category_obj.get_ancestors(include_self=True)
                 breadcrumb_serializer = CategorySerializer(breadcrumb, many=True, context={"request": request})
                 product_query = (
@@ -113,7 +121,9 @@ class products(APIView):
             min_price = self.request.query_params.get("min_price", None)
             max_price = self.request.query_params.get("max_price", None)
             if min_price and max_price:
-                product_query = product_query.filter(final_price_Manager__gte=int(min_price), final_price_Manager__lte=int(max_price))
+                product_query = product_query.filter(
+                    final_price_Manager__gte=int(min_price), final_price_Manager__lte=int(max_price)
+                )
                 # brand_query_before = product_query.values('brand__id').annotate(
                 #     product_count=Count('brand')).values('brand__id')
                 brand_count_query = (
@@ -151,7 +161,9 @@ class products(APIView):
 
             paginator = Paginator(product_query, page_size)
 
-            product_serializer = AllProductSerializer(paginator.page(page_number), many=True, context={"request": request})
+            product_serializer = AllProductSerializer(
+                paginator.page(page_number), many=True, context={"request": request}
+            )
 
             page_count = math.ceil(product_query.count() / int(page_size))
 
@@ -232,7 +244,12 @@ class Brands(APIView):
         other_banner_serializer = BannerSAerializer(other_banner, many=True, context={"request": request})
         page_content = brand_obj.content.first()
         page_content_serializer = ContentSerializer(page_content)
-        product_query = Product.objects.with_price_info().select_related("brand", "category").filter(brand=brand_obj).order_by("-special_offer", "-created_at")
+        product_query = (
+            Product.objects.with_price_info()
+            .select_related("brand", "category")
+            .filter(brand=brand_obj)
+            .order_by("-special_offer", "-created_at")
+        )
         meta_tag = brand_obj.meta_tag.first()
         meta_tag_serializer = MetaTagSerializer(meta_tag, context={"request": request})
         # default page number = 1
@@ -280,7 +297,9 @@ class ProductDetail(APIView):
         questions_serializer = QuestionSerializer(questions, many=True)
 
         # Retrieve similar products based on price and category
-        similar_product = Product.objects.filter(id__in=product_instance.similar_product_ids, category=product_instance.category)
+        similar_product = Product.objects.filter(
+            id__in=product_instance.similar_product_ids, category=product_instance.category
+        )
 
         similar_product_serializer = AllProductSerializer(similar_product, context={"request": request}, many=True)
 
