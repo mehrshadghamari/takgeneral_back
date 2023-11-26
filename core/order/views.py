@@ -224,3 +224,12 @@ class VerfyPaymnet(APIView):
 
             return Response({"message": "Transaction failed or canceled by user"})
             # return HttpResponseRedirect('https://yourdomain.com/failure-page/')
+
+
+# class AllOrders(APIView):
+#     def get(self,request):
+#         user = request.user
+#         status = request.query_params.get("Status")
+#         query=Order.objects.filter(user= user.id)
+#         if status:
+#             query.filter(status=status)

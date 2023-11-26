@@ -9,6 +9,7 @@ from account.serializers import LogOutSerializer
 from account.serializers import UserAddressSerializer
 from account.serializers import UserInfoSerialozer
 from account.serializers import UserRegisterOrLoginSendOTpSerializr
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -177,13 +178,22 @@ class UserAdress(APIView):
 class UpdateAddress(APIView):
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request, id):
-        address_instance = Address.objects.get(id=id)
+    def put(self, request, id):
+        address_instance = get_object_or_404(Address, id=id, user=request.user)
         serializer = UserAddressSerializer(instance=address_instance, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteAddress(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, id):
+        address_instance = get_object_or_404(Address, id=id, user=request.user)
+        address_instance.delete()
+        return Response({"msg": "delete successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class UserStatus(APIView):
