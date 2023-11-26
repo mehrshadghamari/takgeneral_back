@@ -1,6 +1,8 @@
 from datetime import datetime
 
+from account.models import Address
 from account.models import MyUser
+from django.db import transaction
 from django.db.models import F
 from django.db.models import IntegerField
 from django.db.models import Value
@@ -139,6 +141,7 @@ class Pay(APIView):
         serializer.is_valid(raise_exception=True)
         order_data = serializer.validated_data
         order_object = get_object_or_404(Order, id=order_data["order_id"], paid=False)
+        address_object = get_object_or_404(Address, id=order_data["address_id"], user=user.id)
 
         zp = ZarinPal(
             amount=order_object.total_final_price,  # toman
@@ -152,9 +155,24 @@ class Pay(APIView):
 
         url, authority = zp.pay()
 
-        order_object.authority = authority
-        order_object.status = "PENDING"
-        order_object.save()
+        with transaction.atomic():
+            order_object.authority = authority
+            order_object.status = "PENDING"
+            order_object.address = address_object
+            order_object.receiver_name = order_data["receiver_name"]
+            order_object.receiver_phone = order_data["receiver_phone"]
+
+            for item in order_object.items.all():
+                # Update inventory
+                try:
+                    item.product.Inventory_number -= item.quantity
+                    item.product.save()
+                except:
+                    return Response(
+                        {"error": "مجودی ناکافی", "varient_id": item.product.id}, status=status.HTTP_400_BAD_REQUEST
+                    )
+
+            order_object.save()
 
         return Response({"payment_link": url}, status=status.HTTP_200_OK)
 
@@ -169,15 +187,23 @@ class VerfyPaymnet(APIView):
                 amount=order_object.total_final_price, authority=order_object.authority
             )
             if payment_status == "OK":
-                order_object.paid = True
-                order_object.Payment_ref_id = ref_id
-                order_object.Payment_time = datetime.now()
-                order_object.status = "PROCESSING"
-                order_object.save()
+                with transaction.atomic():
+                    order_object.paid = True
+                    order_object.Payment_ref_id = ref_id
+                    order_object.Payment_time = datetime.now()
+                    order_object.status = "PROCESSING"
+                    order_object.save()
 
         else:
+            with transaction.atomic():
+                for item in order_object.items.all():
+                    # Update inventory
+                    item.product.Inventory_number += item.quantity
+                    item.product.save()
+
             payment_status = "NOK"
             ref_id = 0
+            return Response({"message": "Transaction failed. Status: " + str(payment_status)})
 
         if payment_status == "OK":
             return Response(
@@ -190,5 +216,11 @@ class VerfyPaymnet(APIView):
             )
             # return HttpResponseRedirect('http://127.0.0.1:8000/admin/order/order/')
         else:
+            with transaction.atomic():
+                for item in order_object.items.all():
+                    # Update inventory
+                    item.product.Inventory_number += item.quantity
+                    item.product.save()
+
             return Response({"message": "Transaction failed or canceled by user"})
             # return HttpResponseRedirect('https://yourdomain.com/failure-page/')

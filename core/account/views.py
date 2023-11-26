@@ -197,14 +197,13 @@ class UserStatus(APIView):
             full_name = None
         else:
             full_name = user_obj.full_name
-        
-        if user_obj.full_name and user_obj.national_code and user_obj.phone_number :
+
+        if user_obj.full_name and user_obj.national_code and user_obj.phone_number:
             profile_complete = True
         else:
             profile_complete = False
 
-        
-        return Response({"phone_number": phone_number, "full_name": full_name,"profile_complete":profile_complete})
+        return Response({"phone_number": phone_number, "full_name": full_name, "profile_complete": profile_complete})
 
 
 class LocationApi(APIView):

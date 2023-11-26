@@ -116,4 +116,7 @@ class CartSerializer(serializers.Serializer):
 
 class PaymentSerializer(serializers.Serializer):
     order_id = serializers.IntegerField(required=True)
+    address_id = serializers.IntegerField(required=True)
+    receiver_name = serializers.CharField(required=True)
+    receiver_phone = serializers.CharField(required=True)
     order_description = serializers.CharField(required=False)

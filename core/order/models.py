@@ -15,6 +15,12 @@ class Order(models.Model):
         on_delete=models.CASCADE,
         related_name="orders",
     )
+    address = models.OneToOneField(
+        "account.Address",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+    )
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -35,6 +41,16 @@ class Order(models.Model):
         default=False,
     )
     Payment_time = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    receiver_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+    )
+    receiver_phone = models.CharField(
+        max_length=20,
         null=True,
         blank=True,
     )

@@ -342,7 +342,9 @@ class ProductVariant(models.Model):
         default=0,
         validators=[MaxValueValidator(99), MinValueValidator(0)],
     )
-    Inventory_number = models.IntegerField()
+    Inventory_number = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(0)],
+    )
     made_in = models.CharField(
         max_length=25,
         choices=made_in_chiose,
