@@ -93,7 +93,7 @@ class BlogsApi(APIView):
     def get(self, request):
         page_number = self.request.query_params.get("page", 1)
         page_size = self.request.query_params.get("page_size", 20)
-        blogs = Blog.objects.all()
+        blogs = Blog.objects.all().order_by("-created_time")
         paginator = Paginator(blogs, page_size)
         blogs_serializer = AllBlogSerializer(paginator.page(page_number), many=True, context={"request": request})
 
