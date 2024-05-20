@@ -10,6 +10,7 @@ from account.serializers import UserAddressSerializer
 from account.serializers import UserInfoSerialozer
 from account.serializers import UserRegisterOrLoginSendOTpSerializr
 from django.shortcuts import get_object_or_404
+from helpers.sms import send_sms
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -104,9 +105,32 @@ class UserRegisterOrLoginSendOTp(APIView):
             # code=cache.set(str(phone_number), code,2*60)
             # code=cache.get(str(phone_number))
 
-            return Response(
-                {"msg": "code sent successfully", "code": code, "registered": registered}, status=status.HTTP_200_OK
-            )
+            # sending sms
+            try:
+                send_sms(
+                    recipient=phone_number,
+                    template="login",
+                    token={
+                        "token": code,
+                    },
+                )
+                return Response(
+                    {
+                        "msg": "code sent successfully",
+                        "code": "ارسال شد",
+                        "registered": registered,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            except:
+
+                return Response(
+                    {
+                        "msg": "code cant sent successfully",
+                        "registered": registered,
+                    },
+                    status=status.HTTP_200_OK,
+                )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

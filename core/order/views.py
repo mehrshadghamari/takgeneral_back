@@ -7,6 +7,7 @@ from django.db.models import F
 from django.db.models import IntegerField
 from django.db.models import Value
 from django.shortcuts import get_object_or_404
+from helpers.sms import send_sms
 from product.models import ProductVariant
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -206,6 +207,29 @@ class VerfyPaymnet(APIView):
             return Response({"message": "Transaction failed. Status: " + str(payment_status)})
 
         if payment_status == "OK":
+            # sending sms
+            phone_number = order_object.user.phone_number
+            full_name = order_object.user.first_name + order_object.user.last_name
+            try:
+                send_sms(
+                    recipient=phone_number,
+                    template="Moshtari",
+                    token={
+                        "token": full_name,
+                    },
+                )
+
+                send_sms(
+                    recipient="09212075118",
+                    template="Modir",
+                    token={
+                        "token": full_name,
+                        "token2": phone_number,
+                    },
+                )
+            except:
+                pass
+
             return Response(
                 {
                     "message": "Transaction success. RefID: " + str(ref_id),
