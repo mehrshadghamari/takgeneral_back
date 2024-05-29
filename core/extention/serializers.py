@@ -235,6 +235,10 @@ class RedirectSerializer(serializers.ModelSerializer):
 
 class ProductSiteMapSerializer(serializers.ModelSerializer):
     update_at = serializers.SerializerMethodField()
+    index= serializers.SerializerMethodField()
+
+    def get_index(self,obj):
+        return obj.meta_tag.first().index
 
     def get_update_at(self, obj):
         if obj.update_at:
@@ -255,6 +259,10 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
 
 class BrandSiteMapSerializer(serializers.ModelSerializer):
     update_at = serializers.SerializerMethodField()
+    index= serializers.SerializerMethodField()
+
+    def get_index(self,obj):
+        return obj.meta_tag.first().index
 
     def get_update_at(self, obj):
         if obj.update_at:
@@ -275,6 +283,10 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
 
 class CategorySiteMapSerializer(serializers.ModelSerializer):
     update_at = serializers.SerializerMethodField()
+    index= serializers.SerializerMethodField()
+
+    def get_index(self,obj):
+        return obj.meta_tag.first().index
 
     def get_update_at(self, obj):
         if obj.update_at:
@@ -295,6 +307,10 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
 
 class BlogSiteMapSerializer(serializers.ModelSerializer):
     updated_time = serializers.SerializerMethodField()
+    index= serializers.SerializerMethodField()
+
+    def get_index(self,obj):
+        return obj.meta_tag.first().index
 
     def get_updated_time(self, obj):
         if obj.updated_time:
