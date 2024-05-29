@@ -238,7 +238,9 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
     index= serializers.SerializerMethodField()
 
     def get_index(self,obj):
-        return obj.meta_tag.first().index
+        if meta:=obj.meta_tag.first():
+            return meta.index
+        return None
 
     def get_update_at(self, obj):
         if obj.update_at:
@@ -263,7 +265,9 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
     index= serializers.SerializerMethodField()
 
     def get_index(self,obj):
-        return obj.meta_tag.first().index
+        if meta:=obj.meta_tag.first():
+            return meta.index
+        return None
 
     def get_update_at(self, obj):
         if obj.update_at:
@@ -288,7 +292,9 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
     index= serializers.SerializerMethodField()
 
     def get_index(self,obj):
-        return obj.meta_tag.first().index
+        if meta:=obj.meta_tag.first():
+            return meta.index
+        return None
 
     def get_update_at(self, obj):
         if obj.update_at:
@@ -313,7 +319,9 @@ class BlogSiteMapSerializer(serializers.ModelSerializer):
     index= serializers.SerializerMethodField()
 
     def get_index(self,obj):
-        return obj.meta_tag.first().index
+        if meta:=obj.meta_tag.first():
+            return meta.index
+        return None
 
     def get_updated_time(self, obj):
         if obj.updated_time:
