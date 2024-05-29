@@ -254,6 +254,7 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
             "id",
             "url",
             "update_at",
+            "index",
         )
 
 
@@ -278,6 +279,7 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
             "id",
             "url",
             "update_at",
+            "index",
         )
 
 
@@ -302,6 +304,7 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
             "id",
             "url",
             "update_at",
+            "index",
         )
 
 
@@ -326,6 +329,7 @@ class BlogSiteMapSerializer(serializers.ModelSerializer):
             "id",
             "slug",
             "updated_time",
+            "index",
         )
 
 
