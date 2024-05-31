@@ -129,10 +129,10 @@ class RedirectView(APIView):
 
 class SiteMapApi(APIView):
     def get(self, request):
-        blogs = Blog.objects.all()
-        products = Product.objects.all()
-        brands = ProductBrand.objects.all()
-        categories = Category.objects.all()
+        blogs = Blog.objects.prefetch_related("meta_tag").filter(meta_tag__index=True)
+        products = Product.objects.prefetch_related("meta_tag").filter(meta_tag__index=True)
+        brands = ProductBrand.objects.prefetch_related("meta_tag").filter(meta_tag__index=True)
+        categories = Category.objects.prefetch_related("meta_tag").filter(meta_tag__index=True)
         sitemap_data = {
             "products": products,
             "brands": brands,
