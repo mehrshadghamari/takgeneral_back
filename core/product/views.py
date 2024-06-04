@@ -161,7 +161,7 @@ class products(APIView):
 
             page_count = math.ceil(product_query.count() / int(page_size))
 
-            if page_number == 0 or page_number>page_count:
+            if page_number == 0 or int(page_number)>int(page_count):
                 return Response({"msg":"that page contains no results"},status=status.HTTP_400_BAD_REQUEST)
 
             paginator = Paginator(product_query, page_size)
