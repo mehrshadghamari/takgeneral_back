@@ -159,13 +159,18 @@ class products(APIView):
             # page_size = 20
             page_size = self.request.query_params.get("page_size", 20)
 
+            page_count = math.ceil(product_query.count() / int(page_size))
+
+            if page_number == 0 or page_number>page_count:
+                return Response({"msg":"that page contains no results"},status=status.HTTP_400_BAD_REQUEST)
+
             paginator = Paginator(product_query, page_size)
 
             product_serializer = AllProductSerializer(
                 paginator.page(page_number), many=True, context={"request": request}
             )
 
-            page_count = math.ceil(product_query.count() / int(page_size))
+            
 
             main_banner = category_obj.main_banners.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
