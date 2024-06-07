@@ -1,6 +1,7 @@
 from kavenegar import KavenegarAPI
 
-def send_sms(template:str, recipient:str, token:dict):
+
+def send_sms(template: str, recipient: str, token: dict):
     """Send an OTP (One-Time Password) SMS message using the Kavenegar service.
 
     Args:
@@ -10,13 +11,11 @@ def send_sms(template:str, recipient:str, token:dict):
     Returns:
         bool: True if the OTP message was successfully sent, False otherwise.
     """
-    api = KavenegarAPI(apikey="3333684B417362704A574638466C744375346668715034302B496D7154344A305677425A505878324F6B6F3D")
+    api = KavenegarAPI(
+        apikey="3333684B417362704A574638466C744375346668715034302B496D7154344A305677425A505878324F6B6F3D"
+    )
 
-    params = {
-        "receptor": recipient,
-        "template": template,
-        **token
-    }
+    params = {"receptor": recipient, "template": template, **token}
     try:
         api.verify_lookup(params)
     except Exception as e:

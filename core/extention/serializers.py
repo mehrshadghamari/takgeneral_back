@@ -235,10 +235,10 @@ class RedirectSerializer(serializers.ModelSerializer):
 
 class ProductSiteMapSerializer(serializers.ModelSerializer):
     update_at = serializers.SerializerMethodField()
-    index= serializers.SerializerMethodField()
+    index = serializers.SerializerMethodField()
 
-    def get_index(self,obj):
-        if meta:=obj.meta_tag.first():
+    def get_index(self, obj):
+        if meta := obj.meta_tag.first():
             return meta.index
         return None
 
@@ -262,10 +262,10 @@ class ProductSiteMapSerializer(serializers.ModelSerializer):
 
 class BrandSiteMapSerializer(serializers.ModelSerializer):
     update_at = serializers.SerializerMethodField()
-    index= serializers.SerializerMethodField()
+    index = serializers.SerializerMethodField()
 
-    def get_index(self,obj):
-        if meta:=obj.meta_tag.first():
+    def get_index(self, obj):
+        if meta := obj.meta_tag.first():
             return meta.index
         return None
 
@@ -289,10 +289,10 @@ class BrandSiteMapSerializer(serializers.ModelSerializer):
 
 class CategorySiteMapSerializer(serializers.ModelSerializer):
     update_at = serializers.SerializerMethodField()
-    index= serializers.SerializerMethodField()
+    index = serializers.SerializerMethodField()
 
-    def get_index(self,obj):
-        if meta:=obj.meta_tag.first():
+    def get_index(self, obj):
+        if meta := obj.meta_tag.first():
             return meta.index
         return None
 
@@ -316,10 +316,10 @@ class CategorySiteMapSerializer(serializers.ModelSerializer):
 
 class BlogSiteMapSerializer(serializers.ModelSerializer):
     updated_time = serializers.SerializerMethodField()
-    index= serializers.SerializerMethodField()
+    index = serializers.SerializerMethodField()
 
-    def get_index(self,obj):
-        if meta:=obj.meta_tag.first():
+    def get_index(self, obj):
+        if meta := obj.meta_tag.first():
             return meta.index
         return None
 

@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Q
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
+from product.managers import CategoryManager
 from product.managers import ProductManager
 from product.managers import ProductVariantManager
 
@@ -150,6 +151,9 @@ class Product(models.Model):
     pdf = models.FileField(
         null=True,
         blank=True,
+    )
+    is_active = models.BooleanField(
+        default=True,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -468,7 +472,7 @@ class Category(MPTTModel):
         related_name="children",
     )
     is_active = models.BooleanField(
-        default=False,
+        default=True,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -491,6 +495,8 @@ class Category(MPTTModel):
     meta_tag = GenericRelation(
         "extention.MetaTag",
     )
+
+    objects = CategoryManager()
 
     class MPTTMeta:
         order_insertion_by = [

@@ -4,6 +4,7 @@ from django.db.models import Max
 from django.db.models import Min
 from django.db.models import OuterRef
 from django.db.models import Subquery
+from mptt.models import MPTTModelManager
 
 
 class ProductVariantManager(models.Manager):
@@ -12,6 +13,9 @@ class ProductVariantManager(models.Manager):
 
 
 class ProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
     def with_price_info(self):
         from .models import ProductVariant
 
@@ -37,3 +41,8 @@ class ProductManager(models.Manager):
                 prices_subquery.values("highest_discount"), output_field=models.IntegerField()
             ),
         )
+
+
+class CategoryManager(MPTTModelManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)

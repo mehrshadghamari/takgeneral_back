@@ -94,10 +94,24 @@ class BlogsApi(APIView):
         page_number = self.request.query_params.get("page", 1)
         page_size = self.request.query_params.get("page_size", 20)
         blogs = Blog.objects.all().order_by("-created_time")
-        paginator = Paginator(blogs, page_size)
-        blogs_serializer = AllBlogSerializer(paginator.page(page_number), many=True, context={"request": request})
 
-        page_count = math.ceil(blogs.count() / int(page_size))
+        if blogs:
+            page_number = self.request.query_params.get("page", 1)
+            # page_size = 20
+            page_size = self.request.query_params.get("page_size", 20)
+
+            page_count = math.ceil(blogs.count() / int(page_size))
+
+            if page_number == 0 or int(page_number) > int(page_count):
+                return Response({"msg": "that page contains no results"}, status=status.HTTP_404_NOT_FOUND)
+
+            paginator = Paginator(blogs, page_size)
+            blogs_serializer = AllBlogSerializer(paginator.page(page_number), many=True, context={"request": request})
+
+        else:
+            blogs_serializer = AllBlogSerializer(blogs, many=True, context={"request": request})
+            page_number = 1
+            page_count = 1
 
         return Response(
             {

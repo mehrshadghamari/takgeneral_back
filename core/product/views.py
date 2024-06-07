@@ -155,22 +155,25 @@ class products(APIView):
                 elif ordering == "-price":
                     product_query = product_query.order_by("-lowest_final_price_manager")
 
-            page_number = self.request.query_params.get("page", 1)
-            # page_size = 20
-            page_size = self.request.query_params.get("page_size", 20)
+            if product_query:
+                page_number = self.request.query_params.get("page", 1)
+                # page_size = 20
+                page_size = self.request.query_params.get("page_size", 20)
 
-            page_count = math.ceil(product_query.count() / int(page_size))
+                page_count = math.ceil(product_query.count() / int(page_size))
 
-            if page_number == 0 or int(page_number)>int(page_count):
-                return Response({"msg":"that page contains no results"},status=status.HTTP_404_NOT_FOUND)
+                if page_number == 0 or int(page_number) > int(page_count):
+                    return Response({"msg": "that page contains no results"}, status=status.HTTP_404_NOT_FOUND)
 
-            paginator = Paginator(product_query, page_size)
+                paginator = Paginator(product_query, page_size)
 
-            product_serializer = AllProductSerializer(
-                paginator.page(page_number), many=True, context={"request": request}
-            )
-
-            
+                product_serializer = AllProductSerializer(
+                    paginator.page(page_number), many=True, context={"request": request}
+                )
+            else:
+                product_serializer = AllProductSerializer(product_query, many=True, context={"request": request})
+                page_number = 1
+                page_count = 1
 
             main_banner = category_obj.main_banners.all()
             main_banner_serializer = MainBannerSAerializer(main_banner, many=True, context={"request": request})
@@ -257,10 +260,6 @@ class Brands(APIView):
         )
         meta_tag = brand_obj.meta_tag.first()
         meta_tag_serializer = MetaTagSerializer(meta_tag, context={"request": request})
-        # default page number = 1
-        page_number = self.request.query_params.get("page", 1)
-        # default page_size = 20
-        page_size = self.request.query_params.get("page_size", 20)
 
         ordering = self.request.query_params.get("ordering", None)
         if ordering is not None:
@@ -269,11 +268,25 @@ class Brands(APIView):
             elif ordering == "-price":
                 product_query = product_query.order_by("-lowest_final_price_manager")
 
-        paginator = Paginator(product_query, page_size)
+        if product_query:
+            page_number = self.request.query_params.get("page", 1)
+            # page_size = 20
+            page_size = self.request.query_params.get("page_size", 20)
 
-        product_serializer = AllProductSerializer(paginator.page(page_number), many=True, context={"request": request})
+            page_count = math.ceil(product_query.count() / int(page_size))
 
-        page_count = math.ceil(product_query.count() / int(page_size))
+            if page_number == 0 or int(page_number) > int(page_count):
+                return Response({"msg": "that page contains no results"}, status=status.HTTP_404_NOT_FOUND)
+
+            paginator = Paginator(product_query, page_size)
+
+            product_serializer = AllProductSerializer(
+                paginator.page(page_number), many=True, context={"request": request}
+            )
+        else:
+            product_serializer = AllProductSerializer(product_query, many=True, context={"request": request})
+            page_number = 1
+            page_count = 1
 
         return Response(
             {
