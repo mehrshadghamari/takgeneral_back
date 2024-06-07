@@ -4,7 +4,7 @@ from django.db.models import Max
 from django.db.models import Min
 from django.db.models import OuterRef
 from django.db.models import Subquery
-from mptt.models import MPTTModelManager
+from mptt.models import TreeManager
 
 
 class ProductVariantManager(models.Manager):
@@ -43,6 +43,6 @@ class ProductManager(models.Manager):
         )
 
 
-class CategoryManager(MPTTModelManager):
+class CategoryManager(TreeManager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
