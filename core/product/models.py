@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Q
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
+from mptt.models import TreeManager
 from product.managers import CategoryManager
 from product.managers import ProductManager
 from product.managers import ProductVariantManager
@@ -173,6 +174,7 @@ class Product(models.Model):
     )
 
     objects = ProductManager()
+    all_objects = models.Manager()
 
     @property
     def attributes(self):
@@ -303,6 +305,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f"id : {self.id} -- name : {self.name} "
+
+    class Meta:
+        default_manager_name = "all_objects"
 
 
 class ProductOptionType(models.Model):
@@ -498,11 +503,13 @@ class Category(MPTTModel):
     )
 
     objects = CategoryManager()
+    all_objects = TreeManager()
 
     class MPTTMeta:
         order_insertion_by = [
             "name",
         ]
+        default_manager_name = "all_objects"
 
     def __str__(self):
         return self.name

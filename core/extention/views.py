@@ -102,7 +102,7 @@ class BlogsApi(APIView):
 
             page_count = math.ceil(blogs.count() / int(page_size))
 
-            if page_number == 0 or int(page_number) > int(page_count):
+            if int(page_number) < 1 or int(page_number) > int(page_count):
                 return Response({"msg": "that page contains no results"}, status=status.HTTP_404_NOT_FOUND)
 
             paginator = Paginator(blogs, page_size)
