@@ -139,6 +139,9 @@ class Product(models.Model):
         null=True,
         db_index=True,
     )
+    is_active = models.BooleanField(
+        default=True,
+    )
     name = models.CharField(max_length=64)
     brand = models.ForeignKey(
         "product.ProductBrand",
@@ -152,9 +155,7 @@ class Product(models.Model):
         null=True,
         blank=True,
     )
-    is_active = models.BooleanField(
-        default=True,
-    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         null=True,
