@@ -27,6 +27,19 @@ from .models import ProductVariant
 # form
 
 
+# class ProductForm(forms.ModelForm):
+#     class Meta:
+#         model = Product
+#         fields = "__all__"
+
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         product_type = cleaned_data.get("product_type")
+#         if not product_type:
+#             raise forms.ValidationError("A product type must be selected.")
+#         return cleaned_data
+
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -39,6 +52,9 @@ class ProductForm(forms.ModelForm):
             raise forms.ValidationError("A product type must be selected.")
         return cleaned_data
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product_type'].queryset = ProductType.all_objects.all()
 
 # inlines
 

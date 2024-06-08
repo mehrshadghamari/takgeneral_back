@@ -304,7 +304,7 @@ class Product(models.Model):
         }
 
     def __str__(self):
-        return f"id : {self.id} -- name : {self.name} "
+        return f"id : {self.id} -- name : {self.name} -- is_active : {self.is_active}"
 
     class Meta:
         default_manager_name = "all_objects"
@@ -512,7 +512,7 @@ class Category(MPTTModel):
         default_manager_name = "all_objects"
 
     def __str__(self):
-        return self.name
+        return f"name : {self.name} -- is_active : {self.is_active}" 
 
 
 class ProductType(models.Model):
