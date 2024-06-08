@@ -6,7 +6,7 @@ from django.db.models import Q
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from mptt.models import TreeManager
-from product.managers import CategoryManager
+from product.managers import CategoryManager,AllProductsManager
 from product.managers import ProductManager
 from product.managers import ProductVariantManager
 
@@ -174,7 +174,7 @@ class Product(models.Model):
     )
 
     objects = ProductManager()
-    all_objects = models.Manager()
+    all_objects = AllProductsManager()
 
     @property
     def attributes(self):
