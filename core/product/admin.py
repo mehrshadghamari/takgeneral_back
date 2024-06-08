@@ -120,6 +120,9 @@ class CategotyAdmin(NestedModelAdmin, MPTTModelAdmin):
         ContentInline,
         MetaTagInline,
     ]
+    def get_queryset(self, request):
+        # Use the all_objects manager to include inactive categories
+        return Category.all_objects.get_queryset()
 
 
 @admin.register(ProductType)
@@ -150,6 +153,10 @@ class ProductAdmin(NestedModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields["product_type"].widget.can_add_related = False
         return form
+    
+    def get_queryset(self, request):
+        # Use the all_objects manager to include inactive products
+        return Product.all_objects.get_queryset()
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     #     if db_field.name == "category":
