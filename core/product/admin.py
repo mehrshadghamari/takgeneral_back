@@ -173,6 +173,16 @@ class ProductAdmin(NestedModelAdmin):
     def get_queryset(self, request):
         # Use the all_objects manager to include inactive products
         return Product.all_objects.get_queryset()
+    
+    
+    def get_object(self, request, object_id, from_field=None):
+        queryset = self.get_queryset(request)
+        model = queryset.model
+        field = model._meta.pk if from_field is None else model._meta.get_field(from_field)
+        try:
+            return queryset.get(**{field.name: object_id})
+        except model.DoesNotExist:
+            return None
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     #     if db_field.name == "category":
