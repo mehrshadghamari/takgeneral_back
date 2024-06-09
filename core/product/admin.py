@@ -106,7 +106,7 @@ class ProductSpecificationValueInline(NestedTabularInline):
         if db_field.name == "specification":
             product_id = request.resolver_match.kwargs.get("object_id")
             if product_id:
-                product = Product.objects.get(pk=product_id)
+                product = Product.all_objects.get(pk=product_id)
                 kwargs["queryset"] = ProductSpecification.objects.filter(product_type=product.product_type)
             else:
                 kwargs["queryset"] = ProductSpecification.objects.none()
