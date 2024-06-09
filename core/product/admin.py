@@ -136,6 +136,7 @@ class CategotyAdmin(NestedModelAdmin, MPTTModelAdmin):
         ContentInline,
         MetaTagInline,
     ]
+
     def get_queryset(self, request):
         # Use the all_objects manager to include inactive categories
         return Category.all_objects.get_queryset()
@@ -169,12 +170,11 @@ class ProductAdmin(NestedModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields["product_type"].widget.can_add_related = False
         return form
-    
+
     def get_queryset(self, request):
         # Use the all_objects manager to include inactive products
         return Product.all_objects.get_queryset()
-    
-    
+
     def get_object(self, request, object_id, from_field=None):
         queryset = self.get_queryset(request)
         model = queryset.model
@@ -183,6 +183,22 @@ class ProductAdmin(NestedModelAdmin):
             return queryset.get(**{field.name: object_id})
         except model.DoesNotExist:
             return None
+
+    def get_object(self, request, object_id, from_field=None):
+        try:
+            return Product.all_objects.get(pk=object_id)
+        except Product.DoesNotExist:
+            raise None
+
+    # def save_model(self, request, obj, form, change):
+    #     obj.save(using='all_objects')
+
+    # def delete_model(self, request, obj):
+    #     obj.delete(using='all_objects')
+
+    # def get_deleted_objects(self, objs, request):
+    #     using = 'all_objects'
+    #     return super().get_deleted_objects(objs, request)
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     #     if db_field.name == "category":

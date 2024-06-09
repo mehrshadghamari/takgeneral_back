@@ -6,7 +6,8 @@ from django.db.models import Q
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from mptt.models import TreeManager
-from product.managers import CategoryManager,AllProductsManager
+from product.managers import AllProductsManager
+from product.managers import CategoryManager
 from product.managers import ProductManager
 from product.managers import ProductVariantManager
 
@@ -512,7 +513,7 @@ class Category(MPTTModel):
         default_manager_name = "all_objects"
 
     def __str__(self):
-        return f"name : {self.name} -- is_active : {self.is_active}" 
+        return f"name : {self.name} -- is_active : {self.is_active}"
 
 
 class ProductType(models.Model):
