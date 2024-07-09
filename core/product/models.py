@@ -565,7 +565,7 @@ class ProductSpecificationValue(models.Model):
 
     class Meta:
         ordering = [
-            "specification",
+            # "specification",
             "-id",
         ]
 
