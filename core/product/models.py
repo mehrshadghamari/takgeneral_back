@@ -381,6 +381,11 @@ class ProductVariant(models.Model):
 
     objects = ProductVariantManager()
 
+    class Meta:
+        ordering = [
+            "-id",
+        ]
+
     @property
     def final_price(self):
         if self.discount == 0:
@@ -565,8 +570,7 @@ class ProductSpecificationValue(models.Model):
 
     class Meta:
         ordering = [
-            # "specification",
-            "-id",
+            "specification",
         ]
 
 
