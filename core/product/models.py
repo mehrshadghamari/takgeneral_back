@@ -383,7 +383,7 @@ class ProductVariant(models.Model):
 
     class Meta:
         ordering = [
-            "-id",
+            "id",
         ]
 
     @property
