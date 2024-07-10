@@ -227,7 +227,7 @@ class Blog(models.Model):
         return self.blogimage_set.filter(is_main=True).first()
 
     def __str__(self):
-        return f'title : {self.title}  created_time : {self.created_time}  updated_time : {self.updated_time}'
+        return f'title : {self.title} - created_time : {self.created_time.date} - updated_time : {self.updated_time.date}'
 
 
 class BlogImage(models.Model):
