@@ -15,7 +15,7 @@ class Order(models.Model):
         on_delete=models.CASCADE,
         related_name="orders",
     )
-    address = models.OneToOneField(
+    address = models.ForeignKey(
         "account.Address",
         on_delete=models.DO_NOTHING,
         null=True,
