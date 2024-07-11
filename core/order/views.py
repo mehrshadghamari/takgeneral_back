@@ -2,6 +2,7 @@ from datetime import datetime
 
 from account.models import Address
 from account.models import MyUser
+from django.http import HttpResponseRedirect
 from django.db import transaction
 from django.db.models import F
 from django.db.models import IntegerField
@@ -204,7 +205,8 @@ class VerfyPaymnet(APIView):
 
             payment_status = "NOK"
             ref_id = 0
-            return Response({"message": "Transaction failed. Status: " + str(payment_status)})
+            # return Response({"message": "Transaction failed. Status: " + str(payment_status)})
+            return HttpResponseRedirect('https://takgeneral.com/payment?payment-status=false')
 
         if payment_status == "OK":
             # sending sms
@@ -230,15 +232,15 @@ class VerfyPaymnet(APIView):
             except:
                 pass
 
-            return Response(
-                {
-                    "message": "Transaction success. RefID: " + str(ref_id),
-                    "msg": msg,
-                    "ref_id": ref_id,
-                    "card_pan_mask": card_pan_mask,
-                }
-            )
-            # return HttpResponseRedirect('http://127.0.0.1:8000/admin/order/order/')
+            # return Response(
+            #     {
+            #         "message": "Transaction success. RefID: " + str(ref_id),
+            #         "msg": msg,
+            #         "ref_id": ref_id,
+            #         "card_pan_mask": card_pan_mask,
+            #     }
+            # )
+            return HttpResponseRedirect('https://takgeneral.com/payment?payment-status=true')
         else:
             with transaction.atomic():
                 for item in order_object.items.all():
@@ -246,8 +248,8 @@ class VerfyPaymnet(APIView):
                     item.product.Inventory_number += item.quantity
                     item.product.save()
 
-            return Response({"message": "Transaction failed or canceled by user"})
-            # return HttpResponseRedirect('https://yourdomain.com/failure-page/')
+            # return Response({"message": "Transaction failed or canceled by user"})
+            return HttpResponseRedirect('https://takgeneral.com/payment?payment-status=false')
 
 
 # class AllOrders(APIView):
