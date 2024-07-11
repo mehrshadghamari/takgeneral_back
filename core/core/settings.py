@@ -231,7 +231,7 @@ ZARINPAL_CONFIG = {
     "SANDBOX_WEB_GATEWAY": "https://sandbox.zarinpal.com/pg/StartPay/",
     "MERCHANT_ID": "d45a8a3d-89df-4377-be5f-91f8728308c3",
     "EMAIL": "mehrshad2014ghamari@gmail.com",
-    "CALLBACK_URL": "http://127.0.0.1:8000/callback-payment/",
+    "CALLBACK_URL": "https://api.takgeneral/callback-payment/",
 }
 
 
