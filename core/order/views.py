@@ -222,7 +222,7 @@ class VerfyPaymnet(APIView):
                 )
 
                 send_sms(
-                    recipient="09212075118",
+                    recipient="989212075118",
                     template="Modir",
                     token={
                         "token": full_name,
