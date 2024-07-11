@@ -211,7 +211,7 @@ class VerfyPaymnet(APIView):
         if payment_status == "OK":
             # sending sms
             phone_number = order_object.user.phone_number
-            full_name = order_object.user.first_name + " " +order_object.user.last_name
+            full_name = f'{order_object.user.first_name} {order_object.user.last_name}' 
             try:
                 send_sms(
                     recipient=phone_number,
