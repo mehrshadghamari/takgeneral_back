@@ -35,7 +35,7 @@ class Order(models.Model):
     Payment_ref_id = models.IntegerField(
         null=True,
         blank=True,
-        unique=True,
+        unique=False,
     )
     paid = models.BooleanField(
         default=False,
