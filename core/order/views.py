@@ -211,13 +211,14 @@ class VerfyPaymnet(APIView):
         if payment_status == "OK":
             # sending sms
             phone_number = order_object.user.phone_number
-            full_name = f'{order_object.user.first_name} {order_object.user.last_name}' 
+            # full_name = f'{order_object.user.first_name} {order_object.user.last_name}'
+             
             try:
                 send_sms(
                     recipient=phone_number,
                     template="Moshtari",
                     token={
-                        "token": full_name,
+                        "token": order_object.user.first_name,
                     },
                 )
 
@@ -225,7 +226,7 @@ class VerfyPaymnet(APIView):
                     recipient="989212075118",
                     template="Modir",
                     token={
-                        "token": full_name,
+                        "token": order_object.user.last_name,
                         "token2": phone_number,
                     },
                 )
