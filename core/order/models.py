@@ -83,6 +83,9 @@ class Order(models.Model):
     def total_count(self):
         return int(sum(item.quantity for item in self.items.all()))
 
+    def __str__(self):
+        return f"name : {self.user.full_name} - paid : {self.paid} - status : {self.status} - price : {self.total_final_price}"
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(

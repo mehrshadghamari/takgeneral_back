@@ -2,11 +2,11 @@ from datetime import datetime
 
 from account.models import Address
 from account.models import MyUser
-from django.http import HttpResponseRedirect
 from django.db import transaction
 from django.db.models import F
 from django.db.models import IntegerField
 from django.db.models import Value
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from helpers.sms import send_sms
 from product.models import ProductVariant
@@ -145,6 +145,18 @@ class Pay(APIView):
         order_object = get_object_or_404(Order, id=order_data["order_id"], paid=False)
         address_object = get_object_or_404(Address, id=order_data["address_id"], user=user.id)
 
+        # checking for can pay with payment gateway
+
+        for item in order_object.items.all():
+            if not item.product.can_pay:
+                return Response(
+                    {
+                        "error": "لطفا برای خرید تماس بگیرید",
+                        "varient_id": item.product.id,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         zp = ZarinPal(
             amount=order_object.total_final_price,  # toman
             detail=order_data.get("order_description")
@@ -171,7 +183,11 @@ class Pay(APIView):
                     item.product.save()
                 except:
                     return Response(
-                        {"error": "مجودی ناکافی", "varient_id": item.product.id}, status=status.HTTP_400_BAD_REQUEST
+                        {
+                            "error": "مجودی ناکافی",
+                            "varient_id": item.product.id,
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
 
             order_object.save()
@@ -206,13 +222,13 @@ class VerfyPaymnet(APIView):
             payment_status = "NOK"
             ref_id = 0
             # return Response({"message": "Transaction failed. Status: " + str(payment_status)})
-            return HttpResponseRedirect('https://takgeneral.com/payment?payment-status=false')
+            return HttpResponseRedirect("https://takgeneral.com/payment?payment-status=false")
 
         if payment_status == "OK":
             # sending sms
             phone_number = order_object.user.phone_number
             # full_name = f'{order_object.user.first_name} {order_object.user.last_name}'
-             
+
             try:
                 send_sms(
                     recipient=phone_number,
@@ -241,7 +257,7 @@ class VerfyPaymnet(APIView):
             #         "card_pan_mask": card_pan_mask,
             #     }
             # )
-            return HttpResponseRedirect('https://takgeneral.com/payment?payment-status=true')
+            return HttpResponseRedirect("https://takgeneral.com/payment?payment-status=true")
         else:
             with transaction.atomic():
                 for item in order_object.items.all():
@@ -250,7 +266,7 @@ class VerfyPaymnet(APIView):
                     item.product.save()
 
             # return Response({"message": "Transaction failed or canceled by user"})
-            return HttpResponseRedirect('https://takgeneral.com/payment?payment-status=false')
+            return HttpResponseRedirect("https://takgeneral.com/payment?payment-status=false")
 
 
 # class AllOrders(APIView):

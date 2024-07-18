@@ -9,6 +9,7 @@ from account.serializers import LogOutSerializer
 from account.serializers import UserAddressSerializer
 from account.serializers import UserInfoSerialozer
 from account.serializers import UserRegisterOrLoginSendOTpSerializr
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from helpers.sms import send_sms
 from rest_framework import status
@@ -18,7 +19,6 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django.core.cache import cache
 
 r = redis.Redis(host="localhost", port=6379, db=0)
 
@@ -103,8 +103,8 @@ class UserRegisterOrLoginSendOTp(APIView):
             code = random.randint(10000, 99999)
             # r.setex(str(phone_number), timedelta(minutes=2), value=code)
             # code = r.get(str(phone_number)).decode()
-            code=cache.set(str(phone_number), code,2*60)
-            code=cache.get(str(phone_number))
+            code = cache.set(str(phone_number), code, 2 * 60)
+            code = cache.get(str(phone_number))
 
             # sending sms
             try:
@@ -151,7 +151,7 @@ class UserVerifyOTP(APIView):
         except MyUser.DoesNotExist:
             return Response({"msg": "user with this phone number does not exist"})
 
-        cached_code=cache.get(str(phone_number))
+        cached_code = cache.get(str(phone_number))
         # cached_code = r.get(str(phone_number)).decode()
         # import pdb; pdb.set_trace()
         if int(code) != int(cached_code):

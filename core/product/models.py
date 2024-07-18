@@ -349,6 +349,7 @@ class ProductVariant(models.Model):
         blank=True,
     )
     price = models.FloatField()
+    can_pay = models.BooleanField(default=True)
     discount = models.PositiveSmallIntegerField(
         default=0,
         validators=[MaxValueValidator(99), MinValueValidator(0)],
